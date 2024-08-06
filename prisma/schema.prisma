@@ -16,6 +16,41 @@ enum UserRole {
   USER
 }
 
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum TaskType {
+  TASK
+  MILESTONE
+}
+
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  PENDING_REVIEW
+  CHANGES_REQUESTED
+  CLOSED
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+enum SenderType {
+  USER
+  CLIENT
+}
+
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -51,22 +86,22 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @default(now()) @map(name: "updated_at")
-  role          UserRole  @default(USER)
-
-  accounts Account[]
-  sessions Session[]
-
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  id                     String        @id @default(cuid())
+  name                   String?
+  email                  String?       @unique
+  emailVerified          DateTime?
+  image                  String?
+  createdAt              DateTime      @default(now()) @map(name: "created_at")
+  updatedAt              DateTime      @default(now()) @map(name: "updated_at")
+  role                   UserRole      @default(USER)
+  accounts               Account[]
+  sessions               Session[]
+  stripeCustomerId       String?       @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?       @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?       @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
+  projects               UserProject[]
+  comments               Comment[]
 
   @@map(name: "users")
 }
@@ -78,4 +113,114 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
+}
+
+model UserProject {
+  id        String   @id @default(cuid())
+  userId    String
+  projectId String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
+  Project   Project  @relation(fields: [projectId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([projectId])
+  @@map(name: "user_projects")
+}
+
+model ClientInvite {
+  id        String           @id @default(cuid())
+  email     String
+  status    InvitationStatus @default(PENDING)
+  projectId String
+  Project   Project          @relation(fields: [projectId], references: [id])
+  createdAt DateTime         @default(now()) @map(name: "created_at")
+  updatedAt DateTime         @default(now()) @map(name: "updated_at")
+
+  @@map(name: "client_invites")
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  image     String?
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  projectId String
+  Project   Project   @relation(fields: [projectId], references: [id])
+  comments  Comment[]
+
+  @@map(name: "clients")
+}
+
+model Project {
+  id                  String         @id @default(cuid())
+  slug                String         @unique
+  passCode            String
+  name                String
+  description         String?
+  criateriaForSuccess String?        @db.Text
+  visibility          Visibility     @default(PUBLIC)
+  deadline            DateTime
+  color               String?
+  createdAt           DateTime       @default(now()) @map(name: "created_at")
+  updatedAt           DateTime       @default(now()) @map(name: "updated_at")
+  users               UserProject[]
+  ClientInvites       ClientInvite[]
+  clients             Client[]
+  tasks               Task[]
+  assets              Asset[]
+
+  @@map(name: "projects")
+}
+
+model Asset {
+  id           String    @id @default(cuid())
+  projectId    String
+  name         String
+  url          String
+  type         AssetType
+  addWatermark Boolean   @default(false)
+  createdAt    DateTime  @default(now()) @map(name: "created_at")
+  updatedAt    DateTime  @default(now()) @map(name: "updated_at")
+  Project      Project   @relation(fields: [projectId], references: [id])
+
+  @@map(name: "assets")
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  projectId   String
+  name        String
+  visibility  Visibility
+  type        TaskType
+  description String?
+  content     String?
+  status      String
+  reviewedAt  DateTime[]
+  completedAt DateTime?
+  createdAt   DateTime   @default(now()) @map(name: "created_at")
+  updatedAt   DateTime   @default(now()) @map(name: "updated_at")
+  Project     Project    @relation(fields: [projectId], references: [id])
+  comments    Comment[]
+
+  @@map(name: "tasks")
+}
+
+model Comment {
+  id        String     @id @default(cuid())
+  taskId    String
+  userId    String?
+  clientId  String?
+  sender    SenderType
+  content   String
+  createdAt DateTime   @default(now()) @map(name: "created_at")
+  updatedAt DateTime   @default(now()) @map(name: "updated_at")
+  Task      Task       @relation(fields: [taskId], references: [id])
+  User      User?      @relation(fields: [userId], references: [id])
+  Client    Client?    @relation(fields: [clientId], references: [id])
+
+  @@map(name: "comments")
 }
