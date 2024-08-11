@@ -4,6 +4,7 @@ import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavItem, SidebarNavItem } from "@/types";
+import { Project } from "@prisma/client";
 import { Menu, PanelLeftClose, PanelRightClose } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
@@ -25,9 +26,15 @@ import { Icons } from "@/components/shared/icons";
 
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
+  projects: Project[];
+  currentProjectId: string;
 }
 
-export function DashboardSidebar({ links }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  links,
+  projects,
+  currentProjectId,
+}: DashboardSidebarProps) {
   const path = usePathname();
 
   // NOTE: Use this if you want save in local storage -- Credits: Hosna Qasmei
@@ -72,7 +79,12 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
               <div className="flex h-14 items-center p-4 lg:h-[60px]">
-                {isSidebarExpanded ? <ProjectSwitcher /> : null}
+                {isSidebarExpanded ? (
+                  <ProjectSwitcher
+                    projects={projects}
+                    currentProject={currentProjectId}
+                  />
+                ) : null}
 
                 <Button
                   variant="ghost"
