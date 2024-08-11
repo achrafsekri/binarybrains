@@ -20,11 +20,10 @@ export const sidebarLinks: SidebarNavItem[] = [
       },
       { href: "/dashboard/assets", icon: "media", title: "Assets" },
       {
-        href: "/dashboard/invite-clients",
+        href: "/dashboard/clients",
         icon: "smilePlus",
         title: "Clients",
       },
-      { href: "/dashboard/team", icon: "users", title: "Team" },
       {
         href: "/dashboard/billing",
         icon: "billing",
@@ -49,11 +48,14 @@ export const sidebarLinks: SidebarNavItem[] = [
     ],
   },
   {
-    title: "OPTIONS",
+    title: "Options",
     items: [
-      { href: "/dashboard/settings", icon: "settings", title: "Settings" },
-      { href: "/", icon: "home", title: "Homepage" },
-      { href: "/docs", icon: "bookOpen", title: "Documentation" },
+      {
+        href: "/admin/team",
+        icon: "users",
+        title: "Team",
+        authorizeOnly: UserRole.ADMIN,
+      },
       {
         href: "#",
         icon: "messages",
@@ -61,6 +63,19 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
         disabled: true,
       },
+      {
+        href: "/admin/billing",
+        icon: "billing",
+        title: "Billing",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/settings",
+        icon: "settings",
+        title: "Settings",
+        authorizeOnly: UserRole.ADMIN,
+      },
+     
     ],
   },
 ];
