@@ -157,22 +157,22 @@ model Client {
 }
 
 model Project {
-  id                  String         @id @default(cuid())
-  slug                String         @unique
-  passCode            String
-  name                String
-  description         String?
-  criateriaForSuccess String?        @db.Text
-  visibility          Visibility     @default(PUBLIC)
-  deadline            DateTime
-  color               String?
-  createdAt           DateTime       @default(now()) @map(name: "created_at")
-  updatedAt           DateTime       @default(now()) @map(name: "updated_at")
-  users               UserProject[]
-  ClientInvites       ClientInvite[]
-  clients             Client[]
-  tasks               Task[]
-  assets              Asset[]
+  id                 String         @id @default(cuid())
+  slug               String         @unique
+  passCode           String
+  name               String
+  description        String?
+  criteriaForSuccess String?        @db.Text
+  visibility         Visibility     @default(PUBLIC)
+  deadline           DateTime?
+  color              String?
+  createdAt          DateTime       @default(now()) @map(name: "created_at")
+  updatedAt          DateTime       @default(now()) @map(name: "updated_at")
+  users              UserProject[]
+  ClientInvites      ClientInvite[]
+  clients            Client[]
+  tasks              Task[]
+  assets             Asset[]
 
   @@map(name: "projects")
 }

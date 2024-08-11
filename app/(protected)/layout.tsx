@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Project } from "@prisma/client";
 
 import { sidebarLinks } from "@/config/dashboard";
 import { prisma } from "@/lib/db";
@@ -18,10 +19,8 @@ interface ProtectedLayoutProps {
 
 export default async function Dashboard({ children }: ProtectedLayoutProps) {
   const user = await getCurrentUser();
-  console.log(user);
 
   if (!user) redirect("/login");
-
   const filteredLinks = sidebarLinks.map((section) => ({
     ...section,
     items: section.items.filter(
@@ -32,13 +31,16 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
     where: { userId: user.id },
     include: { Project: true },
   });
+  const currentProject = projects.find(
+    (p) => p.Project.id === user.currentProjectId,
+  );
 
   return (
     <div className="relative flex min-h-screen w-full">
       <DashboardSidebar
         links={filteredLinks}
         projects={projects.map((p) => p.Project)}
-        currentProjectId=""
+        currentProject={currentProject?.Project as Project}
       />
 
       <div className="flex flex-1 flex-col">
@@ -47,7 +49,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
             <MobileSheetSidebar
               links={filteredLinks}
               projects={projects.map((p) => p.Project)}
-              currentProjectId=""
+              currentProject={currentProject?.Project as Project}
             />
 
             <div className="w-full flex-1">

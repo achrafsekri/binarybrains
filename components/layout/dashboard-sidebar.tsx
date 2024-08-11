@@ -27,13 +27,13 @@ import { Icons } from "@/components/shared/icons";
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
   projects: Project[];
-  currentProjectId: string;
+  currentProject: Project;
 }
 
 export function DashboardSidebar({
   links,
   projects,
-  currentProjectId,
+  currentProject,
 }: DashboardSidebarProps) {
   const path = usePathname();
 
@@ -82,7 +82,7 @@ export function DashboardSidebar({
                 {isSidebarExpanded ? (
                   <ProjectSwitcher
                     projects={projects}
-                    currentProject={currentProjectId}
+                    currentProject={currentProject}
                   />
                 ) : null}
 
@@ -190,7 +190,11 @@ export function DashboardSidebar({
   );
 }
 
-export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
+export function MobileSheetSidebar({
+  links,
+  projects,
+  currentProject,
+}: DashboardSidebarProps) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const { isSm, isMobile } = useMediaQuery();
@@ -222,7 +226,11 @@ export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
                   </span>
                 </Link>
 
-                <ProjectSwitcher large />
+                <ProjectSwitcher
+                  large
+                  projects={projects}
+                  currentProject={currentProject}
+                />
 
                 {links.map((section) => (
                   <section
