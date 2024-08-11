@@ -10,6 +10,7 @@ import {
   CreditCard,
   File,
   FileText,
+  Handshake,
   HelpCircle,
   Home,
   Image,
@@ -27,9 +28,11 @@ import {
   Puzzle,
   Search,
   Settings,
+  SmilePlus,
   SunMedium,
   Trash,
   User,
+  Users,
   X,
 } from "lucide-react";
 
@@ -99,6 +102,7 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  handshake: Handshake,
   help: HelpCircle,
   home: Home,
   laptop: Laptop,
@@ -113,6 +117,7 @@ export const Icons = {
   search: Search,
   settings: Settings,
   spinner: Loader2,
+  smilePlus: SmilePlus,
   sun: SunMedium,
   trash: Trash,
   twitter: ({ ...props }: LucideProps) => (
@@ -133,5 +138,6 @@ export const Icons = {
     </svg>
   ),
   user: User,
+  users:Users,
   warning: AlertTriangle,
 };
