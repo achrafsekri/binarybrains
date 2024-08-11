@@ -63,30 +63,6 @@ export function UserAccountNav() {
             </div>
 
             <ul role="list" className="mb-14 mt-1 w-full text-muted-foreground">
-              {user.role === "ADMIN" ? (
-                <li className="rounded-lg text-foreground hover:bg-muted">
-                  <Link
-                    href="/admin"
-                    onClick={closeDrawer}
-                    className="flex w-full items-center gap-3 px-2.5 py-2"
-                  >
-                    <Lock className="size-4" />
-                    <p className="text-sm">Admin</p>
-                  </Link>
-                </li>
-              ) : null}
-
-              <li className="rounded-lg text-foreground hover:bg-muted">
-                <Link
-                  href="/dashboard"
-                  onClick={closeDrawer}
-                  className="flex w-full items-center gap-3 px-2.5 py-2"
-                >
-                  <LayoutDashboard className="size-4" />
-                  <p className="text-sm">Dashboard</p>
-                </Link>
-              </li>
-
               <li className="rounded-lg text-foreground hover:bg-muted">
                 <Link
                   href="/dashboard/settings"
@@ -141,29 +117,13 @@ export function UserAccountNav() {
         </div>
         <DropdownMenuSeparator />
 
-        {user.role === "ADMIN" ? (
-          <DropdownMenuItem asChild>
-            <Link href="/admin" className="flex items-center space-x-2.5">
-              <Lock className="size-4" />
-              <p className="text-sm">Admin</p>
-            </Link>
-          </DropdownMenuItem>
-        ) : null}
-
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="flex items-center space-x-2.5">
-            <LayoutDashboard className="size-4" />
-            <p className="text-sm">Dashboard</p>
-          </Link>
-        </DropdownMenuItem>
-
         <DropdownMenuItem asChild>
           <Link
-            href="/dashboard/settings"
+            href="/dashboard/user-settings"
             className="flex items-center space-x-2.5"
           >
             <Settings className="size-4" />
-            <p className="text-sm">Settings</p>
+            <p className="text-sm">Account Settings</p>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
