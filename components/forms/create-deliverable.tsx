@@ -1,17 +1,14 @@
 "use client";
 
 import React from "react";
-import { createProject } from "@/actions/create-project.server";
+import { createDeliverable } from "@/actions/create-deliverable.server";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Visibility } from "@prisma/client";
-import { format } from "date-fns";
-import { CalendarIcon, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -31,19 +28,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 
 import { MinimalTiptapEditor } from "../shared/minimal-tiptap";
 import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
+import { Textarea } from "../ui/textarea";
 
-const FormSchema = z.object({
+export const CreateDeliverableFormSchema = z.object({
   title: z.string().min(3, "Title is too short"),
   description: z.string().optional(),
   milestone: z.boolean().default(false),
@@ -51,11 +43,11 @@ const FormSchema = z.object({
   content: z.string().optional(),
 });
 
-const CreateTask = () => {
+const CreateDeliverable = () => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof CreateDeliverableFormSchema>>({
+    resolver: zodResolver(CreateDeliverableFormSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -65,10 +57,10 @@ const CreateTask = () => {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof CreateDeliverableFormSchema>) {
     try {
       setLoading(true);
-      console.log(data);
+      await createDeliverable(data);
       toast({
         title: "You submitted the following values:",
         description: "hellooo",
@@ -198,7 +190,7 @@ const CreateTask = () => {
                           form.formState.errors.content,
                       })}
                       editorContentClassName="p-5"
-                      output="html"
+                      output="json"
                       placeholder="Type your content here..."
                       autofocus={true}
                       immediatelyRender={true}
@@ -226,4 +218,4 @@ const CreateTask = () => {
   );
 };
 
-export default CreateTask;
+export default CreateDeliverable;

@@ -45,7 +45,7 @@ export const SectionFive = ({ editor }: { editor: Editor }) => {
   return (
     <>
       <LinkEditPopover editor={editor} />
-      <ImageEditDialog editor={editor} />
+      {/* <ImageEditDialog editor={editor} /> */}
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
