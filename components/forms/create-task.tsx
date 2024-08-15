@@ -188,18 +188,18 @@ const CreateTask = () => {
               name="content"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="sr-only">Description</FormLabel>
+                  <FormLabel className="">Content</FormLabel>
                   <FormControl>
                     <MinimalTiptapEditor
                       {...field}
                       throttleDelay={2000}
                       className={cn("w-full", {
                         "border-destructive focus-within:border-destructive":
-                          form.formState.errors.description,
+                          form.formState.errors.content,
                       })}
                       editorContentClassName="p-5"
                       output="html"
-                      placeholder="Type your description here..."
+                      placeholder="Type your content here..."
                       autofocus={true}
                       immediatelyRender={true}
                       editable={true}
