@@ -2,6 +2,7 @@ import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
+import CreateTask from "@/components/forms/create-task";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 export const metadata = constructMetadata({
@@ -24,7 +25,7 @@ export default async function ScopeOfWork() {
         <EmptyPlaceholder.Description>
           You don&apos;t have any content yet. Start creating content.
         </EmptyPlaceholder.Description>
-        <Button>Add Content</Button>
+        <CreateTask />
       </EmptyPlaceholder>
     </>
   );

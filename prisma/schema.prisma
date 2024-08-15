@@ -123,8 +123,8 @@ model UserProject {
   role      UserRole @default(USER)
   createdAt DateTime @default(now()) @map(name: "created_at")
   updatedAt DateTime @default(now()) @map(name: "updated_at")
-  Project   Project  @relation(fields: [projectId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
+  Project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([projectId])
@@ -150,7 +150,7 @@ model Client {
   createdAt DateTime  @default(now()) @map(name: "created_at")
   updatedAt DateTime  @default(now()) @map(name: "updated_at")
   projectId String
-  Project   Project   @relation(fields: [projectId], references: [id])
+  Project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   comments  Comment[]
 
   @@map(name: "clients")
@@ -199,12 +199,12 @@ model Task {
   type        TaskType
   description String?
   content     String?
-  status      String
+  status      TaskStatus @default(OPEN)
   reviewedAt  DateTime[]
   completedAt DateTime?
   createdAt   DateTime   @default(now()) @map(name: "created_at")
   updatedAt   DateTime   @default(now()) @map(name: "updated_at")
-  Project     Project    @relation(fields: [projectId], references: [id])
+  Project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
   comments    Comment[]
 
   @@map(name: "tasks")
@@ -219,9 +219,9 @@ model Comment {
   content   String
   createdAt DateTime   @default(now()) @map(name: "created_at")
   updatedAt DateTime   @default(now()) @map(name: "updated_at")
-  Task      Task       @relation(fields: [taskId], references: [id])
-  User      User?      @relation(fields: [userId], references: [id])
-  Client    Client?    @relation(fields: [clientId], references: [id])
+  Task      Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  User      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  Client    Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   @@map(name: "comments")
 }
