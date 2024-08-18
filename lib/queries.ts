@@ -29,6 +29,9 @@ export const getCurrentUserDeliverables = async () => {
       where: {
         projectId: currentProject,
       },
+      include: {
+        Assets: true,
+      },
     });
     return tasks;
   } catch (error) {

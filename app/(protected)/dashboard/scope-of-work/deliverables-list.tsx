@@ -1,5 +1,6 @@
 import React from "react";
-import { Task } from "@prisma/client";
+import { Asset, Task } from "@prisma/client";
+import { Description } from "@radix-ui/react-dialog";
 import { EyeClosedIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { EyeIcon } from "lucide-react";
@@ -10,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -20,11 +22,20 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import AssetsPicker from "@/components/dashboard/AssetsPicker";
 import CreateDeliverable from "@/components/forms/create-deliverable";
 
 import DeliverableContent from "./deliverable-content";
 
-const DeliverablesList = ({ delivarables }: { delivarables: Task[] }) => {
+export type Deliverable = Task & {
+  Assets: Asset[];
+};
+
+const DeliverablesList = ({
+  delivarables,
+}: {
+  delivarables: Deliverable[];
+}) => {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
@@ -55,7 +66,12 @@ const DeliverablesList = ({ delivarables }: { delivarables: Task[] }) => {
                       {task.name}
                     </h3>
                     {task.type === "MILESTONE" && (
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800">Milestone</Badge>
+                      <Badge
+                        variant="outline"
+                        className="bg-blue-100 text-blue-800"
+                      >
+                        Milestone
+                      </Badge>
                     )}
                     {task.status === "FINISHED" && (
                       <Button variant="link" size="sm">
@@ -87,10 +103,23 @@ const DeliverablesList = ({ delivarables }: { delivarables: Task[] }) => {
                 </div>
               </div>
             </DialogTrigger>
-            <DialogContent className="md:max-h-[80vh] md:max-w-[70vw]">
+            <DialogContent className="overflow-auto md:max-h-[80vh] md:max-w-[70vw]">
+              <DialogDescription className="sr-only">
+                {task.name}
+              </DialogDescription>
               <DialogHeader className="relative">
-                <DialogTitle className="mt-8 text-3xl font-semibold">
-                  {task.name}
+                <DialogTitle className="mt-8 flex items-center gap-4 text-3xl font-semibold">
+                  {task.name}{" "}
+                  {task.visibility === "PRIVATE" && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <EyeClosedIcon className="size-5 text-gray-400" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Hidden from the client</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </DialogTitle>
                 <span className="absolute left-0 top-0 text-sm text-gray-500">
                   {task.type === "MILESTONE" ? "Milestone" : "Deliverable"}
@@ -105,8 +134,13 @@ const DeliverablesList = ({ delivarables }: { delivarables: Task[] }) => {
                 </Button>
               </DialogHeader>
               <DeliverableContent deliverable={task} />
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold">Assets</h2>
+                {task.Assets.length > 0 && <AssetsPicker type="NOT_EMPTY" />}
+                {task.Assets.length === 0 && <AssetsPicker type="EMPTY" />}
+              </div>
               <DialogFooter>
-                <Button type="submit">Save changes</Button>
+                <Button type="button">Mark as completed</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

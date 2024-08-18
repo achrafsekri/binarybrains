@@ -40,7 +40,7 @@ export const CreateDeliverableFormSchema = z.object({
   description: z.string().optional(),
   milestone: z.boolean().default(false),
   visibility: z.boolean().default(false),
-  content: z.string().optional(),
+  content: z.any(),
 });
 
 const CreateDeliverable = () => {
@@ -53,14 +53,18 @@ const CreateDeliverable = () => {
       description: "",
       milestone: false,
       visibility: false,
-      content: "",
+      content: {},
     },
   });
 
   async function onSubmit(data: z.infer<typeof CreateDeliverableFormSchema>) {
     try {
+      const dataToSend = {
+        ...data,
+        content: JSON.parse(data.content),
+      };
       setLoading(true);
-      await createDeliverable(data);
+      await createDeliverable(dataToSend);
       toast({
         title: "You submitted the following values:",
         description: "hellooo",

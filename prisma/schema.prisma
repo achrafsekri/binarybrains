@@ -103,7 +103,7 @@ model User {
   stripePriceId          String?       @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
   projects               UserProject[]
-  comments               Comment[]
+  notes                  Note[]
 
   @@map(name: "users")
 }
@@ -145,14 +145,14 @@ model ClientInvite {
 }
 
 model Client {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   image     String?
-  createdAt DateTime  @default(now()) @map(name: "created_at")
-  updatedAt DateTime  @default(now()) @map(name: "updated_at")
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @default(now()) @map(name: "updated_at")
   projectId String
-  Project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  comments  Comment[]
+  Project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  notes     Note[]
 
   @@map(name: "clients")
 }
@@ -188,30 +188,34 @@ model Asset {
   createdAt    DateTime  @default(now()) @map(name: "created_at")
   updatedAt    DateTime  @default(now()) @map(name: "updated_at")
   Project      Project   @relation(fields: [projectId], references: [id])
+  Tasks        Task[]
+  taskId       String?
 
   @@map(name: "assets")
 }
 
 model Task {
-  id          String     @id @default(cuid())
-  projectId   String
-  name        String
-  visibility  Visibility
-  type        TaskType
-  description String?
-  content     String?    @db.Text
-  status      TaskStatus @default(OPEN)
-  reviewedAt  DateTime[]
-  completedAt DateTime?
-  createdAt   DateTime   @default(now()) @map(name: "created_at")
-  updatedAt   DateTime   @default(now()) @map(name: "updated_at")
-  Project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  comments    Comment[]
+  id            String     @id @default(cuid())
+  projectId     String
+  name          String
+  timeToDeliver Int?
+  visibility    Visibility
+  type          TaskType
+  description   String?
+  content       Json?
+  status        TaskStatus @default(OPEN)
+  reviewedAt    DateTime[]
+  completedAt   DateTime?
+  Assets        Asset[]
+  createdAt     DateTime   @default(now()) @map(name: "created_at")
+  updatedAt     DateTime   @default(now()) @map(name: "updated_at")
+  Project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  notes         Note[]
 
   @@map(name: "tasks")
 }
 
-model Comment {
+model Note {
   id        String     @id @default(cuid())
   taskId    String
   userId    String?
@@ -224,5 +228,5 @@ model Comment {
   User      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
   Client    Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
-  @@map(name: "comments")
+  @@map(name: "notes")
 }
