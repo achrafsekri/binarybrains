@@ -6,10 +6,10 @@ import { auth } from "@/auth";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
-import { CreateDeliverableFormSchema } from "@/components/forms/create-task";
+import { CreateMilestoneFormSchema } from "@/components/forms/create-milestone";
 
-export async function createDeliverable(
-  data: z.infer<typeof CreateDeliverableFormSchema>,
+export async function createMilestone(
+  data: z.infer<typeof CreateMilestoneFormSchema>,
 ) {
   const session = await auth();
   if (!session?.user.id) {
@@ -17,13 +17,14 @@ export async function createDeliverable(
   }
   try {
     const currentProjectId = session.user.currentProjectId;
-    await prisma.task.create({
+    await prisma.milestone.create({
       data: {
         name: data.title,
-        description: data.description,
         visibility: data.visibility ? "PUBLIC" : "PRIVATE",
         content: data.content,
         projectId: currentProjectId,
+        dueDate: data.dueDate,
+        addWatermark: data.addWatermark,
       },
     });
 

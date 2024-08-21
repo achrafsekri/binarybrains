@@ -1,6 +1,8 @@
 "use client";
 
-import React, { ChangeEvent } from "react";
+import React from "react";
+import { uploadFilesToServer } from "@/actions/upload-files.server";
+import { PlusIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +18,13 @@ import {
 import { FileUploader } from "../shared/file-uploader";
 
 // if assets is empty, it will show a big button to add first asset else it will show a plus icon to add more assets
-const AssetsPicker = ({ type }: { type: "EMPTY" | "NOT_EMPTY" }) => {
+const AssetsPicker = ({
+  type,
+  taskId,
+}: {
+  type: "EMPTY" | "NOT_EMPTY";
+  taskId: string;
+}) => {
   const [files, setFiles] = React.useState<File[]>([]);
   const [isUploading, setIsUploading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
@@ -49,9 +57,12 @@ const AssetsPicker = ({ type }: { type: "EMPTY" | "NOT_EMPTY" }) => {
                 body,
                 method: "PUT",
               });
-
-              // Save reference to the object in Postgres (powered by Neon)
-              resolve("file uploaded successfully");
+              resolve({
+                name: file.name,
+                url: signedUrl,
+                id: "haha",
+                type: file.type,
+              });
             } catch (error) {
               console.error("Upload failed for file:", file.name, error);
               reject(error); // Reject the promise if any error occurs
@@ -67,9 +78,16 @@ const AssetsPicker = ({ type }: { type: "EMPTY" | "NOT_EMPTY" }) => {
     };
 
     try {
-      await Promise.all(files.map(uploadFile));
+      const filesToUpload = (await Promise.all(files.map(uploadFile))) as {
+        name: string;
+        url: string;
+        id: string;
+        type: string;
+      }[];
+      await uploadFilesToServer(taskId, filesToUpload);
       console.log("All files uploaded successfully");
       setIsUploading(false);
+      setOpen(false);
     } catch (error) {
       console.error("Some files failed to upload", error);
       setIsUploading(false);
@@ -80,14 +98,16 @@ const AssetsPicker = ({ type }: { type: "EMPTY" | "NOT_EMPTY" }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {type === "EMPTY" ? (
-          <div className="mt-4 flex h-36 cursor-pointer flex-col items-center justify-center space-y-2 border-2 border-dashed border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800">
+          <div className="mt-4 flex h-36 cursor-pointer flex-col items-center justify-center space-y-2 border-2 border-dashed border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-zinc-900">
             <h3 className="text-lg font-semibold text-gray-500">
               No assets uploaded yet
             </h3>
             <p className="text-sm text-gray-400">Add assets to get started</p>
           </div>
         ) : (
-          <Button onClick={() => setOpen(true)}>Add more assets</Button>
+          <div className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-md border-2 border-dashed border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-zinc-900">
+            <PlusIcon className="h-8 w-8 text-gray-500" />
+          </div>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl">
@@ -99,7 +119,7 @@ const AssetsPicker = ({ type }: { type: "EMPTY" | "NOT_EMPTY" }) => {
         </DialogHeader>
         <FileUploader
           maxFileCount={8}
-          maxSize={8 * 1024 * 1024}
+          maxSize={100 * 1024 * 1024}
           onValueChange={setFiles}
           accept={{
             "image/*": [],

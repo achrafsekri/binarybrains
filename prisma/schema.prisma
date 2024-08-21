@@ -27,11 +27,6 @@ enum Visibility {
   PRIVATE
 }
 
-enum TaskType {
-  TASK
-  MILESTONE
-}
-
 enum TaskStatus {
   OPEN
   IN_PROGRESS
@@ -44,12 +39,8 @@ enum TaskStatus {
 enum AssetType {
   IMAGE
   VIDEO
+  AUDIO
   DOCUMENT
-}
-
-enum SenderType {
-  USER
-  CLIENT
 }
 
 model Account {
@@ -103,7 +94,6 @@ model User {
   stripePriceId          String?       @map(name: "stripe_price_id")
   stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
   projects               UserProject[]
-  notes                  Note[]
 
   @@map(name: "users")
 }
@@ -174,24 +164,46 @@ model Project {
   clients            Client[]
   tasks              Task[]
   assets             Asset[]
+  Milestone          Milestone[]
 
   @@map(name: "projects")
 }
 
 model Asset {
-  id           String    @id @default(cuid())
-  projectId    String
-  name         String
-  url          String
-  type         AssetType
-  addWatermark Boolean   @default(false)
-  createdAt    DateTime  @default(now()) @map(name: "created_at")
-  updatedAt    DateTime  @default(now()) @map(name: "updated_at")
-  Project      Project   @relation(fields: [projectId], references: [id])
-  Tasks        Task[]
-  taskId       String?
+  id          String      @id @default(cuid())
+  projectId   String
+  name        String
+  url         String
+  type        AssetType
+  createdAt   DateTime    @default(now()) @map(name: "created_at")
+  updatedAt   DateTime    @default(now()) @map(name: "updated_at")
+  Project     Project     @relation(fields: [projectId], references: [id])
+  Tasks       Task[]
+  taskId      String?
+  Milestones  Milestone[]
+  milestoneId String?
 
   @@map(name: "assets")
+}
+
+model Milestone {
+  id           String     @id @default(cuid())
+  projectId    String
+  name         String
+  addWatermark Boolean    @default(true)
+  content      Json?
+  dueDate      DateTime?
+  reviewedAt   DateTime[]
+  visibility   Visibility @default(PUBLIC)
+  order        Int        @default(autoincrement())
+  Tasks        Task[]
+  notes        Note[]
+  Assets       Asset[]
+  createdAt    DateTime   @default(now()) @map(name: "created_at")
+  updatedAt    DateTime   @default(now()) @map(name: "updated_at")
+  Project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map(name: "milestones")
 }
 
 model Task {
@@ -200,33 +212,31 @@ model Task {
   name          String
   timeToDeliver Int?
   visibility    Visibility
-  type          TaskType
+  addWatermark  Boolean    @default(true)
   description   String?
   content       Json?
+  order         Int        @default(0)
   status        TaskStatus @default(OPEN)
-  reviewedAt    DateTime[]
   completedAt   DateTime?
   Assets        Asset[]
   createdAt     DateTime   @default(now()) @map(name: "created_at")
   updatedAt     DateTime   @default(now()) @map(name: "updated_at")
   Project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  notes         Note[]
+  Milestone     Milestone  @relation(fields: [milestoneId], references: [id])
+  milestoneId   String
 
   @@map(name: "tasks")
 }
 
 model Note {
-  id        String     @id @default(cuid())
-  taskId    String
-  userId    String?
-  clientId  String?
-  sender    SenderType
-  content   String
-  createdAt DateTime   @default(now()) @map(name: "created_at")
-  updatedAt DateTime   @default(now()) @map(name: "updated_at")
-  Task      Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  User      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  Client    Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  id          String     @id @default(cuid())
+  clientId    String?
+  milestoneId String?
+  content     String
+  Client      Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  Milestone   Milestone? @relation(fields: [milestoneId], references: [id])
+  createdAt   DateTime   @default(now()) @map(name: "created_at")
+  updatedAt   DateTime   @default(now()) @map(name: "updated_at")
 
   @@map(name: "notes")
 }

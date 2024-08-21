@@ -3,7 +3,7 @@ import { Asset, Task } from "@prisma/client";
 import { Description } from "@radix-ui/react-dialog";
 import { EyeClosedIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
-import { EyeIcon } from "lucide-react";
+import { EyeIcon, File } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,8 +24,10 @@ import {
 } from "@/components/ui/tooltip";
 import AssetsPicker from "@/components/dashboard/AssetsPicker";
 import CreateDeliverable from "@/components/forms/create-deliverable";
+import AssetPreview from "@/components/shared/asset-preview";
 
 import DeliverableContent from "./deliverable-content";
+import Notes from "@/components/dashboard/notes";
 
 export type Deliverable = Task & {
   Assets: Asset[];
@@ -48,7 +50,7 @@ const DeliverablesList = ({
               <div
                 key={task.id}
                 className={clsx(
-                  "flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 shadow-sm animate-in fade-in-50 hover:bg-gray-50",
+                  "flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 shadow-sm animate-in fade-in-50 hover:bg-gray-50 dark:hover:bg-zinc-900",
                   // task.type !== "MILESTONE" && "ml-8",
                 )}
               >
@@ -103,7 +105,7 @@ const DeliverablesList = ({
                 </div>
               </div>
             </DialogTrigger>
-            <DialogContent className="overflow-auto md:max-h-[80vh] md:max-w-[70vw]">
+            <DialogContent className="overflow-auto max-h-[90vh] md:max-h-[80vh] md:max-w-[70vw]">
               <DialogDescription className="sr-only">
                 {task.name}
               </DialogDescription>
@@ -135,10 +137,34 @@ const DeliverablesList = ({
               </DialogHeader>
               <DeliverableContent deliverable={task} />
               <div className="mt-8">
-                <h2 className="text-xl font-semibold">Assets</h2>
-                {task.Assets.length > 0 && <AssetsPicker type="NOT_EMPTY" />}
-                {task.Assets.length === 0 && <AssetsPicker type="EMPTY" />}
+                <h2 className="mb-4 text-xl font-semibold">Assets</h2>
+                {task.Assets.length == 0 && (
+                  <AssetsPicker type="EMPTY" taskId={task.id} />
+                )}
+                {task.Assets.length > 0 && (
+                  <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                    <AssetsPicker type="NOT_EMPTY" taskId={task.id} />
+                    {task.Assets.map((asset) =>
+                      asset.type == "DOCUMENT" ? (
+                        <a
+                          href={asset.url}
+                          target="_blank"
+                          className="flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-zinc-900"
+                        >
+                          <File className="h-12 w-12 text-gray-500 dark:text-gray-300" />
+                        </a>
+                      ) : (
+                        <AssetPreview
+                          asset={asset}
+                          key={asset.id}
+                          watermark={task.addWatermark}
+                        />
+                      ),
+                    )}
+                  </div>
+                )}
               </div>
+              <Notes />
               <DialogFooter>
                 <Button type="button">Mark as completed</Button>
               </DialogFooter>

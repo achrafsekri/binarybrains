@@ -5,6 +5,7 @@ import { createDeliverable } from "@/actions/create-deliverable.server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { cn } from "@/lib/utils";
@@ -28,7 +29,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 
 import { MinimalTiptapEditor } from "../shared/minimal-tiptap";
 import { Spinner } from "../ui/spinner";
@@ -65,18 +65,12 @@ const CreateDeliverable = () => {
       };
       setLoading(true);
       await createDeliverable(dataToSend);
-      toast({
-        title: "You submitted the following values:",
-        description: "hellooo",
-      });
+      toast.success("Task created successfully");
       setOpenDialog(false);
       setLoading(false);
     } catch (error) {
       console.log(error);
-      toast({
-        title: "An error occurred",
-        description: error.message,
-      });
+      toast.error("Task to create deliverable");
       setLoading(false);
     }
   }

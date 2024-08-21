@@ -21,19 +21,16 @@ export const getCurrentProject = async () => {
 
 // *** tasks ***
 
-export const getCurrentUserDeliverables = async () => {
+export const getCurrentUserMilestones = async () => {
   try {
     const session = await auth();
     const currentProject = session?.user.currentProjectId;
-    const tasks = await prisma.task.findMany({
+    const milestones = await prisma.milestone.findMany({
       where: {
         projectId: currentProject,
       },
-      include: {
-        Assets: true,
-      },
     });
-    return tasks;
+    return milestones;
   } catch (error) {
     console.error(error);
     return [];
