@@ -7,7 +7,7 @@ import CreateMilestone from "@/components/forms/create-milestone";
 import CreateTask from "@/components/forms/create-task";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
-import DeliverablesList from "./deliverables-list";
+import DeliverablesList, { MileStone } from "./milestones-list";
 
 export const metadata = constructMetadata({
   title: "Scope of Work - Modhif",
@@ -32,11 +32,11 @@ export default async function ScopeOfWork() {
           <CreateMilestone />
         </EmptyPlaceholder>
       )}
-      {/* {milestones!.length > 0 && (
+      {milestones!.length > 0 && (
         <div className="rounded-lg border border-dashed p-8 shadow-sm animate-in fade-in-50">
-          <DeliverablesList delivarables={deliverables} />
+          <DeliverablesList milestones={milestones as MileStone[]} />
         </div>
-      )} */}
+      )}
     </>
   );
 }

@@ -194,6 +194,7 @@ model Milestone {
   content      Json?
   dueDate      DateTime?
   reviewedAt   DateTime[]
+  status       TaskStatus @default(OPEN)
   visibility   Visibility @default(PUBLIC)
   order        Int        @default(autoincrement())
   Tasks        Task[]

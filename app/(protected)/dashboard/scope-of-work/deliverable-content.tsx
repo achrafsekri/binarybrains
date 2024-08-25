@@ -33,6 +33,8 @@ import { toast } from "@/components/ui/use-toast";
 import AutoSave from "@/components/forms/auto-save";
 import { MinimalTiptapEditor } from "@/components/shared/minimal-tiptap";
 
+import { MileStone } from "./milestones-list";
+
 export const deliverableSchema = z.object({
   timeToDeliver: z.number(),
   status: z.nativeEnum(TaskStatus),
@@ -54,7 +56,11 @@ const deliverableVisibility = [
   { label: "Private", value: Visibility.PRIVATE },
 ];
 
-const DeliverableContent = ({ deliverable }: { deliverable: Task }) => {
+const DeliverableContent = ({
+  deliverable,
+}: {
+  deliverable: Task | MileStone;
+}) => {
   const defaultValues = {
     timeToDeliver: 10,
     status: deliverable.status,
@@ -187,7 +193,7 @@ const DeliverableContent = ({ deliverable }: { deliverable: Task }) => {
                           </SelectGroup>
                         </SelectContent>
                       </GhostSelect> */}
-                        <div className="col-span-5 rounded-lg px-3 py-3 text-sm dark:hover:bg-zinc-900 hover:bg-gray-50">
+                        <div className="col-span-5 rounded-lg px-3 py-3 text-sm hover:bg-gray-50 dark:hover:bg-zinc-900">
                           {deliverable.status === TaskStatus.OPEN && (
                             <Badge
                               className="border-gray-200 bg-gray-100 text-gray-800"
@@ -250,7 +256,7 @@ const DeliverableContent = ({ deliverable }: { deliverable: Task }) => {
                 <h3 className="col-span-1" key={deliverable.id}>
                   Start Date
                 </h3>
-                <div className="col-span-5 rounded-lg px-3 py-3 text-sm dark:hover:bg-zinc-900 hover:bg-gray-50">
+                <div className="col-span-5 rounded-lg px-3 py-3 text-sm hover:bg-gray-50 dark:hover:bg-zinc-900">
                   {new Date(deliverable.createdAt).toLocaleDateString()}
                 </div>
               </div>
@@ -259,7 +265,7 @@ const DeliverableContent = ({ deliverable }: { deliverable: Task }) => {
                 <h3 className="col-span-1" key={deliverable.id}>
                   Completed At
                 </h3>
-                <div className="col-span-5 rounded-lg px-3 py-3 text-sm dark:hover:bg-zinc-900 hover:bg-gray-50">
+                <div className="col-span-5 rounded-lg px-3 py-3 text-sm hover:bg-gray-50 dark:hover:bg-zinc-900">
                   {deliverable.completedAt ? (
                     <div className="">
                       {new Date(deliverable.completedAt).toLocaleDateString()}

@@ -245,7 +245,7 @@ const CreateMilestone = () => {
             <DialogFooter>
               <Button type="submit">
                 {loading && <Spinner className="mr-2" size="small" />}
-                {loading ? "Creating..." : "Create Project"}
+                {loading ? "Creating..." : "Create Milestone"}
               </Button>
             </DialogFooter>
           </form>

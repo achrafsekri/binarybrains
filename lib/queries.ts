@@ -29,6 +29,17 @@ export const getCurrentUserMilestones = async () => {
       where: {
         projectId: currentProject,
       },
+      include: {
+        Tasks: {
+          orderBy: {
+            order: "desc",
+          },
+        },
+        Assets: true,
+      },
+      orderBy: {
+        order: "desc",
+      },
     });
     return milestones;
   } catch (error) {

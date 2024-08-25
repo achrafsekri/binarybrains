@@ -28,7 +28,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
+import { MileStone } from "@/app/(protected)/dashboard/scope-of-work/milestones-list";
 
 import { MinimalTiptapEditor } from "../shared/minimal-tiptap";
 import { Spinner } from "../ui/spinner";
@@ -43,7 +45,15 @@ export const CreateDeliverableFormSchema = z.object({
   content: z.any(),
 });
 
-const CreateDeliverable = () => {
+const CreateDeliverable = ({
+  type = "BUTTOM",
+  milestoneId,
+  milestones,
+}: {
+  type: "BUTTOM" | "TOP";
+  milestoneId?: string;
+  milestones: MileStone[];
+}) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const form = useForm<z.infer<typeof CreateDeliverableFormSchema>>({
@@ -77,15 +87,35 @@ const CreateDeliverable = () => {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <Button
-          className="relative flex h-9 items-center justify-center gap-2 p-2"
-          onClick={() => {
-            setOpenDialog(true);
-          }}
-        >
-          <Plus size={18} className="" />
-          <span className="flex-1 truncate text-center">New Deliverable</span>
-        </Button>
+        <>
+          {type === "TOP" && (
+            <Button
+              className="relative flex h-9 items-center justify-center gap-2 p-2"
+              variant="outline"
+              onClick={() => {
+                setOpenDialog(true);
+              }}
+            >
+              <Plus size={18} className="" />
+              <span className="flex-1 truncate text-center">New Task</span>
+            </Button>
+          )}
+          {type === "BUTTOM" && (
+            <div
+              className="ml-8 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 p-2 hover:bg-gray-50"
+              onClick={() => {
+                setOpenDialog(true);
+              }}
+            >
+              <div className="flex items-center justify-center gap-2">
+                <Plus size={18} className="" />
+                <span className="flex-1 truncate text-center">
+                  Add a task to this milestone
+                </span>
+              </div>
+            </div>
+          )}
+        </>
       </DialogTrigger>
       <DialogContent className="max-h-[80%] max-w-[60%] overflow-auto">
         <Form {...form}>
@@ -111,24 +141,57 @@ const CreateDeliverable = () => {
             />
             <FormField
               control={form.control}
-              name="milestone"
+              name="title"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Is this a milestone?
-                    </FormLabel>
-                    <FormDescription>
-                      Milestones are significant points in a project.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      aria-expanded={open}
+                      className="w-[200px] justify-between"
+                    >
+                      {value
+                        ? frameworks.find(
+                            (framework) => framework.value === value,
+                          )?.label
+                        : "Select framework..."}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Search framework..." />
+                      <CommandList>
+                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandGroup>
+                          {frameworks.map((framework) => (
+                            <CommandItem
+                              key={framework.value}
+                              value={framework.value}
+                              onSelect={(currentValue) => {
+                                setValue(
+                                  currentValue === value ? "" : currentValue,
+                                );
+                                setOpen(false);
+                              }}
+                            >
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  value === framework.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {framework.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
               )}
             />
             <FormField
