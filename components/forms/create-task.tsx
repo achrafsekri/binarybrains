@@ -1,15 +1,23 @@
 "use client";
 
 import React from "react";
-import { createDeliverable } from "@/actions/create-deliverable.server";
+import { createTask } from "@/actions/create-task.server";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -28,8 +36,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { MileStone } from "@/app/(protected)/dashboard/scope-of-work/milestones-list";
 
 import { MinimalTiptapEditor } from "../shared/minimal-tiptap";
@@ -37,15 +49,15 @@ import { Spinner } from "../ui/spinner";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
-export const CreateDeliverableFormSchema = z.object({
+export const CreateTaskFormSchema = z.object({
   title: z.string().min(3, "Title is too short"),
   description: z.string().optional(),
-  milestone: z.boolean().default(false),
+  milestone: z.string().min(1, "Milestone is required"),
   visibility: z.boolean().default(false),
   content: z.any(),
 });
 
-const CreateDeliverable = ({
+const CreateTask = ({
   type = "BUTTOM",
   milestoneId,
   milestones,
@@ -56,31 +68,34 @@ const CreateDeliverable = ({
 }) => {
   const [openDialog, setOpenDialog] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const form = useForm<z.infer<typeof CreateDeliverableFormSchema>>({
-    resolver: zodResolver(CreateDeliverableFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      milestone: false,
-      visibility: false,
-      content: {},
-    },
+  const [open, setOpen] = React.useState(false);
+  const defaultValues = {
+    title: "",
+    description: "",
+    milestone: milestoneId ? milestoneId : "",
+    visibility: false,
+    content: {},
+  };
+  const form = useForm<z.infer<typeof CreateTaskFormSchema>>({
+    resolver: zodResolver(CreateTaskFormSchema),
+    defaultValues: defaultValues,
   });
 
-  async function onSubmit(data: z.infer<typeof CreateDeliverableFormSchema>) {
+  async function onSubmit(data: z.infer<typeof CreateTaskFormSchema>) {
     try {
       const dataToSend = {
         ...data,
         content: JSON.parse(data.content),
       };
       setLoading(true);
-      await createDeliverable(dataToSend);
+      await createTask(dataToSend);
       toast.success("Task created successfully");
+      form.reset();
       setOpenDialog(false);
       setLoading(false);
     } catch (error) {
       console.log(error);
-      toast.error("Task to create deliverable");
+      toast.error("Failed to create Task");
       setLoading(false);
     }
   }
@@ -121,9 +136,9 @@ const CreateDeliverable = ({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <DialogHeader>
-              <DialogTitle>Create a new Deliverable</DialogTitle>
+              <DialogTitle>Create a new Task</DialogTitle>
               <DialogDescription>
-                You can think of a deliverable as a task or a milestone.
+                Fill in the form below to create a new task
               </DialogDescription>
             </DialogHeader>
             <FormField
@@ -133,7 +148,7 @@ const CreateDeliverable = ({
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="An awesome deliverable :)" {...field} />
+                    <Input placeholder="An awesome task :)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -141,57 +156,67 @@ const CreateDeliverable = ({
             />
             <FormField
               control={form.control}
-              name="title"
+              name="milestone"
               render={({ field }) => (
-                <Popover open={open} onOpenChange={setOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={open}
-                      className="w-[200px] justify-between"
-                    >
-                      {value
-                        ? frameworks.find(
-                            (framework) => framework.value === value,
-                          )?.label
-                        : "Select framework..."}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Search framework..." />
-                      <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                          {frameworks.map((framework) => (
-                            <CommandItem
-                              key={framework.value}
-                              value={framework.value}
-                              onSelect={(currentValue) => {
-                                setValue(
-                                  currentValue === value ? "" : currentValue,
-                                );
-                                setOpen(false);
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  value === framework.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                              {framework.label}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
+                <FormItem>
+                  <FormLabel>Select a milestone</FormLabel>
+                  <FormControl>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          disabled={milestones.length === 0 || !!milestoneId}
+                          aria-expanded={open}
+                          className="w-full justify-between"
+                        >
+                          {field.value
+                            ? milestones.find(
+                                (milestone) => milestone.id === field.value,
+                              )?.name
+                            : "Select milestone..."}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput placeholder="Search milestone..." />
+                          <CommandList>
+                            <CommandEmpty>No milestone found.</CommandEmpty>
+                            <CommandGroup>
+                              {milestones &&
+                                milestones?.map((milestone) => (
+                                  <CommandItem
+                                    key={milestone.id}
+                                    value={milestone.id}
+                                    onSelect={(currentValue) => {
+                                      field.onChange(
+                                        currentValue === field.value
+                                          ? ""
+                                          : currentValue,
+                                      );
+                                      setOpen(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        field.value === milestone.id
+                                          ? "opacity-100"
+                                          : "opacity-0",
+                                      )}
+                                    />
+                                    {milestone.name}
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
             <FormField
@@ -201,10 +226,10 @@ const CreateDeliverable = ({
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
-                      Is this a public deliverable?
+                      Is this a public task?
                     </FormLabel>
                     <FormDescription>
-                      Public deliverables can be viewed by clients.
+                      Public tasks can be viewed by clients.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -227,7 +252,7 @@ const CreateDeliverable = ({
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe the deliverable"
+                      placeholder="Describe the task"
                       {...field}
                     />
                   </FormControl>
@@ -269,7 +294,7 @@ const CreateDeliverable = ({
             <DialogFooter>
               <Button type="submit">
                 {loading && <Spinner className="mr-2" size="small" />}
-                {loading ? "Creating..." : "Create Project"}
+                {loading ? "Creating..." : "Create Task"}
               </Button>
             </DialogFooter>
           </form>
@@ -279,4 +304,4 @@ const CreateDeliverable = ({
   );
 };
 
-export default CreateDeliverable;
+export default CreateTask;

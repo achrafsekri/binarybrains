@@ -21,7 +21,7 @@ export const uploadFilesToServer = async (
   const user = session.user;
   try {
     // upload multiple assets to the server
-    await prisma.task.update({
+    await prisma.milestone.update({
       where: { id: taskId },
       data: {
         Assets: {

@@ -17,6 +17,12 @@ export async function createMilestone(
   }
   try {
     const currentProjectId = session.user.currentProjectId;
+    const highestOrder = await prisma.milestone.findFirst({
+      where: { projectId: currentProjectId },
+      orderBy: { order: "desc" },
+      select: { order: true },
+    });
+    const newOrder = (highestOrder?.order ?? 0) + 1;
     await prisma.milestone.create({
       data: {
         name: data.title,
@@ -25,6 +31,7 @@ export async function createMilestone(
         projectId: currentProjectId,
         dueDate: data.dueDate,
         addWatermark: data.addWatermark,
+        order: newOrder,
       },
     });
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { switchProject } from "@/actions/switch-projects.server";
 import { type Project } from "@prisma/client";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -110,12 +111,14 @@ function ProjectList({
   setOpenPopover: (open: boolean) => void;
   setLoading: (loading: boolean) => void;
 }) {
+  const router = useRouter();
   const handleSwitchProject = async (id: string) => {
     setLoading(true);
     try {
       await switchProject(id);
       setOpenPopover(false);
       setLoading(false);
+      router.refresh();
     } catch (error) {
       console.error(error);
       setLoading(false);

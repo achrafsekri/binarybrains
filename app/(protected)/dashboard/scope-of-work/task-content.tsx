@@ -35,7 +35,7 @@ import { MinimalTiptapEditor } from "@/components/shared/minimal-tiptap";
 
 import { MileStone } from "./milestones-list";
 
-export const deliverableSchema = z.object({
+export const taskSchema = z.object({
   timeToDeliver: z.number(),
   status: z.nativeEnum(TaskStatus),
   visibility: z.nativeEnum(Visibility),
@@ -56,23 +56,19 @@ const deliverableVisibility = [
   { label: "Private", value: Visibility.PRIVATE },
 ];
 
-const DeliverableContent = ({
-  deliverable,
-}: {
-  deliverable: Task | MileStone;
-}) => {
+const DeliverableContent = ({ deliverable }: { deliverable: Task }) => {
   const defaultValues = {
     timeToDeliver: 10,
     status: deliverable.status,
     visibility: deliverable.visibility,
     content: deliverable.content,
   };
-  const form = useForm<z.infer<typeof deliverableSchema>>({
-    resolver: zodResolver(deliverableSchema),
+  const form = useForm<z.infer<typeof taskSchema>>({
+    resolver: zodResolver(taskSchema),
     defaultValues: defaultValues,
   });
 
-  async function onSubmit(data: z.infer<typeof deliverableSchema>) {
+  async function onSubmit(data: z.infer<typeof taskSchema>) {
     const dataToSend = {
       ...data,
       //  if type of content is string, then parse it to JSON

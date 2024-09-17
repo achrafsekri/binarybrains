@@ -32,13 +32,14 @@ export const getCurrentUserMilestones = async () => {
       include: {
         Tasks: {
           orderBy: {
-            order: "desc",
+            order: "asc",
           },
         },
         Assets: true,
+        notes: true,
       },
       orderBy: {
-        order: "desc",
+        order: "asc",
       },
     });
     return milestones;

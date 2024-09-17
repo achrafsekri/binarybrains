@@ -6,11 +6,11 @@ import { auth } from "@/auth";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
-import { deliverableSchema } from "@/app/(protected)/dashboard/scope-of-work/deliverable-content";
+import { taskSchema } from "@/app/(protected)/dashboard/scope-of-work/task-content";
 
 export async function UpdateDeliverable(
   id: string,
-  data: z.infer<typeof deliverableSchema>,
+  data: z.infer<typeof taskSchema>,
 ) {
   const session = await auth();
   if (!session?.user.id) {

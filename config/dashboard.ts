@@ -18,7 +18,7 @@ export const sidebarLinks: SidebarNavItem[] = [
         icon: "handshake",
         title: "Scope of Work",
       },
-      { href: "/dashboard/assets", icon: "media", title: "Assets" },
+      { href: "/dashboard/documents", icon: "page", title: "Documents" },
       {
         href: "/dashboard/clients",
         icon: "smilePlus",

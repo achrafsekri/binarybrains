@@ -16,33 +16,6 @@ enum UserRole {
   USER
 }
 
-enum InvitationStatus {
-  PENDING
-  ACCEPTED
-  DECLINED
-}
-
-enum Visibility {
-  PUBLIC
-  PRIVATE
-}
-
-enum TaskStatus {
-  OPEN
-  IN_PROGRESS
-  FINISHED
-  PENDING_REVIEW
-  CHANGES_REQUESTED
-  CLOSED
-}
-
-enum AssetType {
-  IMAGE
-  VIDEO
-  AUDIO
-  DOCUMENT
-}
-
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -78,22 +51,21 @@ model Session {
 }
 
 model User {
-  id                     String        @id @default(cuid())
+  id                     String    @id @default(cuid())
   name                   String?
-  email                  String?       @unique
+  email                  String?   @unique
   emailVerified          DateTime?
   currentProjectId       String?
   image                  String?
-  createdAt              DateTime      @default(now()) @map(name: "created_at")
-  updatedAt              DateTime      @default(now()) @map(name: "updated_at")
-  role                   UserRole      @default(USER)
+  createdAt              DateTime  @default(now()) @map(name: "created_at")
+  updatedAt              DateTime  @default(now()) @map(name: "updated_at")
+  role                   UserRole  @default(USER)
   accounts               Account[]
   sessions               Session[]
-  stripeCustomerId       String?       @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?       @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?       @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime?     @map(name: "stripe_current_period_end")
-  projects               UserProject[]
+  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?   @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
 
   @@map(name: "users")
 }
@@ -105,139 +77,4 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map(name: "verification_tokens")
-}
-
-model UserProject {
-  id        String   @id @default(cuid())
-  userId    String
-  projectId String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-  Project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([projectId])
-  @@map(name: "user_projects")
-}
-
-model ClientInvite {
-  id        String           @id @default(cuid())
-  email     String
-  status    InvitationStatus @default(PENDING)
-  projectId String
-  Project   Project          @relation(fields: [projectId], references: [id])
-  createdAt DateTime         @default(now()) @map(name: "created_at")
-  updatedAt DateTime         @default(now()) @map(name: "updated_at")
-
-  @@map(name: "client_invites")
-}
-
-model Client {
-  id        String   @id @default(cuid())
-  name      String
-  image     String?
-  createdAt DateTime @default(now()) @map(name: "created_at")
-  updatedAt DateTime @default(now()) @map(name: "updated_at")
-  projectId String
-  Project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  notes     Note[]
-
-  @@map(name: "clients")
-}
-
-model Project {
-  id                 String         @id @default(cuid())
-  slug               String         @unique
-  passCode           String
-  name               String
-  description        String?
-  criteriaForSuccess String?        @db.Text
-  visibility         Visibility     @default(PUBLIC)
-  deadline           DateTime?
-  color              String?
-  createdAt          DateTime       @default(now()) @map(name: "created_at")
-  updatedAt          DateTime       @default(now()) @map(name: "updated_at")
-  users              UserProject[]
-  ClientInvites      ClientInvite[]
-  clients            Client[]
-  tasks              Task[]
-  assets             Asset[]
-  Milestone          Milestone[]
-
-  @@map(name: "projects")
-}
-
-model Asset {
-  id          String      @id @default(cuid())
-  projectId   String
-  name        String
-  url         String
-  type        AssetType
-  createdAt   DateTime    @default(now()) @map(name: "created_at")
-  updatedAt   DateTime    @default(now()) @map(name: "updated_at")
-  Project     Project     @relation(fields: [projectId], references: [id])
-  Tasks       Task[]
-  taskId      String?
-  Milestones  Milestone[]
-  milestoneId String?
-
-  @@map(name: "assets")
-}
-
-model Milestone {
-  id           String     @id @default(cuid())
-  projectId    String
-  name         String
-  addWatermark Boolean    @default(true)
-  content      Json?
-  dueDate      DateTime?
-  reviewedAt   DateTime[]
-  status       TaskStatus @default(OPEN)
-  visibility   Visibility @default(PUBLIC)
-  order        Int        @default(autoincrement())
-  Tasks        Task[]
-  notes        Note[]
-  Assets       Asset[]
-  createdAt    DateTime   @default(now()) @map(name: "created_at")
-  updatedAt    DateTime   @default(now()) @map(name: "updated_at")
-  Project      Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@map(name: "milestones")
-}
-
-model Task {
-  id            String     @id @default(cuid())
-  projectId     String
-  name          String
-  timeToDeliver Int?
-  visibility    Visibility
-  addWatermark  Boolean    @default(true)
-  description   String?
-  content       Json?
-  order         Int        @default(0)
-  status        TaskStatus @default(OPEN)
-  completedAt   DateTime?
-  Assets        Asset[]
-  createdAt     DateTime   @default(now()) @map(name: "created_at")
-  updatedAt     DateTime   @default(now()) @map(name: "updated_at")
-  Project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  Milestone     Milestone  @relation(fields: [milestoneId], references: [id])
-  milestoneId   String
-
-  @@map(name: "tasks")
-}
-
-model Note {
-  id          String     @id @default(cuid())
-  clientId    String?
-  milestoneId String?
-  content     String
-  Client      Client?    @relation(fields: [clientId], references: [id], onDelete: SetNull)
-  Milestone   Milestone? @relation(fields: [milestoneId], references: [id])
-  createdAt   DateTime   @default(now()) @map(name: "created_at")
-  updatedAt   DateTime   @default(now()) @map(name: "updated_at")
-
-  @@map(name: "notes")
 }

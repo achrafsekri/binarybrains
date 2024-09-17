@@ -1,9 +1,10 @@
 import React from "react";
-import { Asset, Milestone, Task } from "@prisma/client";
-import { Description } from "@radix-ui/react-dialog";
+import { markAsComplete } from "@/actions/mark-as-complete.server";
+import { Asset, Milestone, Note, Task } from "@prisma/client";
 import { EyeClosedIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 import { EyeIcon, File } from "lucide-react";
+import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -28,15 +29,17 @@ import CreateMilestone from "@/components/forms/create-milestone";
 import CreateTask from "@/components/forms/create-task";
 import AssetPreview from "@/components/shared/asset-preview";
 
-import DeliverableContent from "./deliverable-content";
+import MarkAsCompleteCheckbox from "./MarkAsCompleteCheckbox";
+import MilestoneContent from "./milestone-content";
+import TaskContent from "./task-content";
 
 export type MileStone = Milestone & {
   Assets: Asset[];
   Tasks: Task[];
+  notes: Note[];
 };
 
 const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
-  console.log(milestones[0].Tasks);
   return (
     <div>
       <div className="mb-4 flex items-center justify-end gap-4">
@@ -45,17 +48,23 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
       </div>
       <div className="grid grid-cols-1 gap-8">
         {milestones.map((milestone) => (
-          <div className="grid grid-cols-1 gap-4">
+          <div className="relative grid grid-cols-1 gap-4">
+            <MarkAsCompleteCheckbox
+              disabled={
+                milestone.status === "FINISHED" || milestone.status === "CLOSED"
+              }
+              type="MILESTONE"
+              id={milestone.id}
+            />
             <Dialog>
               <DialogTrigger asChild>
                 <div
                   key={milestone.id}
                   className={clsx(
-                    "flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 shadow-sm animate-in fade-in-50 hover:bg-gray-50 dark:hover:bg-zinc-900",
+                    "flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 pl-12 shadow-sm animate-in fade-in-50 hover:bg-gray-50 dark:hover:bg-zinc-900",
                     // milestone.type !== "MILESTONE" && "ml-8",
                   )}
                 >
-                  <Checkbox />
                   <div className="grid w-full grid-cols-4 items-center justify-between">
                     <div className="col-span-3 flex items-center gap-2">
                       <h3
@@ -76,10 +85,18 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
                         Milestone
                       </Badge>
 
+                      {milestone.status === "CLOSED" && (
+                        <Badge
+                          variant="outline"
+                          className="bg-green-100 text-green-800"
+                        >
+                          Completed
+                        </Badge>
+                      )}
                       {milestone.status === "FINISHED" && (
-                        <Button variant="link" size="sm">
-                          Request revision
-                        </Button>
+                        <p className="text-sm text-gray-500">
+                          You can now request a revision
+                        </p>
                       )}
                     </div>
                     <div className="col-span-1 flex items-center justify-end">
@@ -136,7 +153,7 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
                     Request revision
                   </Button>
                 </DialogHeader>
-                <DeliverableContent deliverable={milestone} />
+                <MilestoneContent deliverable={milestone} />
                 <div className="mt-8">
                   <h2 className="mb-4 text-xl font-semibold">Assets</h2>
                   {milestone.Assets.length == 0 && (
@@ -165,7 +182,7 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
                     </div>
                   )}
                 </div>
-                <Notes />
+                <Notes notes={milestone.notes} />
                 <DialogFooter>
                   <Button type="button">Mark as completed</Button>
                 </DialogFooter>
@@ -173,53 +190,75 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
             </Dialog>
             {milestone.Tasks?.length > 0 &&
               milestone.Tasks?.map((task: Task) => (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <div
-                      key={task.id}
-                      className={clsx(
-                        "ml-8 flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 shadow-sm animate-in fade-in-50 hover:bg-gray-50 dark:hover:bg-zinc-900",
-                        // task.type !== "MILESTONE" && "ml-8",
-                      )}
-                    >
-                      <Checkbox />
-                      <div className="grid w-full grid-cols-4 items-center justify-between">
-                        <div className="col-span-3 flex items-center gap-2">
-                          <h3
-                            className={clsx(
-                              "text-lg font-semibold capitalize",
-                              (task.status === "FINISHED" ||
-                                task.status === "CLOSED") &&
-                                "line-through",
+                <div className="relative">
+                  <MarkAsCompleteCheckbox
+                    disabled={
+                      task.status === "FINISHED" || task.status === "CLOSED"
+                    }
+                    type="TASK"
+                    id={task.id}
+                  />
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div
+                        key={task.id}
+                        className={clsx(
+                          "ml-8 flex cursor-pointer items-center gap-4 rounded-lg border border-dashed p-4 pl-12 shadow-sm animate-in fade-in-50 hover:bg-gray-50 dark:hover:bg-zinc-900",
+                          // task.type !== "MILESTONE" && "ml-8",
+                        )}
+                      >
+                        <div className="grid w-full grid-cols-4 items-center justify-between">
+                          <div className="col-span-3 flex items-center gap-2">
+                            <h3
+                              className={clsx(
+                                "text-lg font-semibold capitalize",
+                                (task.status === "FINISHED" ||
+                                  task.status === "CLOSED") &&
+                                  "line-through",
+                              )}
+                            >
+                              {task.name}
+                            </h3>
+
+                            <Badge
+                              variant="outline"
+                              className="bg-pink-100 text-pink-800"
+                            >
+                              Task
+                            </Badge>
+                          </div>
+                          <div className="col-span-1 flex items-center justify-end">
+                            {task.visibility === "PUBLIC" ? (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <EyeIcon className="size-5 text-green-600" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Visible to the client</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <EyeClosedIcon className="size-5 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>Hidden from the client</p>
+                                </TooltipContent>
+                              </Tooltip>
                             )}
-                          >
-                            {task.name}
-                          </h3>
-
-                          <Badge
-                            variant="outline"
-                            className="bg-pink-100 text-pink-800"
-                          >
-                            Task
-                          </Badge>
-
-                          {task.status === "FINISHED" && (
-                            <Button variant="link" size="sm">
-                              Request revision
-                            </Button>
-                          )}
+                          </div>
                         </div>
-                        <div className="col-span-1 flex items-center justify-end">
-                          {task.visibility === "PUBLIC" ? (
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <EyeIcon className="size-5 text-green-600" />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Visible to the client</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          ) : (
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="max-h-[90vh] overflow-auto md:max-h-[80vh] md:max-w-[70vw]">
+                      <DialogDescription className="sr-only">
+                        {task.name}
+                      </DialogDescription>
+                      <DialogHeader className="relative">
+                        <DialogTitle className="mt-8 flex items-center gap-4 text-3xl font-semibold">
+                          {task.name}{" "}
+                          {task.visibility === "PRIVATE" && (
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <EyeClosedIcon className="size-5 text-gray-400" />
@@ -229,50 +268,34 @@ const DeliverablesList = ({ milestones }: { milestones: MileStone[] }) => {
                               </TooltipContent>
                             </Tooltip>
                           )}
-                        </div>
-                      </div>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="max-h-[90vh] overflow-auto md:max-h-[80vh] md:max-w-[70vw]">
-                    <DialogDescription className="sr-only">
-                      {task.name}
-                    </DialogDescription>
-                    <DialogHeader className="relative">
-                      <DialogTitle className="mt-8 flex items-center gap-4 text-3xl font-semibold">
-                        {task.name}{" "}
-                        {task.visibility === "PRIVATE" && (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <EyeClosedIcon className="size-5 text-gray-400" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Hidden from the client</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        )}
-                      </DialogTitle>
-                      <span className="absolute left-0 top-0 text-sm text-gray-500">
-                        Task
-                      </span>
+                        </DialogTitle>
+                        <span className="absolute left-0 top-0 text-sm text-gray-500">
+                          Task
+                        </span>
 
-                      <Button
-                        variant="link"
-                        size="sm"
-                        className="absolute right-0 top-0 text-sm"
-                      >
-                        Request revision
-                      </Button>
-                    </DialogHeader>
-                    <DeliverableContent deliverable={task} />
+                        <Button
+                          variant="link"
+                          size="sm"
+                          className="absolute right-0 top-0 text-sm"
+                        >
+                          Request revision
+                        </Button>
+                      </DialogHeader>
+                      <TaskContent deliverable={task} />
 
-                    {/* <Notes /> */}
-                    <DialogFooter>
-                      <Button type="button">Mark as completed</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                      {/* <Notes /> */}
+                      <DialogFooter>
+                        <Button type="button">Mark as completed</Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
               ))}
-            <CreateTask type="BUTTOM" />
+            <CreateTask
+              type="BUTTOM"
+              milestones={milestones}
+              milestoneId={milestone.id}
+            />
           </div>
         ))}
       </div>

@@ -3,15 +3,11 @@
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
-import { SenderType } from "@prisma/client";
-
 import { prisma } from "@/lib/db";
-import { generateSlug } from "@/lib/utils";
 
 export async function createNote(
   content: string,
   taskId: string,
-  sender: SenderType,
   clientId?: string,
 ) {
   const session = await auth();

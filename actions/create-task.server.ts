@@ -6,17 +6,21 @@ import { auth } from "@/auth";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
-import { CreateDeliverableFormSchema } from "@/components/forms/create-task";
+import { CreateTaskFormSchema } from "@/components/forms/create-task";
 
-export async function createDeliverable(
-  data: z.infer<typeof CreateDeliverableFormSchema>,
-) {
+export async function createTask(data: z.infer<typeof CreateTaskFormSchema>) {
   const session = await auth();
   if (!session?.user.id) {
     throw new Error("Unauthorized");
   }
   try {
     const currentProjectId = session.user.currentProjectId;
+    const highestOrder = await prisma.task.findFirst({
+      where: { milestoneId: data.milestone },
+      orderBy: { order: "desc" },
+      select: { order: true },
+    });
+    const newOrder = (highestOrder?.order ?? 0) + 1;
     await prisma.task.create({
       data: {
         name: data.title,
@@ -24,6 +28,8 @@ export async function createDeliverable(
         visibility: data.visibility ? "PUBLIC" : "PRIVATE",
         content: data.content,
         projectId: currentProjectId,
+        milestoneId: data.milestone,
+        order: newOrder,
       },
     });
 
