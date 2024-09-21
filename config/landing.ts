@@ -2,9 +2,9 @@ import { FeatureLdg, InfoLdg, TestimonialType } from "types";
 
 export const infos: InfoLdg[] = [
   {
-    title: "Empower your projects",
+    title: "Créez rapidement des factures et devis professionnels.",
     description:
-      "Unlock the full potential of your projects with our open-source SaaS platform. Collaborate seamlessly, innovate effortlessly, and scale limitlessly.",
+      "Générez des factures et des devis professionnels en quelques minutes. Personnalisez-les avec votre logo et les détails de votre entreprise.",
     image: "/_static/illustrations/work-from-home.jpg",
     list: [
       {
