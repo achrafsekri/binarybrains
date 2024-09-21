@@ -2,25 +2,25 @@ import { FeatureLdg, InfoLdg, TestimonialType } from "types";
 
 export const infos: InfoLdg[] = [
   {
-    title: "Créez rapidement des factures et devis professionnels.",
+    title: "Comment ça marche ?",
     description:
-      "Générez des factures et des devis professionnels en quelques minutes. Personnalisez-les avec votre logo et les détails de votre entreprise.",
+      "Comment creez une facture ou devis en ligne en quelques clics ?",
     image: "/_static/illustrations/work-from-home.jpg",
     list: [
       {
-        title: "Collaborative",
-        description: "Work together with your team members in real-time.",
+        title: "Créez votre compte",
+        description: "Inscrivez-vous gratuitement sur notre plateforme.",
         icon: "laptop",
       },
       {
-        title: "Innovative",
-        description: "Stay ahead of the curve with access constant updates.",
+        title: "Créez une facture ou devis",
+        description: "Créez une facture ou devis en quelques clics.",
         icon: "settings",
       },
       {
-        title: "Scalable",
+        title: "Telechargez votre facture",
         description:
-          "Our platform offers the scalability needed to adapt to your needs.",
+          "Téléchargez votre facture ou devis au format PDF ou envoyez-le par email.",
         icon: "search",
       },
     ],
