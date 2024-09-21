@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
-import { taskSchema } from "@/app/(protected)/dashboard/scope-of-work/task-content";
+import { taskSchema } from "@/app/(protected)/dashboard/invoices/task-content";
 
 export async function UpdateDeliverable(
   id: string,

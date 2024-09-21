@@ -12,32 +12,20 @@ export const sidebarLinks: SidebarNavItem[] = [
       //   title: "Admin Panel",
       //   authorizeOnly: UserRole.ADMIN,
       // },
-      { href: "/dashboard", icon: "dashboard", title: "Dashboard" },
+      { href: "/dashboard", icon: "dashboard", title: "Tableau de bord" },
       {
-        href: "/dashboard/scope-of-work",
+        href: "/dashboard/invoices",
         icon: "handshake",
-        title: "Scope of Work",
+        title: "Facture",
       },
-      { href: "/dashboard/documents", icon: "page", title: "Documents" },
-      {
-        href: "/dashboard/clients",
-        icon: "smilePlus",
-        title: "Clients",
-      },
+      { href: "/dashboard/quotes", icon: "page", title: "Devis" },
       {
         href: "/dashboard/billing",
         icon: "billing",
         title: "Billing",
         authorizeOnly: UserRole.USER,
       },
-      // { href: "/dashboard/charts", icon: "lineChart", title: "Charts" },
-      // {
-      //   href: "/admin/orders",
-      //   icon: "package",
-      //   title: "Orders",
-      //   badge: 2,
-      //   authorizeOnly: UserRole.ADMIN,
-      // },
+
       {
         href: "#/dashboard/posts",
         icon: "post",
@@ -75,7 +63,6 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Settings",
         authorizeOnly: UserRole.ADMIN,
       },
-     
     ],
   },
 ];

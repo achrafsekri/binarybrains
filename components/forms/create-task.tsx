@@ -42,7 +42,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MileStone } from "@/app/(protected)/dashboard/scope-of-work/milestones-list";
+import { MileStone } from "@/app/(protected)/dashboard/invoices/milestones-list";
 
 import { MinimalTiptapEditor } from "../shared/minimal-tiptap";
 import { Spinner } from "../ui/spinner";

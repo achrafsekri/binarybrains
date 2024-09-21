@@ -27,30 +27,15 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
       ({ authorizeOnly }) => !authorizeOnly || authorizeOnly === user.role,
     ),
   }));
-  const projects = await prisma.userProject.findMany({
-    where: { userId: user.id },
-    include: { Project: true },
-  });
-  const currentProject = projects.find(
-    (p) => p.Project.id === user.currentProjectId,
-  );
 
   return (
     <div className="relative flex min-h-screen w-full">
-      <DashboardSidebar
-        links={filteredLinks}
-        projects={projects.map((p) => p.Project)}
-        currentProject={currentProject?.Project as Project}
-      />
+      <DashboardSidebar links={filteredLinks} />
 
       <div className="flex flex-1 flex-col">
         <header className="sticky top-0 z-50 flex h-14 bg-background px-4 lg:h-[60px] xl:px-8">
           <MaxWidthWrapper className="flex max-w-7xl items-center gap-x-3 px-0">
-            <MobileSheetSidebar
-              links={filteredLinks}
-              projects={projects.map((p) => p.Project)}
-              currentProject={currentProject?.Project as Project}
-            />
+            <MobileSheetSidebar links={filteredLinks} />
 
             <div className="w-full flex-1">
               <SearchCommand links={filteredLinks} />

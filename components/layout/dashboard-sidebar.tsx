@@ -4,7 +4,6 @@ import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavItem, SidebarNavItem } from "@/types";
-import { Project } from "@prisma/client";
 import { Menu, PanelLeftClose, PanelRightClose } from "lucide-react";
 
 import { siteConfig } from "@/config/site";
@@ -26,15 +25,9 @@ import { Icons } from "@/components/shared/icons";
 
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
-  projects: Project[];
-  currentProject: Project;
 }
 
-export function DashboardSidebar({
-  links,
-  projects,
-  currentProject,
-}: DashboardSidebarProps) {
+export function DashboardSidebar({ links }: DashboardSidebarProps) {
   const path = usePathname();
 
   // NOTE: Use this if you want save in local storage -- Credits: Hosna Qasmei
@@ -79,13 +72,6 @@ export function DashboardSidebar({
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
               <div className="flex h-14 items-center p-4 lg:h-[60px]">
-                {isSidebarExpanded ? (
-                  <ProjectSwitcher
-                    projects={projects}
-                    currentProject={currentProject}
-                  />
-                ) : null}
-
                 <Button
                   variant="ghost"
                   size="icon"
@@ -190,11 +176,7 @@ export function DashboardSidebar({
   );
 }
 
-export function MobileSheetSidebar({
-  links,
-  projects,
-  currentProject,
-}: DashboardSidebarProps) {
+export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const { isSm, isMobile } = useMediaQuery();
@@ -225,12 +207,6 @@ export function MobileSheetSidebar({
                     {siteConfig.name}
                   </span>
                 </Link>
-
-                <ProjectSwitcher
-                  large
-                  projects={projects}
-                  currentProject={currentProject}
-                />
 
                 {links.map((section) => (
                   <section
