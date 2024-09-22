@@ -7,7 +7,7 @@ export const marketingConfig: MarketingConfig = {
       href: "/",
     },
     {
-      title: "prix",
+      title: "Prix",
       href: "/pricing",
     },
     {
@@ -15,7 +15,7 @@ export const marketingConfig: MarketingConfig = {
       href: "/blog",
     },
     {
-      title: "contact",
+      title: "Contact",
       href: "/contact",
     },
   ],
