@@ -2,12 +2,10 @@ import React from "react";
 
 const Logo = () => {
   return (
-    <a href="/" className="">
-      <span className="text-xl transition duration-300 hover:text-gray-600 font-extrabold text-gray-800">
-        Allo
-        <span className="text-gradient_indigo-purple">Facture</span>
-      </span>
-    </a>
+    <span className="text-xl font-extrabold text-gray-800 transition duration-300 hover:text-gray-600">
+      Allo
+      <span className="text-gradient_indigo-purple">Facture</span>
+    </span>
   );
 };
 
