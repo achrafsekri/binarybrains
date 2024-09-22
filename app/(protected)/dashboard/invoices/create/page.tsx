@@ -3,6 +3,7 @@
 import { createContext, useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
+import { uuid } from "uuidv4";
 import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
@@ -15,7 +16,7 @@ const defaultInvoiceFormValues = {
     name: "Company Name", // Default company name
     address: "123 Company Street, City, Country", // Default company address
     phone: "+1 234 567 890", // Default phone number
-    email: null, // Optional, default to null
+    email: "3sTqI@example.com", // Optional, default to null
     siret: "123 456 789 00000", // Default SIRET number
     vatNumber: "FR12345678900", // Default VAT number
   },
@@ -66,10 +67,9 @@ const defaultInvoiceFormValues = {
   },
 
   InvoiceDetails: {
-    number: "INV-001", // Default invoice number
-    date: "2023-05-01", // Default invoice creation date
-    deliveryDate: "2023-05-05", // Default delivery date
-    dueDate: "2023-05-15", // Default due date
+    startingDate: new Date("2023-05-01"), // Default invoice creation date
+    deliveryDate:new Date ("2023-05-05"), // Default delivery date
+    dueDate: new Date("2023-05-15"), // Default due date
     subtotal: 1700, // Default subtotal
     vatRate: 20, // Default VAT rate
     vatAmount: 340, // Default VAT amount
@@ -78,16 +78,15 @@ const defaultInvoiceFormValues = {
     paymentDetails: null, // Optional, default to null
     legalMentions: null, // Optional, default to null
     paymentDate: null, // Optional, default to null
-    createdAt: "2023-05-01", // Default creation date
-    updatedAt: "2023-05-01", // Default update date
   },
 };
-``;
+
 
 export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
     name: z.string(),
     address: z.string(),
+    logo: z.string().nullable(),
     phone: z.string().nullable(),
     email: z.string().nullable(),
     siret: z.string().nullable(),
@@ -104,7 +103,6 @@ export const invoiceFormSchema = z.object({
 
   ProductsList: z.array(
     z.object({
-      id: z.string(),
       description: z.string(),
       quantity: z.number(),
       unitPrice: z.number(),
@@ -117,17 +115,18 @@ export const invoiceFormSchema = z.object({
   Settings: z.object({
     vatActivated: z.boolean().default(true),
     vatPerItem: z.boolean().default(false),
-    vatRate:z.number().default(20),
+    vatRate: z.number().default(20),
     devise: z.string().default("€"),
     color: z.string().default("Vert"), // Default box color
     showQuantity: z.boolean().default(true), // Activate quantity column
     showUnit: z.boolean().default(false), // Deactivate unit column
-
   }),
 
   InvoiceDetails: z.object({
-    number: z.string(),
-    date: z.string(),
+    id: z.string().uuid(),
+    startingDate: z.date().nullable(),
+    deliveryDate: z.date().nullable(),
+    dueDate: z.date().nullable(),
     subtotal: z.number(),
     vatRate: z.number().nullable(),
     vatAmount: z.number().nullable(),
@@ -136,13 +135,12 @@ export const invoiceFormSchema = z.object({
     paymentDetails: z.string().nullable(),
     legalMentions: z.string().nullable(),
     paymentDate: z.string().nullable(),
-    dueDate: z.string().nullable(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
   }),
 });
 
-export const invoiceFormContext = createContext<UseFormReturn<z.infer<typeof invoiceFormSchema>> | null>(null);
+export const invoiceFormContext = createContext<UseFormReturn<
+  z.infer<typeof invoiceFormSchema>
+> | null>(null);
 export default function Page() {
   const form = useForm<z.infer<typeof invoiceFormSchema>>({
     resolver: zodResolver(invoiceFormSchema),
@@ -152,12 +150,15 @@ export default function Page() {
     console.log(values);
   }
   return (
-    <main >
+    <main>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-3 gap-4 p-4">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-3 gap-4 p-4"
+        >
           <invoiceFormContext.Provider value={form}>
-          <InvoiceIntervace />
-          <SettingBar />
+            <InvoiceIntervace />
+            <SettingBar />
           </invoiceFormContext.Provider>
         </form>
       </Form>
