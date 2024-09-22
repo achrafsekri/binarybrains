@@ -24,35 +24,32 @@ const defaultInvoiceFormValues = {
   ClientDetails: {
     name: "John Doe", // Default client name
     address: "456 Client Street, Client City, Client Country", // Default client address
-    siret: null, // Optional field, default is null
+    siret: " 123 456 789 00000", // Optional field, default is null
     phone: "+1 987 654 321", // Default client contact
-    email: null, // Optional field, default is null
+    email: "vLlTq@example.com", // Optional field, default is null
   },
 
   ProductsList: [
     {
-      description: "Website Design", // Default product 1
+      name: "Website Design", // Default product 1
       quantity: 1, // Default quantity
       unitPrice: 1000, // Default unit price
       totalPrice: 1000, // Default total price
-      totalVat: null, // Optional VAT field, default is null
-      vatRate: null, // Optional VAT rate, default is null
+      vatRate: 0, // Optional VAT rate, default is 0
     },
     {
-      description: "Logo Design", // Default product 2
+      name: "Logo Design", // Default product 2
       quantity: 1, // Default quantity
       unitPrice: 500, // Default unit price
       totalPrice: 500, // Default total price
-      totalVat: null, // Optional VAT field, default is null
-      vatRate: null, // Optional VAT rate, default is null
+      vatRate: 0, // Optional VAT rate, default is 0
     },
     {
-      description: "Hosting (per year)", // Default product 3
+      name: "Hosting (per year)", // Default product 3
       quantity: 1, // Default quantity
       unitPrice: 200, // Default unit price
       totalPrice: 200, // Default total price
-      totalVat: null, // Optional VAT field, default is null
-      vatRate: null, // Optional VAT rate, default is null
+      vatRate: 0, // Optional VAT rate, default is null
     },
   ],
 
@@ -61,7 +58,7 @@ const defaultInvoiceFormValues = {
     vatPerItem: false, // VAT per item not activated
     devise: "€", // Default currency is Euro
     vatRate: 20, // Default VAT rate
-    color: "Vert", // Default box color
+    color: "6b7280", // Default box color
     showQuantity: true, // Activate quantity column
     showUnit: false, // Deactivate unit column
   },
@@ -103,11 +100,10 @@ export const invoiceFormSchema = z.object({
 
   ProductsList: z.array(
     z.object({
-      description: z.string(),
+      name: z.string(),
       quantity: z.number(),
       unitPrice: z.number(),
       totalPrice: z.number(),
-      totalVat: z.number().nullable(),
       vatRate: z.number().nullable(),
     }),
   ),

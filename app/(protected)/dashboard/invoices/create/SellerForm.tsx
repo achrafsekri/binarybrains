@@ -7,6 +7,8 @@ import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { invoiceFormContext } from "./page";
+import { FileUploader } from "@/components/shared/file-uploader";
+import { InvoiceFileUploader } from "@/components/shared/invoice-file-uploader";
 
 export default function SellerForm() {
   const form = useContext(invoiceFormContext);
@@ -65,8 +67,8 @@ export default function SellerForm() {
 
   return (
     <div className="flex flex-col items-center space-x-4">
-      <div className="flex h-16 w-full items-center justify-start rounded-full bg-gray-200 px-4 text-gray-500">
-        Logo
+      <div className=" w-full items-center justify-start relative">
+        <InvoiceFileUploader/>
       </div>
       <div className="flex flex-col space-y-1">
         {Object.keys(sellerDetails).map(
@@ -123,14 +125,14 @@ export default function SellerForm() {
               />
             ),
         )}
-        <div className="flex w-full justify-center">
+        <div className="flex w-full justify-center group">
         <Button
           variant={"ghost"}
           //@ts-ignore
           onClick={()=>form?.resetField(`SellerDetails.${add[0]}`)}
           className={cn(
             "invisible size-fit rounded-full p-2 text-primary hover:text-primary",
-            add.length > 0 && "visible",
+            add.length > 0 && "group-hover:visible",
           )}
         >
           <Plus className="size-4" />

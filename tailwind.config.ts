@@ -15,8 +15,8 @@ const config = {
   },
   prefix: "",
   theme: {
-    colors:{
-      "indigo-purple":"#7f5af0",
+    colors: {
+      "indigo-purple": "#7f5af0",
     },
     container: {
       center: true,
@@ -141,6 +141,7 @@ const config = {
         "fade-in": "fade-in 0.4s",
         "fade-out": "fade-out 0.4s",
       },
+      
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

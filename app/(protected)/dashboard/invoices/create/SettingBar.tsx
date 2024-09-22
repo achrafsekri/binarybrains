@@ -156,9 +156,9 @@ export default function SettingBar() {
                   <SelectValue placeholder="Sélectionnez une couleur" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gray">Gris</SelectItem>
-                  <SelectItem value="blue">Bleu</SelectItem>
-                  <SelectItem value="green">Vert</SelectItem>
+                  <SelectItem value="6b7280">Gris</SelectItem>
+                  <SelectItem value="3b82f6">Bleu</SelectItem>
+                  <SelectItem value="22c55e">Vert</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>

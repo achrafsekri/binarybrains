@@ -60,14 +60,14 @@ export default function InvoiceDetails() {
             />
           ),
       )}
-      <div className="flex w-full justify-center">
+      <div className="flex w-full justify-center group">
         <Button
           variant={"ghost"}
           //@ts-ignore
           onClick={()=>form?.resetField(`InvoiceDetails.${add[0]}`)}
           className={cn(
             "invisible size-fit rounded-full p-2 text-primary hover:text-primary",
-            add.length > 0 && "visible",
+            add.length > 0 && "group-hover:visible",
           )}
         >
           <Plus className="size-4" />
