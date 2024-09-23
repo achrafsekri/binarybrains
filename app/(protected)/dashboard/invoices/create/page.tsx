@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
 import { uuid } from "uuidv4";
 import { z } from "zod";
 
@@ -13,6 +14,7 @@ import SettingBar from "./SettingBar";
 
 const defaultInvoiceFormValues = {
   SellerDetails: {
+    logo: "jazjkaj",
     name: "Company Name", // Default company name
     address: "123 Company Street, City, Country", // Default company address
     phone: "+1 234 567 890", // Default phone number
@@ -64,8 +66,9 @@ const defaultInvoiceFormValues = {
   },
 
   InvoiceDetails: {
+    id: "9cd3a703-e23b-44da-af54-d54132d908a3",
     startingDate: new Date("2023-05-01"), // Default invoice creation date
-    deliveryDate:new Date ("2023-05-05"), // Default delivery date
+    deliveryDate: new Date("2023-05-05"), // Default delivery date
     dueDate: new Date("2023-05-15"), // Default due date
     subtotal: 1700, // Default subtotal
     vatRate: 20, // Default VAT rate
@@ -77,7 +80,6 @@ const defaultInvoiceFormValues = {
     paymentDate: null, // Optional, default to null
   },
 };
-
 
 export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -137,19 +139,25 @@ export const invoiceFormSchema = z.object({
 export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
+
 export default function Page() {
   const form = useForm<z.infer<typeof invoiceFormSchema>>({
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: defaultInvoiceFormValues,
   });
+  function OnError(error) {
+    toast.error(JSON.stringify(error));
+
+    console.log(error);
+  }
   function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    console.log(values);
+    console.log("submitted", values);
   }
   return (
     <main>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(onSubmit, OnError)}
           className="grid grid-cols-3 gap-4 p-4"
         >
           <invoiceFormContext.Provider value={form}>
