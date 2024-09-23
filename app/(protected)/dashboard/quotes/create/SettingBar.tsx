@@ -30,7 +30,7 @@ export default function SettingBar() {
   form?.watch("Settings");
 
   return (
-    <Card className="mx-auto h-fit w-full max-w-md">
+    <Card className="mx-auto h-fit w-full max-w-md sticky top-16 bg-white z-10">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Réglages</CardTitle>
       </CardHeader>
