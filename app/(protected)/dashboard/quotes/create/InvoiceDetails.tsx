@@ -13,7 +13,7 @@ export default function InvoiceDetails() {
   form?.watch("InvoiceDetails");
   const dates = {
     startingDate: {
-      label: "Created:",
+      label: "Crée-le:",
       value: form?.getValues("InvoiceDetails.startingDate"), // Default invoice creation date
     },
     deliveryDate: {
@@ -21,7 +21,7 @@ export default function InvoiceDetails() {
       value: form?.getValues("InvoiceDetails.deliveryDate"), // Default delivery date
     },
     dueDate: {
-      label: "Due:",
+      label: "échéance:",
       value: form?.getValues("InvoiceDetails.dueDate"), // Default due date
     },
   };
@@ -41,7 +41,7 @@ export default function InvoiceDetails() {
               key={key}
               control={form?.control}
               render={({ field }) => (
-                <FormItem className="font-gray-600 group flex items-end justify-end gap-1 text-center text-sm">
+                <FormItem className="font-gray-600 group flex items-end justify-start gap-1 text-sm text-center">
                   <Button
                     onClick={() => field.onChange(null)}
                     variant={"ghost"}

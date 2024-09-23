@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import CreateMilestone from "@/components/forms/create-milestone";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
+import { DataTable } from "./Table";
 
 export const metadata = constructMetadata({
   title: "Mes factures- alloFacture",
   description: "Suivez les factures et les paiements pour vos projets.",
 });
+
 
 export default async function ScopeOfWork() {
   const invoices = [];
@@ -40,9 +42,7 @@ export default async function ScopeOfWork() {
         </EmptyPlaceholder>
       )}
       {invoices!.length > 0 && (
-        <div className="rounded-lg border border-dashed p-8 shadow-sm animate-in fade-in-50">
-          liste de devis
-        </div>
+        <DataTable />
       )}
     </>
   );
