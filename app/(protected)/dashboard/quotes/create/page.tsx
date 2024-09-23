@@ -150,7 +150,7 @@ export default function Page() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="grid grid-cols-3 gap-4 p-4"
+          className="grid grid-cols-3 gap-4 py-4"
         >
           <invoiceFormContext.Provider value={form}>
             <InvoiceIntervace />

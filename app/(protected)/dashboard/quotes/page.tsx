@@ -41,7 +41,7 @@ export default async function ScopeOfWork() {
       )}
       {invoices!.length > 0 && (
         <div className="rounded-lg border border-dashed p-8 shadow-sm animate-in fade-in-50">
-          invoice list
+          liste de devis
         </div>
       )}
     </>
