@@ -15,6 +15,9 @@ const config = {
   },
   prefix: "",
   theme: {
+    colors: {
+      "indigo-purple": "#7f5af0",
+    },
     container: {
       center: true,
       padding: ".8rem",
@@ -27,7 +30,7 @@ const config = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#7f5af0",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -138,6 +141,7 @@ const config = {
         "fade-in": "fade-in 0.4s",
         "fade-out": "fade-out 0.4s",
       },
+      
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
