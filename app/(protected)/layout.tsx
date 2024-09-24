@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { Project } from "@prisma/client";
+// import { Project } from "@prisma/client";
 
 import { sidebarLinks } from "@/config/dashboard";
 import { prisma } from "@/lib/db";

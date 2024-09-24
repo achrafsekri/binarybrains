@@ -26,11 +26,10 @@ export default function InvoiceDetails() {
     },
   };
   const add = Object.keys(dates).filter((key) => dates[key].value === null);
-  
   return (
     <div className="text-right">
       <h2 className="font-gray-800 mb-2 text-xl font-semibold">
-        #INV-001
+       #{form?.getValues("InvoiceDetails.id")}
       </h2>
       {Object.keys(dates).map(
         (key) =>
