@@ -54,12 +54,18 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
                 {isYearly && offer.prices.monthly > 0 ? (
                   <>
                     <span className="mr-2 text-muted-foreground/80 line-through">
-                      ${offer.prices.monthly}
+                      €{offer.prices.monthly}
                     </span>
-                    <span>${offer.prices.yearly / 12}</span>
+                    <span>
+                      €
+                      {
+                        //rround
+                        Math.round((offer.prices.yearly / 12) * 100) / 100
+                      }
+                    </span>
                   </>
                 ) : (
-                  `$${offer.prices.monthly}`
+                  `€${offer.prices.monthly}`
                 )}
               </div>
               <div className="-mb-1 ml-2 text-left text-sm font-medium text-muted-foreground">
@@ -70,8 +76,8 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
           {offer.prices.monthly > 0 ? (
             <div className="text-left text-sm text-muted-foreground">
               {isYearly
-                ? `$${offer.prices.yearly} will be charged when annual`
-                : "when charged monthly"}
+                ? `€${offer.prices.yearly} sera facturé annuellement`
+                : "en cas de facturation mensuelle"}
             </div>
           ) : null}
         </div>
@@ -139,7 +145,7 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
   return (
     <MaxWidthWrapper>
       <section className="flex flex-col items-center text-center">
-        <HeaderSection label="Pricing" title="Start at full speed !" />
+        <HeaderSection label="Les prix" title="Choisissez votre plan" />
 
         <div className="mb-4 mt-10 flex items-center gap-5">
           <ToggleGroup
@@ -155,14 +161,14 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
               className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
               aria-label="Toggle yearly billing"
             >
-              Yearly (-20%)
+              Annuel (-20%)
             </ToggleGroupItem>
             <ToggleGroupItem
               value="monthly"
               className="rounded-full px-5 data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
               aria-label="Toggle monthly billing"
             >
-              Monthly
+              Mensuel
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
@@ -174,18 +180,14 @@ export function PricingCards({ userId, subscriptionPlan }: PricingCardsProps) {
         </div>
 
         <p className="mt-3 text-balance text-center text-base text-muted-foreground">
-          Email{" "}
+          Envoyez un email à{" "}
           <a
             className="font-medium text-primary hover:underline"
-            href="mailto:support@saas-starter.com"
+            href="mailto:info@allofacture.com"
           >
-            support@saas-starter.com
+            info@allofacture.com
           </a>{" "}
-          for to contact our support team.
-          <br />
-          <strong>
-            You can test the subscriptions and won&apos;t be charged.
-          </strong>
+          pour toute question.
         </p>
       </section>
     </MaxWidthWrapper>

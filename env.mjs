@@ -18,6 +18,7 @@ export const env = createEnv({
     AWS_S3_BUCKET_NAME: z.string().min(1),
     AWS_KEY_ID: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
+    EMAIL_SENDER:z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_APP_URL: z.string().min(1),
@@ -35,6 +36,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     RESEND_API_KEY: process.env.RESEND_API_KEY,
     EMAIL_FROM: process.env.EMAIL_FROM,
+    EMAIL_SENDER: process.env.EMAIL_SENDER,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     // Stripe
     STRIPE_API_KEY: process.env.STRIPE_API_KEY,

@@ -34,12 +34,14 @@ export default function Features() {
                     <div className="relative flex size-12 rounded-2xl border border-border shadow-sm *:relative *:m-auto *:size-6">
                       <Icon />
                     </div>
-
-                    <p className="mt-6 pb-6 text-muted-foreground">
+                    <h3 className="mt-6 text-xl font-bold text-gray-800 md:text-2xl">
+                      {feature.title}
+                    </h3>
+                    <p className="mt-3 pb-6 text-muted-foreground">
                       {feature.description}
                     </p>
 
-                    <div className="-mb-5 flex gap-3 border-t border-muted py-4 md:-mb-7">
+                    {/* <div className="-mb-5 flex gap-3 border-t border-muted py-4 md:-mb-7">
                       <Button
                         variant="secondary"
                         size="sm"
@@ -51,7 +53,7 @@ export default function Features() {
                           <Icons.arrowUpRight className="size-4" />
                         </Link>
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               );
