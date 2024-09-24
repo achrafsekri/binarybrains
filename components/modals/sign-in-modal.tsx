@@ -30,7 +30,7 @@ function SignInModal({
             <Logo />
           </a>
           <h3 className="font-urban text-2xl font-bold">
-            S'identifier pour continuer
+            S&apos;identifier pour continuer
           </h3>
           <p className="text-sm text-gray-500">
             Connectez-vous à votre compte pour accéder à toutes les fonctionnalités

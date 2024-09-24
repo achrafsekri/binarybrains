@@ -4,7 +4,6 @@ import { Plus } from "lucide-react";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
-import CreateMilestone from "@/components/forms/create-milestone";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 export const metadata = constructMetadata({

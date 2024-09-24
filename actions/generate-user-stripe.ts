@@ -15,7 +15,7 @@ export type responseAction = {
 // const billingUrl = absoluteUrl("/dashboard/billing")
 const billingUrl = absoluteUrl("/pricing");
 const success_url = absoluteUrl("/payment-status/success");
-const cancel_url = absoluteUrl("/payment-status/cancel");
+const cancel_url = absoluteUrl("/payment-status/failed");
 
 export async function generateUserStripe(
   priceId: string,

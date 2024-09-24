@@ -190,7 +190,7 @@ export default function BentoGrid() {
                 </h2>
                 <p className="text-muted-foreground">
                   Il vous suffit de créer une facture ou un devis et de
-                  l'envoyer à votre client par courrier électronique ou de le
+                  l&apos;envoyer à votre client par courrier électronique ou de le
                   télécharger au format PDF.
                 </p>
               </div>

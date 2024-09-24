@@ -132,7 +132,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
             preview: URL.createObjectURL(file),
           }),
         );
-
+        // @ts-ignore
         const updatedFiles = files ? [...files, ...newFiles] : newFiles;
 
         setFiles(updatedFiles);
@@ -167,6 +167,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
 
     function onRemove(index: number) {
       if (!files) return;
+      //@ts-expect-error
       const newFiles = files.filter((_, i) => i !== index);
       setFiles(newFiles);
       onValueChange?.(newFiles);
@@ -176,6 +177,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     React.useEffect(() => {
       return () => {
         if (!files) return;
+        //@ts-expect-error
         files.forEach((file) => {
           if (isFileWithPreview(file)) {
             URL.revokeObjectURL(file.preview);
@@ -200,6 +202,7 @@ const FileUploader = React.forwardRef<HTMLDivElement, FileUploaderProps>(
     return (
       <FileUploaderContext.Provider
         value={{
+          //@ts-expect-error
           files: files ?? [],
           maxFiles,
           maxSize,
