@@ -15,9 +15,6 @@ const config = {
   },
   prefix: "",
   theme: {
-    colors: {
-      "indigo-purple": "#7f5af0",
-    },
     container: {
       center: true,
       padding: ".8rem",
@@ -25,6 +22,7 @@ const config = {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "indigo-purple": "#7f5af0",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -141,7 +139,6 @@ const config = {
         "fade-in": "fade-in 0.4s",
         "fade-out": "fade-out 0.4s",
       },
-      
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
