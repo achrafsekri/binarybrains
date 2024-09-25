@@ -1,4 +1,3 @@
-import { getCurrentProject } from "@/lib/queries";
 import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,14 +10,12 @@ export const metadata = constructMetadata({
 });
 
 export default async function DashboardPage() {
-  const user = await getCurrentUser();
-  const currentProject = await getCurrentProject();
 
   return (
     <>
       <DashboardHeader
         heading="Dashboard"
-        text={`Current Project : ${currentProject?.name} — Change your role in settings.`}
+        text={` Change your role in settings.`}
       />
       <EmptyPlaceholder>
         <EmptyPlaceholder.Icon name="post" />

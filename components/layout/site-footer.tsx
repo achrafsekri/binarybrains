@@ -1,12 +1,12 @@
 import * as React from "react";
 import Link from "next/link";
-
-import { footerLinks, siteConfig } from "@/config/site";
+import { FaCcMastercard, FaCcPaypal, FaCcVisa } from "react-icons/fa";
+import { FaCcApplePay } from "react-icons/fa6";
+import { LiaCcAmex } from "react-icons/lia";
+import { MdOutlineSecurity } from "react-icons/md";
+import { footerLinks } from "@/config/site";
 import { cn } from "@/lib/utils";
-import { ModeToggle } from "@/components/layout/mode-toggle";
-
 import { NewsletterForm } from "../forms/newsletter-form";
-import { Icons } from "../shared/icons";
 
 export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
   return (
@@ -42,45 +42,31 @@ export function SiteFooter({ className }: React.HTMLAttributes<HTMLElement>) {
             Copyright &copy; 2024. All rights reserved.
           </span> */}
           <p className="text-left text-sm text-muted-foreground">
-            Built by{" "}
-            <Link
-              href={siteConfig.links.twitter}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              mickasmt
-            </Link>
-            . Hosted on{" "}
-            <Link
-              href="https://vercel.com"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              Vercel
-            </Link>
-            . Illustrations by{" "}
-            <Link
-              href="https://popsy.co"
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              Popsy
-            </Link>
+            Tous droits réservés &copy; {new Date().getFullYear()}.
           </p>
 
           <div className="flex items-center gap-3">
-            <Link
-              href={siteConfig.links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              <Icons.gitHub className="size-5" />
-            </Link>
-            <ModeToggle />
+            <MdOutlineSecurity className="size-6 text-muted-foreground hover:text-indigo-700" />
+            <FaCcVisa
+              className="size-6 text-muted-foreground hover:text-indigo-700"
+              title="Visa"
+            />
+            <FaCcMastercard
+              className="size-6 text-muted-foreground hover:text-indigo-700"
+              title="Mastercard"
+            />
+            <LiaCcAmex
+              className="size-6 text-muted-foreground hover:text-indigo-700"
+              title="American Express"
+            />
+            <FaCcPaypal
+              className="size-6 text-muted-foreground hover:text-indigo-700"
+              title="Paypal"
+            />
+            <FaCcApplePay
+              className="size-6 text-muted-foreground hover:text-indigo-700"
+              title="Apple Pay"
+            />
           </div>
         </div>
       </div>

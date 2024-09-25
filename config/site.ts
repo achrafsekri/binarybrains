@@ -4,16 +4,15 @@ import { env } from "@/env.mjs";
 const site_url = env.NEXT_PUBLIC_APP_URL;
 
 export const siteConfig: SiteConfig = {
-  name: "Modhif",
-  description:
-    "A simple app that allows freelancers to better communicate with their clients.",
+  name: "AlloFacture",
+  description: "Créez rapidement des factures et devis professionnels.",
   url: site_url,
   ogImage: `${site_url}/_static/og.jpg`,
   links: {
-    twitter: "https://twitter.com/miickasmt",
+    twitter: "https://twitter.com/allofacture",
     github: "https://github.com/mickasmt/next-saas-stripe-starter",
   },
-  mailSupport: "support@saas-starter.com",
+  mailSupport: "info@allofacture.com",
 };
 
 export const footerLinks: SidebarNavItem[] = [
@@ -21,7 +20,6 @@ export const footerLinks: SidebarNavItem[] = [
     title: "Company",
     items: [
       { title: "About", href: "#" },
-      { title: "Enterprise", href: "#" },
       { title: "Terms", href: "/terms" },
       { title: "Privacy", href: "/privacy" },
     ],
@@ -32,16 +30,15 @@ export const footerLinks: SidebarNavItem[] = [
       { title: "Security", href: "#" },
       { title: "Customization", href: "#" },
       { title: "Customers", href: "#" },
-      { title: "Changelog", href: "#" },
     ],
   },
   {
-    title: "Docs",
+    title: "Comment?",
     items: [
-      { title: "Introduction", href: "#" },
-      { title: "Installation", href: "#" },
-      { title: "Components", href: "#" },
-      { title: "Code Blocks", href: "#" },
+      { title: "Comment creer une facture?", href: "#" },
+      { title: "Comment creer un devis?", href: "#" },
+      { title: "Comment envoyer une facture?", href: "#" },
+      { title: "Comment ajouter un client?", href: "#" },
     ],
   },
 ];

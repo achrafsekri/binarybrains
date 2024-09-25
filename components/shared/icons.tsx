@@ -35,10 +35,27 @@ import {
   Users,
   X,
 } from "lucide-react";
+import { LiaFileInvoiceDollarSolid, LiaRedoAltSolid } from "react-icons/lia";
+import { PiInvoiceLight, PiUsers } from "react-icons/pi";
+import { VscFilePdf } from "react-icons/vsc";
+import { GoMail } from "react-icons/go";
+
+import {
+  TbCircleNumber1,
+  TbCircleNumber2,
+  TbCircleNumber3,
+} from "react-icons/tb";
 
 export type Icon = LucideIcon;
 
 export const Icons = {
+  one: TbCircleNumber1,
+  two: TbCircleNumber2,
+  three: TbCircleNumber3,
+  reuse: LiaRedoAltSolid,
+  mail: GoMail,
+  pdf: VscFilePdf,
+  clients: PiUsers,
   add: Plus,
   arrowRight: ArrowRight,
   arrowUpRight: ArrowUpRight,
@@ -102,6 +119,8 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  invoice: LiaFileInvoiceDollarSolid,
+  quote: PiInvoiceLight,
   handshake: Handshake,
   help: HelpCircle,
   home: Home,
@@ -138,6 +157,6 @@ export const Icons = {
     </svg>
   ),
   user: User,
-  users:Users,
+  users: Users,
   warning: AlertTriangle,
 };

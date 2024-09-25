@@ -21,30 +21,8 @@ export const uploadFilesToServer = async (
   const user = session.user;
   try {
     // upload multiple assets to the server
-    await prisma.milestone.update({
-      where: { id: taskId },
-      data: {
-        Assets: {
-          create: files.map((file) => ({
-            name: file.name,
-            type: file.type.includes("image")
-              ? "IMAGE"
-              : file.type.includes("video")
-                ? "VIDEO"
-                : file.type.includes("audio")
-                  ? "AUDIO"
-                  : "DOCUMENT",
-            Project: {
-              connect: {
-                id: user.currentProjectId,
-              },
-            },
-            url: file.url.split("?")[0],
-          })),
-        },
-      },
-    });
-    revalidatePath("/dashboard/scope-of-work");
+
+    revalidatePath("/dashboard");
     return "All files uploaded successfully";
   } catch (error) {
     console.error("Some files failed to upload", error);

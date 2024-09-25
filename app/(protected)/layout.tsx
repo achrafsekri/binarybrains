@@ -1,8 +1,5 @@
 import { redirect } from "next/navigation";
-// import { Project } from "@prisma/client";
-
 import { sidebarLinks } from "@/config/dashboard";
-import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 import { SearchCommand } from "@/components/dashboard/search-command";
 import {
