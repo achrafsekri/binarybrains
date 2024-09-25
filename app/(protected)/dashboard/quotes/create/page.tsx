@@ -151,15 +151,12 @@ export default function Page(props) {
     console.log(error);
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    // const client = await createCustomer(values.ClientDetails);
-    // console.log("waiting submit:", values);
     try {
       const quote = await createQuote(values);
       if (quote) {
-        // toast.success("Quote created successfully");
-        console.log("submitted", quote);
+        toast.success("Le devis a été créé avec succès");
       } else {
-        toast.error("Error creating quote");
+        toast.error("Erreur lors de la création du devis");
       }
     } catch (e) {
       console.log(e);
