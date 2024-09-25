@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
+import { QuoteWithRelations } from "@/types/quote-with-relations";
+import { prisma } from "@/lib/db";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
@@ -14,14 +16,20 @@ export const metadata = constructMetadata({
 });
 
 export default async function ScopeOfWork() {
-  const invoices = [];
+  const quotes: QuoteWithRelations[] = await prisma.quote.findMany({
+    include: {
+      seller: true,
+      customer: true,
+    },
+  });
+  console.log("les devis: ", quotes);
   return (
     <>
       <DashboardHeader
         heading="Mes devis"
         text={`Suivez les devis pour vos projets.`}
       />
-      {invoices!.length == 0 && (
+      {quotes!.length == 0 && (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />
           <EmptyPlaceholder.Title>
@@ -40,7 +48,8 @@ export default async function ScopeOfWork() {
           </Link>
         </EmptyPlaceholder>
       )}
-      {invoices!.length > 0 && <DataTable />}
+      {/* @ts-ignore */}
+      {quotes!.length > 0 && <DataTable data={quotes} />}
     </>
   );
 }
