@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Quote } from "@prisma/client";
+import { Customer, Quote, Seller } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
+import { QuoteWithRelations } from "@/types/quote-with-relations";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export const columns: ColumnDef<Partial<Quote>>[] = [
+export const columns: ColumnDef<QuoteWithRelations>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -46,7 +47,7 @@ export const columns: ColumnDef<Partial<Quote>>[] = [
     ),
   },
   {
-    accessorKey: "client",
+    accessorKey: "customer",
     header: ({ column }) => {
       return (
         <Button
@@ -59,11 +60,11 @@ export const columns: ColumnDef<Partial<Quote>>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="ml-4 lowercase">{row.getValue("client")}</div>
+      <div className="ml-4 lowercase">{(row.getValue("customer") as Customer).name}</div>
     ),
   },
   {
-    accessorKey: "company",
+    accessorKey: "seller",
     header: ({ column }) => {
       return (
         <div className="">
@@ -78,7 +79,7 @@ export const columns: ColumnDef<Partial<Quote>>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="ml-4 lowercase">{row.getValue("company")}</div>
+      <div className="ml-4 lowercase">{(row.getValue("seller") as Seller).name}</div>
     ),
   },
   {
@@ -94,13 +95,13 @@ export const columns: ColumnDef<Partial<Quote>>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{(row.getValue("customer") as Customer).email}</div>,
   },
   {
-    accessorKey: "amount",
+    accessorKey: "total",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const amount = parseFloat(row.getValue("total"));
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {

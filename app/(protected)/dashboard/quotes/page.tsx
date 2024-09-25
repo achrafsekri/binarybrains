@@ -22,7 +22,6 @@ export default async function ScopeOfWork() {
       customer: true,
     },
   });
-  console.log("les devis: ", quotes);
   return (
     <>
       <DashboardHeader
