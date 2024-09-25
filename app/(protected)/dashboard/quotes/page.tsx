@@ -30,7 +30,7 @@ export default async function ScopeOfWork() {
           <EmptyPlaceholder.Description>
             Créez un devis pour commencer à suivre le travail effectué.
           </EmptyPlaceholder.Description>
-          <Link href="/dashboard/invoices/create">
+          <Link href="/dashboard/quotes/create">
             <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
               <Plus size={18} className="" />
               <span className="flex-1 truncate text-center">

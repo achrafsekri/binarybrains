@@ -87,6 +87,7 @@ model Seller {
   email     String?
   siret     String?   @unique
   vatNumber String?
+  logo      String? 
   userId    String
   user      User      @relation(fields: [userId], references: [id])
   invoices  Invoice[]
@@ -161,6 +162,7 @@ model Quote {
 
 model Item {
   id          String  @id @default(uuid())
+  name        String 
   description String
   quantity    Int
   unitPrice   Float
@@ -173,6 +175,7 @@ model Item {
 
 model QuoteItem {
   id          String @id @default(uuid())
+  name        String 
   description String
   quantity    Int
   unitPrice   Float

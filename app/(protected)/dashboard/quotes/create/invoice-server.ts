@@ -13,6 +13,7 @@ export const createInvoice = async (data) => {
     throw error;
   }
 };
+
 export const createSeller = async (data) => {
   try {
     const res = await prisma.seller.create({ data });
