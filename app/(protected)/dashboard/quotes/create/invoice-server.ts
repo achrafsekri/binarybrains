@@ -1,8 +1,31 @@
 "use server";
 
+import { Customer, Seller } from "@prisma/client";
+
 import { QuoteForm } from "@/types/quote-form";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+
+export const customerExists = async (ClientDetails: Partial<Customer>) => {
+  return await prisma.customer.findFirst({
+    where: {
+      name: ClientDetails.name,
+      email: ClientDetails.email,
+      siret: ClientDetails.siret,
+    },
+  });
+};
+
+export const sellerExists = async (SellerDetails: Partial<Seller>) => {
+  return await prisma.seller.findFirst({
+    where: {
+      name: SellerDetails.name,
+      address: SellerDetails.address,
+      phone: SellerDetails.phone,
+      siret: SellerDetails.siret,
+    },
+  });
+};
 
 export const createQuote = async (data: QuoteForm) => {
   try {
@@ -19,14 +42,7 @@ export const createQuote = async (data: QuoteForm) => {
     const userId = user?.id;
 
     // Create or get the seller
-    const existingSeller = await prisma.seller.findFirst({
-      where: {
-        name: SellerDetails.name,
-        address: SellerDetails.address,
-        phone: SellerDetails.phone,
-        siret: SellerDetails.siret,
-      },
-    });
+    const existingSeller = await sellerExists(SellerDetails);
 
     const sellerId = existingSeller
       ? existingSeller.id
@@ -45,13 +61,7 @@ export const createQuote = async (data: QuoteForm) => {
         ).id;
 
     // Create or get the customer
-    const existingCustomer = await prisma.customer.findFirst({
-      where: {
-        name: ClientDetails.name,
-        email: ClientDetails.email,
-        siret: ClientDetails.siret,
-      },
-    });
+    const existingCustomer = await customerExists(ClientDetails);
 
     const customerId = existingCustomer
       ? existingCustomer.id
