@@ -22,11 +22,10 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import { invoiceFormContext } from "./page";
+import {  invoiceFormContext } from "./page";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);
-
   form?.watch("Settings");
 
   return (

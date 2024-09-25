@@ -13,7 +13,7 @@ export default function InvoiceDetails() {
   form?.watch("InvoiceDetails");
   const dates = {
     startingDate: {
-      label: "Crée-le:",
+      label: "Created:",
       value: form?.getValues("InvoiceDetails.startingDate"), // Default invoice creation date
     },
     deliveryDate: {
@@ -21,16 +21,15 @@ export default function InvoiceDetails() {
       value: form?.getValues("InvoiceDetails.deliveryDate"), // Default delivery date
     },
     dueDate: {
-      label: "échéance:",
+      label: "Due:",
       value: form?.getValues("InvoiceDetails.dueDate"), // Default due date
     },
   };
   const add = Object.keys(dates).filter((key) => dates[key].value === null);
-  
   return (
     <div className="text-right">
       <h2 className="font-gray-800 mb-2 text-xl font-semibold">
-        #INV-001
+       #{form?.getValues("InvoiceDetails.id")}
       </h2>
       {Object.keys(dates).map(
         (key) =>
@@ -41,7 +40,7 @@ export default function InvoiceDetails() {
               key={key}
               control={form?.control}
               render={({ field }) => (
-                <FormItem className="font-gray-600 group flex items-end justify-start gap-1 text-sm text-center">
+                <FormItem className="font-gray-600 group flex items-end justify-end gap-1 text-center text-sm">
                   <Button
                     onClick={() => field.onChange(null)}
                     variant={"ghost"}

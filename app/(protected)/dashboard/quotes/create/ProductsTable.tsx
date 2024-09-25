@@ -83,7 +83,7 @@ export default function ProductsTable() {
         </TableHeader>
         <TableBody >
           {ProductsDetails?.map((product, index) => (
-            <TableRow key={product.index} className={cn("group")}>
+            <TableRow key={index} className={cn("group")}>
               <TableCell>
                 <Button
                   onClick={() => removeProduct(index)}

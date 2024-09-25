@@ -4,15 +4,14 @@ import { Plus } from "lucide-react";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
-import CreateMilestone from "@/components/forms/create-milestone";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
+
 import { DataTable } from "./Table";
 
 export const metadata = constructMetadata({
-  title: "Mes factures- alloFacture",
-  description: "Suivez les factures et les paiements pour vos projets.",
+  title: "Mes devis- alloFacture",
+  description: "Suivez les devis pour vos projets.",
 });
-
 
 export default async function ScopeOfWork() {
   const invoices = [];
@@ -26,12 +25,12 @@ export default async function ScopeOfWork() {
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />
           <EmptyPlaceholder.Title>
-            Pas de devis pour le moment
+            Pas des devis pour le moment
           </EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>
             Créez un devis pour commencer à suivre le travail effectué.
           </EmptyPlaceholder.Description>
-          <Link href="/dashboard/quotes/create">
+          <Link href="/dashboard/invoices/create">
             <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
               <Plus size={18} className="" />
               <span className="flex-1 truncate text-center">
@@ -41,9 +40,7 @@ export default async function ScopeOfWork() {
           </Link>
         </EmptyPlaceholder>
       )}
-      {invoices!.length > 0 && (
-        <DataTable />
-      )}
+      {invoices!.length > 0 && <DataTable />}
     </>
   );
 }

@@ -63,7 +63,6 @@ export default function SellerForm() {
   };
 
   const add = Object.keys(sellerDetails).filter((key) => sellerDetails[key].value === null);
-  console.log(add)
 
   return (
     <div className="flex flex-col items-center space-x-4">
