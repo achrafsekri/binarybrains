@@ -16,6 +16,19 @@ enum UserRole {
   USER
 }
 
+enum QuoteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum invoiceStatus {
+  PENDING
+  PAID
+  CANCELED
+}
+
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -183,15 +196,20 @@ model QuoteItem {
   quoteId     String
 }
 
-enum QuoteStatus {
-  PENDING
-  ACCEPTED
-  REJECTED
-  EXPIRED
+model newsLetter {
+  id        String   @id @default(uuid())
+  email     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-enum invoiceStatus {
-  PENDING
-  PAID
-  CANCELED
+model Contact {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+

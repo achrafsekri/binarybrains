@@ -10,33 +10,33 @@ import { HeaderSection } from "../shared/header-section";
 const pricingFaqData = [
   {
     id: "item-1",
-    question: "What is the cost of the free plan?",
+    question: "Est-ce que le plan gratuit est vraiment gratuit ?",
     answer:
-      "Our free plan is completely free, with no monthly or annual charges. It's a great way to get started and explore our basic features.",
+      "Oui, notre plan gratuit est 100% gratuit. Il offre un accès limité à certaines fonctionnalités, mais vous pouvez l'utiliser aussi longtemps que vous le souhaitez.",
   },
   {
     id: "item-2",
-    question: "How much does the Basic Monthly plan cost?",
+    question: "Quel est le prix du plan mensuel de base ?",
     answer:
-      "The Basic Monthly plan is priced at $15 per month. It provides access to our core features and is billed on a monthly basis.",
+      "Le plan mensuel de base est disponible pour 15 $ par mois. Il offre des fonctionnalités de base pour les petites entreprises et les travailleurs indépendants.",
   },
   {
     id: "item-3",
-    question: "What is the price of the Pro Monthly plan?",
+    question: "Est-ce que vous proposez un plan mensuel Pro ?",
     answer:
-      "The Pro Monthly plan is available for $25 per month. It offers advanced features and is billed on a monthly basis for added flexibility.",
+      "Oui, nous proposons un plan mensuel Pro pour 12€ par mois. Il offre des fonctionnalités avancées pour les professionnels et les petites entreprises.",
   },
   {
     id: "item-4",
-    question: "Do you offer any annual subscription plans?",
+    question: "Proposez-vous des plans d'abonnement annuels ?",
     answer:
-      "Yes, we offer annual subscription plans for even more savings. The Basic Annual plan is $144 per year, and the Pro Annual plan is $300 per year.",
+      "Oui, nous proposons des plans d'abonnement annuels pour les plans Pro et Business. Vous pouvez économiser jusqu'à 20% en optant pour un abonnement annuel.",
   },
   {
     id: "item-5",
-    question: "Is there a trial period for the paid plans?",
+    question: "Puis-je annuler mon abonnement à tout moment ?",
     answer:
-      "We offer a 14-day free trial for both the Pro Monthly and Pro Annual plans. It's a great way to experience all the features before committing to a paid subscription.",
+      "Oui, vous pouvez annuler votre abonnement à tout moment. Votre abonnement restera actif jusqu'à la fin de la période de facturation en cours.",
   },
 ];
 
@@ -45,10 +45,8 @@ export function PricingFaq() {
     <section className="container max-w-4xl py-2">
       <HeaderSection
         label="FAQ"
-        title="Frequently Asked Questions"
-        subtitle="Explore our comprehensive FAQ to find quick answers to common
-          inquiries. If you need further assistance, don't hesitate to
-          contact us for personalized help."
+        title="Les questions fréquemment posées"
+        subtitle="Trouvez des réponses aux questions les plus courantes sur nos plans et tarifs."
       />
 
       <Accordion type="single" collapsible className="my-12 w-full">
