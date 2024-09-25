@@ -11,8 +11,7 @@ import { Form } from "@/components/ui/form";
 
 import InvoiceIntervace from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
-
-import { createCustomer } from "./invoice-server";
+import { createInvoice } from "./invoice-server";
 
 export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -152,8 +151,16 @@ export default function Page(props) {
     console.log(error);
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    // const client = await createCustomer(values.ClientDetails);
-    console.log("submitted", values);
+    try {
+      const invoice = await createInvoice(values);
+      if (invoice) {
+        toast.success("La facture a été créé avec succès");
+      } else {
+        toast.error("Erreur lors de la création de la facture");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <main>
