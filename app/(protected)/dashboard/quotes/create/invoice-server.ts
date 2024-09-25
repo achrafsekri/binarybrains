@@ -1,5 +1,6 @@
 "use server";
 
+import { create } from "domain";
 import { Customer, Seller } from "@prisma/client";
 
 import { QuoteForm } from "@/types/quote-form";
@@ -27,6 +28,38 @@ export const sellerExists = async (SellerDetails: Partial<Seller>) => {
   });
 };
 
+export const createSeller = async ({
+  SellerDetails,
+  userId,
+}: {
+  SellerDetails: Partial<Seller>;
+  userId: string;
+}) => {
+  return await prisma.seller.create({
+    data: {
+      name: SellerDetails.name ?? "",
+      address: SellerDetails.address ?? "",
+      phone: SellerDetails.phone ?? "",
+      siret: SellerDetails.siret ?? "",
+      email: SellerDetails.email ?? "",
+      vatNumber: SellerDetails.vatNumber ?? "",
+      userId: userId as string,
+    },
+  });
+};
+
+export const createCustomer = async (ClientDetails: Partial<Customer>) => {
+  return await prisma.customer.create({
+    data: {
+      name: ClientDetails.name ?? "",
+      email: ClientDetails.email ?? "",
+      siret: ClientDetails.siret ?? "",
+      address: ClientDetails.address ?? "",
+      phone: ClientDetails.phone ?? "",
+    },
+  });
+};
+
 export const createQuote = async (data: QuoteForm) => {
   try {
     const {
@@ -39,43 +72,21 @@ export const createQuote = async (data: QuoteForm) => {
     // Get the current session to retrieve the user ID
     const user = await getCurrentUser();
 
-    const userId = user?.id;
+    const userId = user?.id as string;
 
     // Create or get the seller
     const existingSeller = await sellerExists(SellerDetails);
 
     const sellerId = existingSeller
       ? existingSeller.id
-      : (
-          await prisma.seller.create({
-            data: {
-              name: SellerDetails.name ?? "",
-              address: SellerDetails.address ?? "",
-              phone: SellerDetails.phone ?? "",
-              siret: SellerDetails.siret ?? "",
-              email: SellerDetails.email ?? "",
-              vatNumber: SellerDetails.vatNumber ?? "",
-              userId: userId as string,
-            },
-          })
-        ).id;
+      : (await createSeller({ SellerDetails, userId })).id;
 
     // Create or get the customer
     const existingCustomer = await customerExists(ClientDetails);
 
     const customerId = existingCustomer
       ? existingCustomer.id
-      : (
-          await prisma.customer.create({
-            data: {
-              name: ClientDetails.name ?? "",
-              email: ClientDetails.email ?? "",
-              siret: ClientDetails.siret ?? "",
-              address: ClientDetails.address ?? "",
-              phone: ClientDetails.phone ?? "",
-            },
-          })
-        ).id;
+      : (await createCustomer(ClientDetails)).id;
 
     // Create Quote
     const quote = await prisma.quote.create({
