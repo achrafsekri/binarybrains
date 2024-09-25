@@ -1,8 +1,8 @@
 import { type Customer, type Seller, type QuoteItem } from "@prisma/client";
 
 export type QuoteForm = {
-  SellerDetails: Seller
-  ClientDetails: Customer;
+  SellerDetails: Partial<Seller>;
+  ClientDetails: Partial<Customer>;
   ProductsList: Partial<QuoteItem>[];
   InvoiceDetails: {
     id: string;

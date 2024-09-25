@@ -9,10 +9,9 @@ import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
 
+import { createQuote } from "./invoice-server";
 import InvoiceIntervace from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
-
-import { createCustomer } from "./invoice-server";
 
 export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -153,7 +152,18 @@ export default function Page(props) {
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     // const client = await createCustomer(values.ClientDetails);
-    console.log("submitted", values);
+    // console.log("waiting submit:", values);
+    try {
+      const quote = await createQuote(values);
+      if (quote) {
+        // toast.success("Quote created successfully");
+        console.log("submitted", quote);
+      } else {
+        toast.error("Error creating quote");
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
   return (
     <main>
