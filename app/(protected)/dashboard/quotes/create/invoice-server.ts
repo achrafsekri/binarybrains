@@ -1,64 +1,13 @@
 "use server";
 
-import { create } from "domain";
-import { Customer, Seller } from "@prisma/client";
+import createCustomer from "@/actions/create-customer.server";
+import createSeller from "@/actions/create-seller.server";
+import customerExists from "@/actions/customer-exists.server";
+import sellerExists from "@/actions/seller-exists.server";
 
 import { QuoteForm } from "@/types/quote-form";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
-
-export const customerExists = async (ClientDetails: Partial<Customer>) => {
-  return await prisma.customer.findFirst({
-    where: {
-      name: ClientDetails.name,
-      email: ClientDetails.email,
-      siret: ClientDetails.siret,
-    },
-  });
-};
-
-export const sellerExists = async (SellerDetails: Partial<Seller>) => {
-  return await prisma.seller.findFirst({
-    where: {
-      name: SellerDetails.name,
-      address: SellerDetails.address,
-      phone: SellerDetails.phone,
-      siret: SellerDetails.siret,
-    },
-  });
-};
-
-export const createSeller = async ({
-  SellerDetails,
-  userId,
-}: {
-  SellerDetails: Partial<Seller>;
-  userId: string;
-}) => {
-  return await prisma.seller.create({
-    data: {
-      name: SellerDetails.name ?? "",
-      address: SellerDetails.address ?? "",
-      phone: SellerDetails.phone ?? "",
-      siret: SellerDetails.siret ?? "",
-      email: SellerDetails.email ?? "",
-      vatNumber: SellerDetails.vatNumber ?? "",
-      userId: userId as string,
-    },
-  });
-};
-
-export const createCustomer = async (ClientDetails: Partial<Customer>) => {
-  return await prisma.customer.create({
-    data: {
-      name: ClientDetails.name ?? "",
-      email: ClientDetails.email ?? "",
-      siret: ClientDetails.siret ?? "",
-      address: ClientDetails.address ?? "",
-      phone: ClientDetails.phone ?? "",
-    },
-  });
-};
 
 export const createQuote = async (data: QuoteForm) => {
   try {
