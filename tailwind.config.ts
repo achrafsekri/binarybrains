@@ -22,12 +22,13 @@ const config = {
     extend: {
       colors: {
         border: "hsl(var(--border))",
+        "indigo-purple": "#7f5af0",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#7f5af0",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
