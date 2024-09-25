@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
+import { InvoiceWithRelations } from "@/types/invoice-with-relations";
+import { prisma } from "@/lib/db";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
-import CreateMilestone from "@/components/forms/create-milestone";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
+
+import { DataTable } from "./Table";
 
 export const metadata = constructMetadata({
   title: "Mes factures- alloFacture",
@@ -13,7 +16,12 @@ export const metadata = constructMetadata({
 });
 
 export default async function ScopeOfWork() {
-  const invoices = [];
+  const invoices: InvoiceWithRelations[] = await prisma.invoice.findMany({
+    include: {
+      seller: true,
+      customer: true,
+    },
+  });
   return (
     <>
       <DashboardHeader
@@ -39,11 +47,7 @@ export default async function ScopeOfWork() {
           </Link>
         </EmptyPlaceholder>
       )}
-      {invoices!.length > 0 && (
-        <div className="rounded-lg border border-dashed p-8 shadow-sm animate-in fade-in-50">
-          invoice list
-        </div>
-      )}
+      {invoices!.length > 0 && <DataTable data={invoices} />}
     </>
   );
 }
