@@ -16,16 +16,13 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
 
     const userVerified = user?.emailVerified ? true : false;
     const authSubject = userVerified
-      ? `Sign-in link for ${siteConfig.name}`
-      : "Activate your account";
+      ? `Se connecter à AlloFacture`
+      : `Créer un compte AlloFacture`;
 
     try {
       const { data, error } = await resend.emails.send({
         from: provider.from,
-        to:
-          process.env.NODE_ENV === "development"
-            ? "delivered@resend.dev"
-            : identifier,
+        to: identifier,
         subject: authSubject,
         react: MagicLinkEmail({
           firstName: user?.name as string,
@@ -41,11 +38,13 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
       });
 
       if (error || !data) {
+        console.error(error);
         throw new Error(error?.message);
       }
 
       // console.log(data)
     } catch (error) {
+      console.error(error);
       throw new Error("Failed to send verification email.");
     }
   };

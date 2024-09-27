@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { UserAuthForm } from "@/components/forms/user-auth-form";
 import { Icons } from "@/components/shared/icons";
+import Logo from "@/components/layout/logo";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -24,17 +25,17 @@ export default function LoginPage() {
       >
         <>
           <Icons.chevronLeft className="mr-2 size-4" />
-          Back
+          Retour
         </>
       </Link>
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
         <div className="flex flex-col space-y-2 text-center">
-          <Icons.logo className="mx-auto size-6" />
+          <Logo />
           <h1 className="text-2xl font-semibold tracking-tight">
-            Welcome back
+            Bien venue sur alloFacture
           </h1>
           <p className="text-sm text-muted-foreground">
-            Enter your email to sign in to your account
+            Saisissez votre adresse E-mail pour vous connecter à votre compte
           </p>
         </div>
         <Suspense>
@@ -45,7 +46,7 @@ export default function LoginPage() {
             href="/register"
             className="hover:text-brand underline underline-offset-4"
           >
-            Don&apos;t have an account? Sign Up
+            Pas de compte? Créez-en un maintenant
           </Link>
         </p>
       </div>

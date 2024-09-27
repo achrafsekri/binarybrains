@@ -6,27 +6,39 @@ import { InvoiceEmail } from "@/emails/invoice-email";
 import { render } from "@react-email/components";
 import { toast } from "sonner";
 
-const page = async () => {
-  const emailHtml = await render(
-    <InvoiceEmail
-      invoiceLink={"alloFacture.com"}
-      senderName={"achraf"}
-      receiverName={"malek"}
-    />,
-  );
-  const send = async () => {
+import { Button } from "@/components/ui/button";
+
+const page = () => {
+  const [loading, setLoading] = React.useState(false);
+
+  const sendTestEmail = async () => {
+    setLoading(true);
+    const emailHtml = await render(
+      <InvoiceEmail
+        invoiceLink={"alloFacture.com"}
+        senderName={"achraf"}
+        receiverName={"malek"}
+      />,
+    );
     try {
-      const response = await sendInvoiceEmail(emailHtml, "Vous avez une nouvelle facture");
+      const response = await sendInvoiceEmail(
+        emailHtml,
+        "Vous avez une nouvelle facture",
+      );
       console.log(response);
       toast.success("Email sent successfully");
+      setLoading(false);
     } catch (error) {
       console.log(error);
       toast.error("Failed to send email");
+      setLoading(false);
     }
   };
   return (
     <div>
-      <button onClick={send}>Send Email</button>
+      <Button onClick={sendTestEmail}>
+        {loading ? "Sending..." : "Send Email"}
+      </Button>
     </div>
   );
 };

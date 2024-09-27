@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendInvoiceEmail = async (html: any, subject: string) => {
   const options = {
-    from: process.env.EMAIL_FROM,
+    from: `"AlloFacture" <${process.env.EMAIL_FROM}>`,
     to: "achrafsekri2001@gmail.com",
     subject: subject,
     html: html,
