@@ -3,6 +3,7 @@
 import React from "react";
 import { sendInvoiceEmail } from "@/actions/send-invoice-email";
 import { InvoiceEmail } from "@/emails/invoice-email";
+import { ReminderEmail } from "@/emails/reminder-email";
 import { render } from "@react-email/components";
 import { toast } from "sonner";
 
@@ -14,18 +15,20 @@ const page = () => {
   const sendTestEmail = async () => {
     setLoading(true);
     const emailHtml = await render(
-      <InvoiceEmail
-        invoiceLink={"alloFacture.com"}
+      <ReminderEmail
+        documentLink={"alloFacture.com"}
         senderName={"achraf"}
         receiverName={"malek"}
+        type={"DEVIS"}
+        dueDate="2022-01-01"
+        amount="1000"
       />,
     );
     try {
       const response = await sendInvoiceEmail(
         emailHtml,
-        "Vous avez une nouvelle facture",
+        "Vous avez une facture en attente",
       );
-      console.log(response);
       toast.success("Email sent successfully");
       setLoading(false);
     } catch (error) {

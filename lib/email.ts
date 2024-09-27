@@ -12,7 +12,6 @@ export const resend = new Resend(env.RESEND_API_KEY);
 export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
   async ({ identifier, url, provider }) => {
     const user = await getUserByEmail(identifier);
-    if (!user || !user.name) return;
 
     const userVerified = user?.emailVerified ? true : false;
     const authSubject = userVerified

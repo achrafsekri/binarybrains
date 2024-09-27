@@ -5,13 +5,12 @@ import {
   Head,
   Hr,
   Html,
+  Img,
   Preview,
   Section,
   Tailwind,
   Text,
 } from "@react-email/components";
-
-import { Icons } from "../components/shared/icons";
 
 type MagicLinkEmailProps = {
   actionUrl: string;
@@ -24,7 +23,6 @@ export const MagicLinkEmail = ({
   firstName = "",
   actionUrl,
   mailType,
-  siteName,
 }: MagicLinkEmailProps) => (
   <Html>
     <Head />
@@ -32,15 +30,15 @@ export const MagicLinkEmail = ({
     <Tailwind>
       <Body className="bg-white font-sans">
         <Container className="mx-auto py-5 pb-12">
-          <Icons.logo className="m-auto block size-10" />
-          <Text className="text-base">Bonjour {firstName},</Text>
+          <Img src="https://allofacture.s3.amazonaws.com/Group+1.png" alt="allofacture-logo" className="w-28 mx-auto" />
+          <Text className="text-base mt-4">Bonjour {firstName},</Text>
           <Text className="text-base">
             Bienvenue sur AlloFacture! Vous avez reçu ce courriel pour vous
             connecter à votre compte.
           </Text>
           <Section className="my-5 text-center">
             <Button
-              className="inline-block rounded-md bg-zinc-900 px-4 py-2 text-base text-white no-underline"
+              className="inline-block rounded-md bg-[#7f5af0] px-4 py-2 text-base text-white no-underline"
               href={actionUrl}
             >
               Se connecter

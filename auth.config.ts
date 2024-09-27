@@ -9,10 +9,6 @@ import { sendVerificationRequest } from "./lib/email";
 
 export default {
   providers: [
-    Google({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-    }),
     Resend({
       apiKey: env.RESEND_API_KEY,
       from: "noreply@allofacture.com",
