@@ -5,24 +5,25 @@ import {
   Head,
   Hr,
   Html,
+  Img,
   Preview,
   Section,
   Tailwind,
   Text,
 } from "@react-email/components";
 
-import { Icons } from "../components/shared/icons";
-
 type EmailProps = {
   senderName: string;
-  invoiceLink: string;
+  documentLink: string;
   receiverName: string;
+  type: "FACTURE" | "DEVIS";
 };
 
 export const InvoiceEmail = ({
   senderName = "",
-  invoiceLink,
+  documentLink,
   receiverName,
+  type,
 }: EmailProps) => (
   <Html>
     <Head />
@@ -30,18 +31,25 @@ export const InvoiceEmail = ({
     <Tailwind>
       <Body className="bg-white font-sans">
         <Container className="mx-auto py-5 pb-12">
-          <Icons.logo className="m-auto block size-10" />
-          <Text className="text-base">Bonjour {receiverName},</Text>
+          <Img
+            src="https://allofacture.s3.amazonaws.com/Group+1.png"
+            alt="allofacture-logo"
+            className="mx-auto w-28"
+          />
           <Text className="text-base">
-            {senderName} vous a envoyé une facture. Cliquez sur le lien
+            Bonjour <b>{receiverName}</b>,
+          </Text>
+          <Text className="text-base">
+            <b>{senderName}</b> vous a envoyé une{" "}
+            {type == "FACTURE" ? "facture" : "devi"}. Cliquez sur le lien
             ci-dessous pour la consulter et la télécharger :
           </Text>
           <Section className="my-5 text-center">
             <Button
-              className="inline-block rounded-md bg-zinc-900 px-4 py-2 text-base text-white no-underline"
-              href={invoiceLink}
+              className="inline-block rounded-md bg-[#7f5af0] px-4 py-2 text-base text-white no-underline"
+              href={documentLink}
             >
-              Consulter la facture
+              Consulter {type == "FACTURE" ? "la facture" : "le devis"}
             </Button>
           </Section>
 

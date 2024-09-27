@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { cn } from "@/lib/utils";
@@ -12,7 +13,6 @@ import { userAuthSchema } from "@/lib/validations/auth";
 import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { Icons } from "@/components/shared/icons";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -45,13 +45,13 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
     setIsLoading(false);
 
     if (!signInResult?.ok) {
-      return toast.error("Something went wrong.", {
-        description: "Your sign in request failed. Please try again."
+      return toast.error("Quelque chose s'est mal passé", {
+        description: "Veuillez réessayer plus tard.",
       });
     }
 
-    return toast.success("Check your email", {
-      description: "We sent you a login link. Be sure to check your spam too.",
+    return toast.success("Email envoyé, vérifiez votre boîte de réception", {
+      description: "Vérifiez votre boîte de réception pour continuer.",
     });
   }
 
@@ -83,11 +83,11 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
             {isLoading && (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            {type === "register" ? "Sign Up with Email" : "Sign In with Email"}
+            {type === "register" ? "Creez un compte" : "Se connecter"}
           </button>
         </div>
       </form>
-      <div className="relative">
+      {/* <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
@@ -112,7 +112,7 @@ export function UserAuthForm({ className, type, ...props }: UserAuthFormProps) {
           <Icons.google className="mr-2 size-4" />
         )}{" "}
         Google
-      </button>
+      </button> */}
     </div>
   );
 }

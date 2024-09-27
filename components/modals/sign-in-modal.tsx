@@ -1,4 +1,3 @@
-import { signIn } from "next-auth/react";
 import {
   Dispatch,
   SetStateAction,
@@ -6,11 +5,14 @@ import {
   useMemo,
   useState,
 } from "react";
+import { signIn } from "next-auth/react";
 
-import { Icons } from "@/components/shared/icons";
+import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { siteConfig } from "@/config/site";
+import { Icons } from "@/components/shared/icons";
+
+import { UserAuthForm } from "../forms/user-auth-form";
 import Logo from "../layout/logo";
 
 function SignInModal({
@@ -33,31 +35,13 @@ function SignInModal({
             S&apos;identifier pour continuer
           </h3>
           <p className="text-sm text-gray-500">
-            Connectez-vous à votre compte pour accéder à toutes les fonctionnalités
-            de alloFacture
+            Connectez-vous à votre compte pour accéder à toutes les
+            fonctionnalités de alloFacture
           </p>
         </div>
 
         <div className="flex flex-col space-y-4 bg-secondary/50 px-4 py-8 md:px-16">
-          <Button
-            variant="default"
-            disabled={signInClicked}
-            onClick={() => {
-              setSignInClicked(true);
-              signIn("google", { redirect: false }).then(() =>
-                setTimeout(() => {
-                  setShowSignInModal(false);
-                }, 400),
-              );
-            }}
-          >
-            {signInClicked ? (
-              <Icons.spinner className="mr-2 size-4 animate-spin" />
-            ) : (
-              <Icons.google className="mr-2 size-4" />
-            )}{" "}
-            Sign In with Google
-          </Button>
+          <UserAuthForm type="login" />
         </div>
       </div>
     </Modal>
