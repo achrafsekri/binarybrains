@@ -188,7 +188,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
 
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden">
-      <Dropzone
+      {(!files || files.length === 0) && (<Dropzone
         onDrop={onDrop}
         accept={accept}
         maxSize={maxSize}
@@ -245,9 +245,10 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
             )}
           </div>
         )}
-      </Dropzone>
+      </Dropzone>)
+      }
       {files?.length ? (
-        <ScrollArea className="h-fit w-full px-3">
+        // <ScrollArea className="h-fit w-full px-3">
           <div className="flex max-h-48 flex-col gap-4">
             {files?.map((file, index) => (
               <FileCard
@@ -258,7 +259,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
               />
             ))}
           </div>
-        </ScrollArea>
+        // </ScrollArea>
       ) : null}
     </div>
   )
@@ -273,9 +274,9 @@ interface FileCardProps {
 function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
     <div className="relative flex items-center gap-2.5">
-      <div className="flex flex-1 gap-2.5">
+      {/* <div className="flex flex-1 gap-2.5"> */}
         {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
-        <div className="flex w-full flex-col gap-2">
+        {/* <div className="flex w-full flex-col gap-2">
           <div className="flex flex-col gap-px">
             <p className="line-clamp-1 text-sm font-medium text-foreground/80">
               {file.name}
@@ -285,8 +286,8 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
             </p>
           </div>
           {progress ? <Progress value={progress} /> : null}
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
       <div className="flex items-center gap-2">
         <Button
           type="button"
@@ -320,7 +321,7 @@ function FilePreview({ file }: FilePreviewProps) {
         width={48}
         height={48}
         loading="lazy"
-        className="aspect-square shrink-0 rounded-md object-cover"
+        className="aspect-square h-52 w-max shrink-0 rounded-md object-cover"
       />
     )
   }

@@ -27,7 +27,11 @@ export default async function ScopeOfWork() {
       <DashboardHeader
         heading="Mes devis"
         text={`Suivez les devis pour vos projets.`}
-      />
+      >
+        <Link href="/dashboard/quotes/create">
+        <Button>Creer une devis</Button>
+        </Link>
+        </DashboardHeader>
       {quotes!.length == 0 && (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />
