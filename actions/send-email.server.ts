@@ -1,9 +1,6 @@
 "use server";
 
-import { render } from "@react-email/components";
 import nodemailer from "nodemailer";
-
-import { InvoiceEmail } from "../emails/invoice-email";
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_SERVER_HOST,
@@ -14,10 +11,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendInvoiceEmail = async (html: any, subject: string) => {
+export const sendEmail = async (html: any, subject: string, to: string) => {
   const options = {
     from: `"AlloFacture" <${process.env.EMAIL_FROM}>`,
-    to: "achrafsekri2001@gmail.com",
+    to: to,
     subject: subject,
     html: html,
   };
