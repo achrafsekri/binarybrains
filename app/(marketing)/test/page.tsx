@@ -1,11 +1,10 @@
 "use client";
 
 import React from "react";
-import { sendInvoiceEmail } from "@/actions/send-invoice-email";
-import { InvoiceEmail } from "@/emails/invoice-email";
 import { ReminderEmail } from "@/emails/reminder-email";
 import { render } from "@react-email/components";
 import { toast } from "sonner";
+import { sendEmail } from "@/actions/send-email.server";
 
 import { Button } from "@/components/ui/button";
 
@@ -25,9 +24,10 @@ const page = () => {
       />,
     );
     try {
-      const response = await sendInvoiceEmail(
+      const response = await sendEmail(
         emailHtml,
         "Vous avez une facture en attente",
+        "achrafsekri2001@gmail.com"
       );
       toast.success("Email sent successfully");
       setLoading(false);
