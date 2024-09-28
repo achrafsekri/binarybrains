@@ -99,7 +99,6 @@ export default function ProductsTable() {
                   className="no-spinner size-full border-none"
                   type="text"
                   {...register(`ProductsList.${index}.name`)}
-                  defaultValue={product.name}
                   onChange={(e) =>
                     handleProductChange(index, "name", e.target.value)
                   }
@@ -113,7 +112,6 @@ export default function ProductsTable() {
                     type="number"
                     min={0}
                     {...register(`ProductsList.${index}.quantity`)}
-                    defaultValue={product.quantity || 0}
                     onChange={(e) =>
                       handleProductChange(index, "quantity", e.target.value)
                     }
@@ -129,7 +127,6 @@ export default function ProductsTable() {
                     min={0}
                     max={100}
                     {...register(`ProductsList.${index}.vatRate`)}
-                    defaultValue={product.vatRate || 0}
                     onChange={(e) =>
                       handleProductChange(
                         index,
@@ -148,7 +145,6 @@ export default function ProductsTable() {
                   type="number"
                   min={0}
                   {...register(`ProductsList.${index}.unitPrice`)}
-                  defaultValue={product.unitPrice || 0}
                   onChange={(e) =>
                     handleProductChange(index, "unitPrice", e.target.value)
                   }

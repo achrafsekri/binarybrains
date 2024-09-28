@@ -27,7 +27,11 @@ export default async function ScopeOfWork() {
       <DashboardHeader
         heading="Mes factures"
         text={`Suivez les factures et les paiements pour vos projets.`}
-      />
+      >
+        <Link href="/dashboard/invoices/create">
+        <Button>Creer une facture</Button>
+        </Link>
+      </DashboardHeader>
       {invoices!.length == 0 && (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />
