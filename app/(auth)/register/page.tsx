@@ -50,7 +50,7 @@ export default function RegisterPage() {
               href="/terms"
               className="hover:text-brand underline underline-offset-4"
             >
-              Conditions d'utilisation
+              Conditions d&apos;utilisation
             </Link>{" "}
             et{" "}
             <Link

@@ -23,7 +23,10 @@ const nextConfig = {
     ],
   },
   experimental: {
-    serverComponentsExternalPackages: ["@prisma/client"],
+    serverComponentsExternalPackages: [
+      "@prisma/client",
+      "@react-email/tailwind",
+    ],
   },
 };
 

@@ -71,7 +71,7 @@ export function NewsletterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>S'abonner à notre newsletter</FormLabel>
+              <FormLabel>S&apos;abonner à notre newsletter</FormLabel>
               <FormControl>
                 <Input
                   type="email"
