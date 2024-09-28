@@ -117,7 +117,7 @@ export default function Page(props) {
     ],
 
     Settings: {
-      vatActivated: false, // VAT not activated
+      vatActivated: true, // VAT not activated
       vatPerItem: false, // VAT per item not activated
       devise: "€", // Default currency is Euro
       vatRate: 20, // Default VAT rate
