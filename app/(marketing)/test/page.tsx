@@ -24,7 +24,7 @@ const page = () => {
       />,
     );
     try {
-      const response = await sendEmail(
+       await sendEmail(
         emailHtml,
         "Vous avez une facture en attente",
         "achrafsekri2001@gmail.com"

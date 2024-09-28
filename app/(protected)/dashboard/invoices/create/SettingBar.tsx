@@ -22,14 +22,14 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import {  invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./page";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);
   form?.watch("Settings");
 
   return (
-    <Card className="mx-auto h-fit w-full max-w-md sticky top-16 bg-white z-10">
+    <Card className="z-10 h-fit lg:sticky lg:top-16 lg:mx-auto lg:max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Réglages</CardTitle>
       </CardHeader>
@@ -189,21 +189,20 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-        <div className=" flex justify-end space-x-4">
+        <div className="flex justify-end space-x-4">
           <Button
-            className="bg-primary font-white hover:bg-yellow-600"
+            className="font-white bg-primary hover:bg-yellow-600"
             type="submit"
           >
             <Download className="mr-2 size-4" />
             Save
           </Button>
-          <Button className="bg-primary font-white hover:bg-yellow-600">
+          <Button className="font-white bg-primary hover:bg-yellow-600">
             <Printer className="mr-2 size-4" />
             Print
           </Button>
         </div>
       </CardContent>
-
     </Card>
   );
 }

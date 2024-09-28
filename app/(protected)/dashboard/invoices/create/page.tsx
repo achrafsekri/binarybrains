@@ -9,9 +9,9 @@ import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
 
+import { createInvoice } from "./invoice-server";
 import InvoiceIntervace from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
-import { createInvoice } from "./invoice-server";
 
 export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -167,7 +167,7 @@ export default function Page(props) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit, OnError)}
-          className="grid grid-cols-3 gap-4 p-4"
+          className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
           <invoiceFormContext.Provider value={form}>
             <InvoiceIntervace />
