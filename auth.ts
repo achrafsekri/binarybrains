@@ -11,7 +11,6 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: UserRole;
-      currentProjectId: string;
     } & DefaultSession["user"];
   }
 }
@@ -32,15 +31,12 @@ export const {
         if (token.sub) {
           session.user.id = token.sub;
         }
-
         if (token.email) {
           session.user.email = token.email;
         }
-
         if (token.role) {
           session.user.role = token.role;
         }
-
         session.user.name = token.name;
         session.user.image = token.picture;
       }
@@ -59,7 +55,6 @@ export const {
       token.email = dbUser.email;
       token.picture = dbUser.image;
       token.role = dbUser.role;
-
       return token;
     },
   },

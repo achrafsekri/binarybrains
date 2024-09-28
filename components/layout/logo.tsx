@@ -1,12 +1,7 @@
 import React from "react";
 
 const Logo = () => {
-  return (
-    <span className="text-xl font-extrabold text-gray-800 transition duration-300 hover:text-gray-600">
-      Allo
-      <span className="text-gradient_indigo-purple">Facture</span>
-    </span>
-  );
+  return <img src="/logo.svg" alt="logo" className="h-7 hover:opacity-90" />;
 };
 
 export default Logo;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
-import { InvoiceWithRelations } from "@/types/invoice-with-relations";
+import { QuoteWithRelations } from "@/types/quote-with-relations";
 import { prisma } from "@/lib/db";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,12 +11,12 @@ import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 import { DataTable } from "./Table";
 
 export const metadata = constructMetadata({
-  title: "Mes factures- alloFacture",
-  description: "Suivez les factures et les paiements pour vos projets.",
+  title: "Mes devis- alloFacture",
+  description: "Suivez les devis pour vos projets.",
 });
 
 export default async function ScopeOfWork() {
-  const invoices: InvoiceWithRelations[] = await prisma.invoice.findMany({
+  const quotes: QuoteWithRelations[] = await prisma.quote.findMany({
     include: {
       seller: true,
       customer: true,
@@ -25,29 +25,30 @@ export default async function ScopeOfWork() {
   return (
     <>
       <DashboardHeader
-        heading="Mes factures"
-        text={`Suivez les factures et les paiements pour vos projets.`}
+        heading="Mes devis"
+        text={`Suivez les devis pour vos projets.`}
       />
-      {invoices!.length == 0 && (
+      {quotes!.length == 0 && (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="post" />
           <EmptyPlaceholder.Title>
-            Pas des factures pour le moment
+            Pas des devis pour le moment
           </EmptyPlaceholder.Title>
           <EmptyPlaceholder.Description>
-            Créez une facture pour commencer à suivre le travail effectué.
+            Créez un devis pour commencer à suivre le travail effectué.
           </EmptyPlaceholder.Description>
-          <Link href="/dashboard/invoices/create">
+          <Link href="/dashboard/quotes/create">
             <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
               <Plus size={18} className="" />
               <span className="flex-1 truncate text-center">
-                Créer une facture
+                Créer un devis
               </span>
             </Button>
           </Link>
         </EmptyPlaceholder>
       )}
-      {invoices!.length > 0 && <DataTable data={invoices} />}
+      {/* @ts-ignore */}
+      {quotes!.length > 0 && <DataTable data={quotes} />}
     </>
   );
 }

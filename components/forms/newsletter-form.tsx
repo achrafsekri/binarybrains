@@ -1,7 +1,13 @@
 "use client";
 
+import { useState } from "react";
+import { sendEmail } from "@/actions/send-email.server";
+import { subscribeToNewsletter } from "@/actions/subscribe-to-newsletter.server";
+import { NewsletterWelcome } from "@/emails/subscriber-welcome";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { render } from "@react-email/components";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -14,7 +20,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+
+import { Spinner } from "../ui/spinner";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -23,6 +30,7 @@ const FormSchema = z.object({
 });
 
 export function NewsletterForm() {
+  const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -30,16 +38,26 @@ export function NewsletterForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    form.reset();
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    setLoading(true);
+    try {
+      subscribeToNewsletter(data.email);
+
+      const html = await render(
+        <NewsletterWelcome unsubscribeUrl="https://www.allofacture.com/unsubscribe" />,
+      );
+      await sendEmail(
+        html,
+        "Bienvenue à la newsletter d'AlloFacture!",
+        data.email,
+      );
+      toast.success("Thank you for subscribing!");
+      form.reset();
+      setLoading(false);
+    } catch (error) {
+      toast.error("Failed to subscribe to newsletter");
+      setLoading(false);
+    }
   }
 
   return (
@@ -53,7 +71,7 @@ export function NewsletterForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subscribe to our newsletter</FormLabel>
+              <FormLabel>S'abonner à notre newsletter</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -67,7 +85,8 @@ export function NewsletterForm() {
           )}
         />
         <Button type="submit" size="sm" rounded="full" className="px-4">
-          Subscribe
+          {loading && <Spinner size="small" className="mr-2" />}
+          {!loading ? "S'abonner" : "S'abonner..."}
         </Button>
       </form>
     </Form>
