@@ -6,17 +6,20 @@ import { SubscriptionPlan, UserSubscriptionPlan } from "@/types";
 
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
+import { cn } from "@/lib/utils";
 
 interface BillingFormButtonProps {
   offer: SubscriptionPlan;
   subscriptionPlan: UserSubscriptionPlan;
   year: boolean;
+  className?:string
 }
 
 export function BillingFormButton({
   year,
   offer,
   subscriptionPlan,
+  className
 }: BillingFormButtonProps) {
   let [isPending, startTransition] = useTransition();
   const generateUserStripeSession = generateUserStripe.bind(
@@ -35,7 +38,7 @@ export function BillingFormButton({
     <Button
       variant={userOffer ? "default" : "outline"}
       rounded="full"
-      className="w-full"
+      className={cn("w-full",className)}
       disabled={isPending}
       onClick={stripeSessionAction}
     >
