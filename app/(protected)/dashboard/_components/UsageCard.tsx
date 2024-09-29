@@ -29,7 +29,6 @@ export default async function UsageCard({
     1,
   );
 
-
   const Limits = planLimits[subscriptionPlan.title];
   const QuotesUsagePromise = prisma.quote.count({
     where: {
@@ -64,18 +63,20 @@ export default async function UsageCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="mb-1 flex justify-between text-sm">
-            <span>
-              Invoices: {InvoicesUsage}/{Limits.Factures}
-            </span>
-            <span>
-              Quotes: {QuotesUsage}/{Limits.Devis}
-            </span>
+          <div className="mb-1 flex text-sm">
+            Invoices: {InvoicesUsage}/{Limits.Factures}
           </div>
           <Progress value={InvoicesUsage} className="h-2" />
         </div>
+        <div>
+          <div className="mb-1 flex text-sm">
+            Quotes: {QuotesUsage}/{Limits.Devis}
+          </div>
+          <Progress value={QuotesUsage} className="h-2" />
+        </div>
         <p className="text-sm text-gray-500">
-          You&apos;ve used {InvoicesUsage + QuotesUsage} out of {Limits.Factures + Limits.Devis} total documents
+          You&apos;ve used {InvoicesUsage + QuotesUsage} out of{" "}
+          {typeof Limits.Factures== "string" ||  typeof Limits.Devis == "string" ? "unlimited" : Limits.Factures + Limits.Devis } total documents
         </p>
       </CardContent>
       <CardFooter>

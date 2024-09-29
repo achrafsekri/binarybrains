@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { User } from "@prisma/client";
 
 import { getCurrentUser } from "@/lib/session";
@@ -13,6 +14,7 @@ export const metadata = constructMetadata({
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
+  if (!user) redirect("/login");
   return (
     <>
       <DashboardHeader
