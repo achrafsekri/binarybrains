@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 
 export default function ProductsTable() {
   const form = useContext(invoiceFormContext);

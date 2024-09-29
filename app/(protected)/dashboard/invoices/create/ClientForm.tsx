@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 import AutoGrowTextArea from "@/components/shared/AutoGrowTextarea";
 
 export default function ClientForm() {
   const form = useContext(invoiceFormContext);
   form?.watch("ClientDetails");
-  const ClientDetails = {
+  const ClientDetails:Record<string , any> = {
     name: {
       label: "Client Name:",
       value: form?.getValues("ClientDetails.name"),

@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { DatePicker } from "@/components/shared/DatePicker";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 
 export default function InvoiceDetails() {
   const form = useContext(invoiceFormContext);
   form?.watch("InvoiceDetails");
-  const dates = {
+  const dates:Record<string,any> = {
     startingDate: {
       label: "Created:",
       value: form?.getValues("InvoiceDetails.startingDate"), // Default invoice creation date

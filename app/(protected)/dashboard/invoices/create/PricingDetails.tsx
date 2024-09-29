@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 
 export default function PricingDetails() {
   const form = useContext(invoiceFormContext);

@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 import { FileUploader } from "@/components/shared/file-uploader";
 import { InvoiceFileUploader } from "@/components/shared/invoice-file-uploader";
 
 export default function SellerForm() {
   const form = useContext(invoiceFormContext);
-  function adjustInputWidth(value, key) {
+  function adjustInputWidth(value:string, key:string) {
     const span = document.getElementById(`input-width-helper-${key}`);
 
     // Update the span content to the current input value
@@ -24,7 +24,8 @@ export default function SellerForm() {
     input!.style.width = `${span?.offsetWidth}px`;
   }
   form?.watch("SellerDetails");
-  const sellerDetails = {
+
+  const sellerDetails:Record<string, any> = {
     name: {
       value: form?.getValues("SellerDetails.name"),
       nullable: false, // Not nullable, as per schema
@@ -62,7 +63,7 @@ export default function SellerForm() {
     },
   };
 
-  const add = Object.keys(sellerDetails).filter((key) => sellerDetails[key].value === null);
+  const add = Object.keys(sellerDetails).filter((key:string) => sellerDetails[key].value === null);
 
   return (
     <div className="flex flex-col items-center space-x-4">
