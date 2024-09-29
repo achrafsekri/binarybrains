@@ -1,6 +1,6 @@
 "use client";
 
-import { Bar, BarChart } from "recharts";
+import { Bar, BarChart, XAxis } from "recharts";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -11,10 +11,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-
-
-
 
 const chartConfig = {
   Factures: {
@@ -31,9 +27,8 @@ type chartData = {
   month: string;
   Factures: number;
   Devis: number;
-}[]
-export default   function DocsChart({data} :{data:chartData} ) {
-
+}[];
+export default function DocsChart({ data }: { data: chartData }) {
   return (
     <Card>
       <CardHeader>
@@ -42,12 +37,18 @@ export default   function DocsChart({data} :{data:chartData} ) {
           Nombre de factures et devis par mois
         </p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex h-full flex-col justify-center">
         <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
           <BarChart accessibilityLayer data={data}>
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
-
             <Bar dataKey="Factures" fill="var(--color-Factures)" radius={4} />
             <Bar dataKey="Devis" fill="var(--color-Devis)" radius={4} />
           </BarChart>

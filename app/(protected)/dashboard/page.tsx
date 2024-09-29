@@ -19,8 +19,8 @@ export default async function DashboardPage() {
   return (
     <>
       <DashboardHeader
-        heading={`Welcome back, ${user?.name}!`}
-        text={`Here's an overview of your account`}
+      heading={`Bienvenue de nouveau, ${user?.name}!`}
+      text={`Voici un aperçu de votre compte`}
       />
       <PlanState user={user as User} />
       <ChartsSection user={user as User} />
