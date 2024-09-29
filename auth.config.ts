@@ -12,7 +12,7 @@ export default {
     Resend({
       apiKey: env.RESEND_API_KEY,
       from: "noreply@allofacture.com",
-      sendVerificationRequest,
+      // sendVerificationRequest,
     }),
   ],
 } satisfies NextAuthConfig;
