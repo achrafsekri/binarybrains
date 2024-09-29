@@ -6,6 +6,7 @@ import { constructMetadata } from "@/lib/utils";
 import { DashboardHeader } from "@/components/dashboard/header";
 
 import PlanState from "./_components/planState";
+import ChartsSection from "./_components/ChartsSection";
 
 export const metadata = constructMetadata({
   title: "Dashboard",
@@ -22,6 +23,7 @@ export default async function DashboardPage() {
         text={`Here's an overview of your account`}
       />
       <PlanState user={user as User} />
+      <ChartsSection user={user as User} />
     </>
   );
 }

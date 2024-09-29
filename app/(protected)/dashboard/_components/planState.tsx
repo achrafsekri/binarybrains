@@ -13,7 +13,7 @@ export default async function PlanState({ user }: { user: User }) {
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <section className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
       {/* Current Plan Card */}
       <CurrentPlanCard subscriptionPlan={subscriptionPlan as UserSubscriptionPlan} />
 
@@ -22,6 +22,6 @@ export default async function PlanState({ user }: { user: User }) {
 
       {/* Usage Statistics Card */}
       <UsageCard subscriptionPlan={subscriptionPlan as UserSubscriptionPlan} user={user} />
-    </div>
+    </section>
   );
 }
