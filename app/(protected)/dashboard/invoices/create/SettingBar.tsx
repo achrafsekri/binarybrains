@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateInvoiceForm";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);

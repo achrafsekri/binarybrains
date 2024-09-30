@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { DatePicker } from "@/components/shared/DatePicker";
 
-import { invoiceFormContext } from "./page";
+import { invoiceFormContext } from "./CreateQuoteForm";
 
 export default function InvoiceDetails() {
   const form = useContext(invoiceFormContext);
