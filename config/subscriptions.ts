@@ -112,7 +112,8 @@ export const comparePlans: PlansRow[] = [
     pro: "Illimité",
     business: "Illimité",
     enterprise: true,
-    tooltip: "Le nombre de clients est illimité avec les plans Pro et Business.",
+    tooltip:
+      "Le nombre de clients est illimité avec les plans Pro et Business.",
   },
   {
     feature: "Support",
@@ -121,6 +122,12 @@ export const comparePlans: PlansRow[] = [
     business: "24/7 Support",
     enterprise: "24/7 Support",
   },
- 
+
   // Add more rows as needed
 ];
+type PlanLimits = Record <string, number | string>;
+export const planLimits:Record<string , PlanLimits> = {
+  Débutant: { Factures: 10, Devis: 10 },
+  pro: { Factures: 100, Devis: 100 },
+  business: { Factures: "Illimité", Devis: "Illimité" },
+};
