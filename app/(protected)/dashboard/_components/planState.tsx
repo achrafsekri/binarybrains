@@ -6,7 +6,7 @@ import UsageCard from "./UsageCard";
 import { UserSubscriptionPlan } from "@/types";
 
 export default async function PlanState({ user }: { user: User }) {
- 
+
   let subscriptionPlan;
   if (user && user.id) {
     subscriptionPlan = await getUserSubscriptionPlan(user.id);
