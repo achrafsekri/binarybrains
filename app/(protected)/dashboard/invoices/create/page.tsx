@@ -4,7 +4,6 @@ import { createContext, useContext, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import { uuid } from "uuidv4";
 import { z } from "zod";
 
 import { Form } from "@/components/ui/form";
@@ -150,23 +149,23 @@ export default function Page(props) {
 
     console.log(error);
   }
-  async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    try {
-      const invoice = await createInvoice(values);
-      if (invoice) {
-        toast.success("La facture a été créé avec succès");
-      } else {
-        toast.error("Erreur lors de la création de la facture");
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
+  //   try {
+  //     const invoice = await createInvoice(values);
+  //     if (invoice) {
+  //       toast.success("La facture a été créé avec succès");
+  //     } else {
+  //       toast.error("Erreur lors de la création de la facture");
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
   return (
     <main>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit, OnError)}
+          // onSubmit={form.handleSubmit(onSubmit, OnError)}
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
           <invoiceFormContext.Provider value={form}>
