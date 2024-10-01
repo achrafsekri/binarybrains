@@ -1,14 +1,5 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
-import { signIn } from "next-auth/react";
+import { Dispatch, SetStateAction, useContext } from "react";
 
-import { siteConfig } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
 import { invoiceFormContext } from "@/app/(protected)/dashboard/invoices/create/CreateInvoiceForm";
@@ -33,7 +24,7 @@ export default function EditSellerInfoModal({
   const form = useContext(invoiceFormContext);
   return (
     <Modal
-      className="max-w-2xl p-4"
+      className="max-w-2xl p-4 max-h-[90vh] overflow-y-auto"
       showModal={showModal}
       setShowModal={setShowModal}
     >
@@ -41,7 +32,7 @@ export default function EditSellerInfoModal({
         Modifier les informations du vendeur
       </h2>
       <hr className="my-4" />
-      <div className="w-full px-2 space-y-4 overflow-y-auto">
+      <div className="w-full space-y-4 px-2">
         <FormField
           control={form!.control}
           name="SellerDetails.name"
@@ -120,6 +111,15 @@ export default function EditSellerInfoModal({
             </FormItem>
           )}
         />
+        <div className="flex justify-end">
+          <Button
+            onClick={() => {
+              setShowModal(false);
+            }}
+          >
+            Enregistrer
+          </Button>
+        </div>
       </div>
     </Modal>
   );
