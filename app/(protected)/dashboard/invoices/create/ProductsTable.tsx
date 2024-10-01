@@ -53,7 +53,7 @@ export default function ProductsTable() {
     const ProductsList = getValues("ProductsList");
     setValue(
       "ProductsList",
-      ProductsList.map((product, i) => ({
+      ProductsList.map((product: any, i: number) => ({
         ...product,
         [field]: i === index ? value : product[field],
         totalPrice:
@@ -68,35 +68,37 @@ export default function ProductsTable() {
     <>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className=""></TableHead>
-            <TableHead className="w-4/12">Description</TableHead>
+          <TableRow className="bg-gray-800 lg:text-base text-sm text-white hover:bg-gray-800">
+            <TableHead className="text-white"></TableHead>
+            <TableHead className="w-4/12 text-left text-white">
+              Description
+            </TableHead>
             {showQuantity && (
-              <TableHead className="text-left">Quantité</TableHead>
+              <TableHead className="text-left text-white">Quantité</TableHead>
             )}
-            {vat && <TableHead className="text-left">TVA</TableHead>}
+            {vat && <TableHead className="text-left text-white">TVA</TableHead>}
 
-            <TableHead className="text-left">Prix</TableHead>
+            <TableHead className="text-left text-white">Prix</TableHead>
 
-            <TableHead className="text-left">Total</TableHead>
+            <TableHead className="text-left text-white">Total</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="divide-y divide-gray-200 md:text-sm text-2xs">
           {ProductsDetails?.map((product: any, index: number) => (
             <TableRow key={index} className={cn("group")}>
               <TableCell>
                 <Button
                   onClick={() => removeProduct(index)}
                   variant={"ghost"}
-                  className="invisible size-fit justify-end border-none p-1 text-primary hover:bg-transparent hover:text-primary group-hover:visible"
+                  className="size-fit justify-end border-none p-1 text-primary hover:bg-gray-100 hover:text-primary"
                 >
                   <Minus className="size-4" />
                 </Button>
               </TableCell>
               <TableCell>
-                <Input
+                <input
                   value={product.name}
-                  className="no-spinner size-full border-none"
+                  className="no-spinner size-full border-none py-2 text-left"
                   type="text"
                   {...register(`ProductsList.${index}.name`)}
                   onChange={(e) =>
@@ -106,9 +108,9 @@ export default function ProductsTable() {
               </TableCell>
               {showQuantity && (
                 <TableCell className="text-left">
-                  <Input
+                  <input
                     value={product.quantity}
-                    className="no-spinner size-full border-none"
+                    className="no-spinner size-full border-none py-2"
                     type="number"
                     min={0}
                     {...register(`ProductsList.${index}.quantity`)}
@@ -119,10 +121,10 @@ export default function ProductsTable() {
                 </TableCell>
               )}
               {vat && (
-                <TableCell className="flex text-left">
-                  <Input
+                <TableCell className="flex items-center text-left">
+                  <input
                     value={product.vatRate}
-                    className="no-spinner size-full border-none"
+                    className="no-spinner size-full border-none py-2"
                     type="number"
                     min={0}
                     max={100}
@@ -139,9 +141,9 @@ export default function ProductsTable() {
                 </TableCell>
               )}
               <TableCell className="text-left">
-                <Input
+                <input
                   value={product.unitPrice}
-                  className="no-spinner size-full border-none"
+                  className="no-spinner size-full border-none py-2"
                   type="number"
                   min={0}
                   {...register(`ProductsList.${index}.unitPrice`)}
@@ -163,8 +165,7 @@ export default function ProductsTable() {
           //@ts-ignore
           onClick={() => addProduct()}
           className={cn(
-            "invisible size-fit rounded-full p-2 text-primary hover:text-primary",
-            "group-hover:visible",
+            "size-fit rounded-full p-2 text-primary hover:text-primary",
           )}
         >
           <Plus className="size-4" />

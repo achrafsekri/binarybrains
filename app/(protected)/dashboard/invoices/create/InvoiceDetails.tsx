@@ -27,14 +27,14 @@ export default function InvoiceDetails() {
   };
   const add = Object.keys(dates).filter((key) => dates[key].value === null);
   return (
-    <div className="relative min-w-64 flex flex-col items-start border-2 border-dashed p-2 hover:bg-gray-100">
-      <p className="text-sm font-semibold text-gray-600">À l’attention de:</p>
-      <p className="text-sm font-medium text-gray-600">Panorama</p>
+    <div className="relative text-2xs flex-1 lg:flex-none lg:text-sm flex lg:min-w-64 flex-col items-start border-2 border-dashed p-2 hover:bg-gray-100">
+      <p className="font-semibold text-gray-600">À l’attention de:</p>
+      <p className="font-medium text-gray-600">Panorama</p>
       {/* //siret */}
-      <p className="text-sm text-gray-600">SIRET: 123456789 </p>
-      <p className="text-sm text-gray-600">123-456-7890</p>
-      <p className="text-sm text-gray-600">hello@Panorama.fr </p>
-      <p className="text-sm text-gray-600">1234 Paris, France</p>
+      <p className="text-gray-600">SIRET: 123456789 </p>
+      <p className="text-gray-600">123-456-7890</p>
+      <p className="text-gray-600">hello@Panorama.fr </p>
+      <p className="text-gray-600">1234 Paris, France</p>
       <button
         type="button"
         className="absolute right-2 top-2 rounded-full px-2 py-2 text-gray-600 hover:bg-primary hover:text-white"

@@ -26,13 +26,13 @@ export const sidebarLinks: SidebarNavItem[] = [
         authorizeOnly: UserRole.USER,
       },
 
-      {
-        href: "#/dashboard/posts",
-        icon: "post",
-        title: "User Posts",
-        authorizeOnly: UserRole.USER,
-        disabled: true,
-      },
+      // {
+      //   href: "#/dashboard/posts",
+      //   icon: "post",
+      //   title: "User Posts",
+      //   authorizeOnly: UserRole.USER,
+      //   disabled: true,
+      // },
     ],
   },
   {
