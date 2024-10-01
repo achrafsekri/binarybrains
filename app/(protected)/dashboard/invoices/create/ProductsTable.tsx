@@ -70,19 +70,19 @@ export default function ProductsTable() {
         <TableHeader>
           <TableRow>
             <TableHead className=""></TableHead>
-            <TableHead className="w-4/12">Product Name</TableHead>
+            <TableHead className="w-4/12">Description</TableHead>
             {showQuantity && (
-              <TableHead className="text-left">Quantity</TableHead>
+              <TableHead className="text-left">Quantité</TableHead>
             )}
-            {vat && <TableHead className="text-left">VAT Rate</TableHead>}
+            {vat && <TableHead className="text-left">TVA</TableHead>}
 
-            <TableHead className="text-left">Unit Price</TableHead>
+            <TableHead className="text-left">Prix</TableHead>
 
             <TableHead className="text-left">Total</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody >
-          {ProductsDetails?.map((product, index) => (
+        <TableBody>
+          {ProductsDetails?.map((product: any, index: number) => (
             <TableRow key={index} className={cn("group")}>
               <TableCell>
                 <Button

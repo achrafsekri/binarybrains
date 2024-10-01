@@ -1,18 +1,15 @@
 import { useContext } from "react";
-import { Minus , Plus } from "lucide-react";
+import { Minus, Pencil, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 
 import { invoiceFormContext } from "./CreateInvoiceForm";
-import { FileUploader } from "@/components/shared/file-uploader";
-import { InvoiceFileUploader } from "@/components/shared/invoice-file-uploader";
 
 export default function SellerForm() {
   const form = useContext(invoiceFormContext);
-  function adjustInputWidth(value:string, key:string) {
+  function adjustInputWidth(value: string, key: string) {
     const span = document.getElementById(`input-width-helper-${key}`);
 
     // Update the span content to the current input value
@@ -25,7 +22,7 @@ export default function SellerForm() {
   }
   form?.watch("SellerDetails");
 
-  const sellerDetails:Record<string, any> = {
+  const sellerDetails: Record<string, any> = {
     name: {
       value: form?.getValues("SellerDetails.name"),
       nullable: false, // Not nullable, as per schema
@@ -63,83 +60,25 @@ export default function SellerForm() {
     },
   };
 
-  const add = Object.keys(sellerDetails).filter((key:string) => sellerDetails[key].value === null);
+  const add = Object.keys(sellerDetails).filter(
+    (key: string) => sellerDetails[key].value === null,
+  );
 
   return (
-    <div className="flex flex-col items-center space-x-4">
-      <div className=" w-full items-center justify-start relative">
-        <InvoiceFileUploader/>
-      </div>
-      <div className="flex flex-col space-y-1">
-        {Object.keys(sellerDetails).map(
-          (key) =>
-            sellerDetails[key].value && (
-              <FormField
-                //@ts-ignore
-                name={`SellerDetails.${key}`}
-                key={key}
-                control={form?.control}
-                render={({ field }) => (
-                  <FormItem className="font-gray-600 group flex items-end justify-start gap-1 text-center text-sm">
-                    <span>{sellerDetails[key]?.nullable && `${key}:`}</span>
-                    <div className="relative">
-                      {/* Invisible span to measure text width */}
-                      <span
-                        id={`input-width-helper-${key}`}
-                        className="invisible absolute whitespace-pre font-bold"
-                      >
-                        {(field.value as string) || key}{" "}
-                        {/* Fallback to placeholder value */}
-                      </span>
-
-                      <input
-                        className={cn(
-                          "size-fit min-w-max justify-start border-none p-0 text-sm text-gray-600 hover:bg-transparent",
-                          sellerDetails[key].tag === "h1" &&
-                            "text-2xl font-bold text-gray-800",
-                        )}
-                        onChange={(e) => {
-                          field.onChange(e.target.value);
-                          adjustInputWidth(e.target.value, key);
-                        }}
-                        value={field.value as string}
-                        placeholder={key}
-                        style={{ width: "auto" }} // To allow dynamic width change
-                      />
-                    </div>
-
-                    <Button
-                      onClick={() => field.onChange(null)}
-                      variant={"ghost"}
-                      className={cn(
-                        "invisible size-fit justify-start border-none p-1 text-primary hover:bg-transparent hover:text-primary group-hover:visible",
-                        !sellerDetails[key].nullable &&
-                          "obacity-0 disabled:cursor-default disabled:opacity-0",
-                      )}
-                      disabled={!sellerDetails[key].nullable}
-                    >
-                      <Minus className="size-4" />
-                    </Button>
-                  </FormItem>
-                )}
-              />
-            ),
-        )}
-        <div className="flex w-full justify-center group">
-        <Button
-          variant={"ghost"}
-          //@ts-ignore
-          onClick={()=>form?.resetField(`SellerDetails.${add[0]}`)}
-          className={cn(
-            "invisible size-fit rounded-full p-2 text-primary hover:text-primary",
-            add.length > 0 && "group-hover:visible",
-          )}
-        >
-          <Plus className="size-4" />
-        </Button>
-      </div>
-      
-      </div>
+    <div className="relative min-w-64 flex flex-col items-start border-2 border-dashed p-2 hover:bg-gray-100">
+      <p className="text-sm font-semibold text-gray-600">Célia Naudin</p>
+      {/* //siret */}
+      <p className="text-sm text-gray-600">SIRET: 123456789 </p>
+      <p className="text-sm text-gray-600">123-456-7890</p>
+      <p className="text-sm text-gray-600">hello@reallygreatsite.com </p>
+      <p className="text-sm text-gray-600">1234 Rue de la Rue, Paris, France</p>
+      <button
+        type="button"
+        className="absolute right-2 top-2 text-gray-600 rounded-full px-2 py-2 hover:bg-primary hover:text-white"
+        onClick={() => {}}
+      >
+        <Pencil size={16} className="" />
+      </button>
     </div>
   );
 }

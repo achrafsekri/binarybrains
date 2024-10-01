@@ -17,7 +17,7 @@ export default function UpgradePlanCard({
 }) {
     const proposedUpgrade = pricingData.filter(
         (offer) =>
-            offer.title !== subscriptionPlan.title && offer.title !== "Débutant",
+            offer.title.toLowerCase() !== subscriptionPlan.title.toLowerCase() && offer.title !== "Débutant",
     )[0];
 
     return (

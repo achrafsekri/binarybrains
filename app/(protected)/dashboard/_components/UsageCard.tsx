@@ -29,7 +29,7 @@ export default async function UsageCard({
         1,
     );
 
-    const Limits = planLimits[subscriptionPlan.title];
+    const Limits = planLimits[subscriptionPlan.title.toLowerCase()];
     const QuotesUsagePromise = prisma.quote.count({
         where: {
             userId: user?.id,
