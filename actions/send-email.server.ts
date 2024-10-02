@@ -3,6 +3,7 @@
 import nodemailer from "nodemailer";
 
 const transporter = nodemailer.createTransport({
+  // @ts-expect-error
   host: process.env.EMAIL_SERVER_HOST,
   port: process.env.EMAIL_SERVER_PORT,
   auth: {
@@ -21,7 +22,8 @@ export const sendEmail = async (html: any, subject: string, to: string) => {
   try {
     return await transporter.sendMail(options);
   } catch (error) {
-    console.log("ERROR", error.message);
+    //@ts-expect-error
+    console.log("ERROR", error!.message as string);
     return { ok: false, msg: "Failed to send email" };
   }
 };

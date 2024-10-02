@@ -62,6 +62,7 @@ export const createInvoice = async (data: QuoteForm) => {
         devise: Settings.devise,
         number: InvoiceDetails.id,
         date: InvoiceDetails.startingDate as Date,
+        userId: userId,
       },
     });
 

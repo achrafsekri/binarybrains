@@ -64,28 +64,29 @@ model Session {
 }
 
 model User {
-  id                     String    @id @default(cuid())
+  id                     String     @id @default(cuid())
   name                   String?
-  email                  String?   @unique
+  email                  String?    @unique
   emailVerified          DateTime?
-  emailVerifToken        String?   @db.VarChar(255)
-  passwordResetToken     String?   @db.VarChar(255)
+  emailVerifToken        String?    @db.VarChar(255)
+  passwordResetToken     String?    @db.VarChar(255)
   password               String?
   image                  String?
-  createdAt              DateTime  @default(now()) @map(name: "created_at")
-  updatedAt              DateTime  @default(now()) @map(name: "updated_at")
-  role                   UserRole  @default(USER)
+  createdAt              DateTime   @default(now()) @map(name: "created_at")
+  updatedAt              DateTime   @default(now()) @map(name: "updated_at")
+  role                   UserRole   @default(USER)
   accounts               Account[]
   sessions               Session[]
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+  stripeCustomerId       String?    @unique @map(name: "stripe_customer_id")
+  stripeSubscriptionId   String?    @unique @map(name: "stripe_subscription_id")
+  stripePriceId          String?    @map(name: "stripe_price_id")
+  stripeCurrentPeriodEnd DateTime?  @map(name: "stripe_current_period_end")
   Seller                 Seller[]
   Invoice                Invoice[]
+  Quote                  Quote[]
+  Customer               Customer[]
 
   @@map(name: "users")
-  Quote Quote[]
 }
 
 model VerificationToken {
@@ -119,6 +120,8 @@ model Customer {
   siret    String?   @unique
   phone    String?
   email    String?
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
   invoices Invoice[]
   quotes   Quote[]
 }
