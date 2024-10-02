@@ -34,7 +34,10 @@ export default async function Page() {
         text={`Suivez les factures et les paiements pour vos projets.`}
       >
         <Link href="/dashboard/invoices/create">
-          <Button>Creer une facture</Button>
+          <Button>
+            <span className="hidden md:block">Créer une facture</span>
+            <Plus size={18} className="md:hidden" />
+          </Button>
         </Link>
       </DashboardHeader>
       {invoices!.length == 0 && (

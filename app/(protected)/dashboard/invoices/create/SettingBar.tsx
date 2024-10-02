@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -34,15 +33,14 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import { createInvoice } from "./invoice-server";
-import { invoiceFormContext, invoiceFormSchema } from "./page";
+import { invoiceFormContext, invoiceFormSchema } from "./CreateInvoiceForm";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);
   form?.watch("Settings");
 
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    console.log('the values: ', values);
+    console.log("the values: ", values);
     toast.success("La facture a été créé avec succès");
 
     try {
@@ -197,9 +195,12 @@ export default function SettingBar() {
         />
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="outline">Sauvegarder</Button>
+            <Button className="mt-8 w-full" variant="outline">
+              <Download className="mr-2 size-4" />
+              Sauvegarder
+            </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] ">
             <DialogHeader>
               <DialogTitle>Sauvegarder</DialogTitle>
               <DialogDescription>
@@ -208,12 +209,12 @@ export default function SettingBar() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <div className="flex justify-end space-x-4">
+              <div className="flex justify-center space-x-4">
                 <ConnectForm>
-                  {({ handleSubmit }) => (
+                  {({ handleSubmit }: any) => (
                     <>
                       <Button
-                        className="font-white bg-primary hover:bg-yellow-600"
+                        className="font-white bg-primary hover:bg-primary/80"
                         type="button"
                         onClick={handleSubmit(onSubmit)}
                       >
@@ -223,7 +224,7 @@ export default function SettingBar() {
                     </>
                   )}
                 </ConnectForm>
-                <Button className="font-white bg-primary hover:bg-yellow-600">
+                <Button className="font-white bg-primary hover:bg-primary/80">
                   <Send className="mr-2 size-4" />
                   Envoyer
                 </Button>
@@ -236,7 +237,7 @@ export default function SettingBar() {
   );
 }
 
-export const ConnectForm = ({ children }) => {
+export const ConnectForm = ({ children }: any) => {
   const methods = useFormContext();
 
   return children({ ...methods });

@@ -23,6 +23,7 @@ import { UpgradeCard } from "@/components/dashboard/upgrade-card";
 import { Icons } from "@/components/shared/icons";
 
 import Logo from "./logo";
+import MobileLogo from "./MobileLogo";
 
 interface DashboardSidebarProps {
   links: SidebarNavItem[];
@@ -71,7 +72,7 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
               <div className="flex h-14 items-center p-4">
-                <Logo />
+                {isSidebarExpanded ? <Logo /> : <MobileLogo />}
                 <Button
                   variant="ghost"
                   size="icon"
@@ -93,7 +94,7 @@ export function DashboardSidebar({ links }: DashboardSidebarProps) {
                 </Button>
               </div>
 
-              <nav className="flex flex-1 flex-col gap-8 px-4 ">
+              <nav className="flex flex-1 flex-col gap-8 px-4">
                 {links.map((section) => (
                   <section
                     key={section.title}
@@ -202,10 +203,7 @@ export function MobileSheetSidebar({ links }: DashboardSidebarProps) {
                   href="#"
                   className="flex items-center gap-2 text-lg font-semibold"
                 >
-                  <Icons.logo className="size-6" />
-                  <span className="font-urban text-xl font-bold">
-                    {siteConfig.name}
-                  </span>
+                  <Logo />
                 </Link>
 
                 {links.map((section) => (
