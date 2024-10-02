@@ -9,8 +9,9 @@ import { z } from "zod";
 import { Form } from "@/components/ui/form";
 
 import { createInvoice } from "./invoice-server";
-import InvoiceIntervace from "./InvoiceInterface";
+import InvoiceInterface from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
+import { Customer } from "@prisma/client";
 
 const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -60,7 +61,7 @@ const invoiceFormSchema = z.object({
     vatRate: z.number().nullable(),
     vatAmount: z.number().nullable(),
     total: z.number().nullable(),
-    paymentTerms: z.string().nullable(),
+    paymentMethod: z.string().nullable(),
     paymentDetails: z.string().nullable(),
     legalMentions: z.string().nullable(),
     paymentDate: z.string().nullable(),
@@ -69,8 +70,8 @@ const invoiceFormSchema = z.object({
 export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
-
-export function CreateInvoiceForm() {
+export const userCustomers = createContext<Customer[] | null>(null);
+export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
       logo: "jazjkaj",
@@ -133,7 +134,7 @@ export function CreateInvoiceForm() {
       vatRate: 20, // Default VAT rate
       vatAmount: 340, // Default VAT amount
       total: 2040, // Default total amount
-      paymentTerms: null, // Optional, default to null
+      paymentMethod: null, // Optional, default to null
       paymentDetails: null, // Optional, default to null
       legalMentions: null, // Optional, default to null
       paymentDate: null, // Optional, default to null
@@ -167,10 +168,12 @@ export function CreateInvoiceForm() {
           onSubmit={form.handleSubmit(onSubmit, OnError)}
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
+          <userCustomers.Provider value={clients}>
           <invoiceFormContext.Provider value={form}>
-            <InvoiceIntervace />
+            <InvoiceInterface />
             <SettingBar />
           </invoiceFormContext.Provider>
+          </userCustomers.Provider>
         </form>
       </Form>
     </main>

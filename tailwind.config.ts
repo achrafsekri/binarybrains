@@ -61,6 +61,12 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontSize: {
+        "2xs": ".625rem",
+        "3xs": ".5rem",
+        "4xs": ".375rem",
+        "5xs": ".25rem",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         urban: ["var(--font-urban)", ...fontFamily.sans],

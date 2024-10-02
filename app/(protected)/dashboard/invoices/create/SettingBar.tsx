@@ -31,15 +31,17 @@ export default function SettingBar() {
   return (
     <Card className="z-10 h-fit lg:sticky lg:top-16 lg:mx-auto lg:max-w-md">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Réglages</CardTitle>
+        <CardTitle className="text-lg font-bold lg:text-2xl">
+          Réglages
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="text-sm md:text-base">
         <FormField
           control={form?.control}
           name="Settings.vatActivated"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <Label htmlFor="activate-vat" className="text-sm font-medium">
                   Activer la TVA
                 </Label>
@@ -52,13 +54,13 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-
+        <hr className="my-6" />
         <FormField
           control={form?.control}
           name="Settings.vatPerItem"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <Label htmlFor="variable-vat" className="text-sm font-medium">
                   Taux TVA variable par ligne
                 </Label>
@@ -71,6 +73,7 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
+        <hr className="my-6" />
 
         <FormField
           control={form?.control}
@@ -78,6 +81,7 @@ export default function SettingBar() {
           render={({ field }) => (
             <FormItem
               className={cn(
+                "",
                 (form?.getValues("Settings.vatPerItem") ||
                   !form?.getValues("Settings.vatActivated")) &&
                   "hidden",
@@ -96,13 +100,13 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-
+        <hr className="my-6" />
         <FormField
           control={form?.control}
           name="Settings.showQuantity"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <Label
                   htmlFor="activate-quantity"
                   className="text-sm font-medium"
@@ -118,13 +122,13 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-
+        <hr className="my-6" />
         <FormField
           control={form?.control}
           name="Settings.showUnit"
           render={({ field }) => (
             <FormItem>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-2">
                 <Label htmlFor="activate-unit" className="text-sm font-medium">
                   Activer la colonne &quot;Unité&quot;
                 </Label>
@@ -137,33 +141,7 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form?.control}
-          name="Settings.color"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="cell-color" className="text-sm font-medium">
-                Couleur des cases
-              </Label>
-              <Select
-                onValueChange={(value) => field.onChange(value)}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectTrigger id="cell-color">
-                  <SelectValue placeholder="Sélectionnez une couleur" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="6b7280">Gris</SelectItem>
-                  <SelectItem value="3b82f6">Bleu</SelectItem>
-                  <SelectItem value="22c55e">Vert</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-
+        <hr className="my-6" />
         <FormField
           control={form?.control}
           name="Settings.devise"
@@ -189,17 +167,18 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-        <div className="flex justify-end space-x-4">
+
+        <div className="mt-6 flex justify-end space-x-4">
           <Button
             className="font-white bg-primary hover:bg-yellow-600"
             type="submit"
           >
             <Download className="mr-2 size-4" />
-            Save
+            Télécharger
           </Button>
           <Button className="font-white bg-primary hover:bg-yellow-600">
             <Printer className="mr-2 size-4" />
-            Print
+            Imprimer
           </Button>
         </div>
       </CardContent>
