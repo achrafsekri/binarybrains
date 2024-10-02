@@ -29,7 +29,7 @@ export default async function UsageCard({
         1,
     );
 
-    const Limits = planLimits[subscriptionPlan.title];
+    const Limits = planLimits[subscriptionPlan.title.toLowerCase()];
     const QuotesUsagePromise = prisma.quote.count({
         where: {
             userId: user?.id,
@@ -64,19 +64,19 @@ export default async function UsageCard({
             <CardContent className="space-y-4">
                 <div>
                     <div className="mb-1 flex text-sm">
-                        Factures: {InvoicesUsage}/{Limits.Factures}
+                        Factures: {InvoicesUsage}/{Limits?.Factures}
                     </div>
                     <Progress value={InvoicesUsage} className="h-2" />
                 </div>
                 <div>
                     <div className="mb-1 flex text-sm">
-                        Devis: {QuotesUsage}/{Limits.Devis}
+                        Devis: {QuotesUsage}/{Limits?.Devis}
                     </div>
                     <Progress value={QuotesUsage} className="h-2" />
                 </div>
                 <p className="text-sm text-gray-500">
                     Vous avez utilisé {InvoicesUsage + QuotesUsage} sur{" "}
-                    {typeof Limits.Factures == "string" || typeof Limits.Devis == "string" ? "illimité" : Limits.Factures + Limits.Devis} documents au total
+                    {typeof Limits?.Factures == "string" || typeof Limits?.Devis == "string" ? "illimité" : Limits.Factures + Limits.Devis} documents au total
                 </p>
             </CardContent>
             <CardFooter>

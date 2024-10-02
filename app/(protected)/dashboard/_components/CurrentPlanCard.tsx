@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
+import { format } from "date-fns";
 
 export default function CurrentPlanCard({ subscriptionPlan }: { subscriptionPlan: UserSubscriptionPlan }) {
     return (
@@ -25,7 +26,7 @@ export default function CurrentPlanCard({ subscriptionPlan }: { subscriptionPlan
                 </p>
                 {subscriptionPlan.isPaid && (
                     <p className="text-sm text-gray-500">
-                        {subscriptionPlan?.stripeCurrentPeriodEnd}
+                        {format(subscriptionPlan?.stripeCurrentPeriodEnd, "dd/MM/yyyy")}
                     </p>
                 )}
             </CardContent>
