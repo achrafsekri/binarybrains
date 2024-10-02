@@ -22,7 +22,7 @@ export const sendEmail = async (html: any, subject: string, to: string) => {
   try {
     return await transporter.sendMail(options);
   } catch (error) {
-    //@ts-expect-error
+    //@ts-ignore
     console.log("ERROR", error!.message as string);
     return { ok: false, msg: "Failed to send email" };
   }

@@ -24,7 +24,7 @@ export default function ProductsTable() {
     const ProductsList = getValues("ProductsList");
     setValue(
       "ProductsList",
-      ProductsList.filter((_, i) => i !== index),
+      ProductsList.filter((_: any, i: any) => i !== index),
     );
   };
   const addProduct = () => {
@@ -68,7 +68,7 @@ export default function ProductsTable() {
     <>
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-800 lg:text-base text-sm text-white hover:bg-gray-800">
+          <TableRow className="bg-gray-800 text-sm text-white hover:bg-gray-800 lg:text-base">
             <TableHead className="text-white"></TableHead>
             <TableHead className="w-4/12 text-left text-white">
               Description
@@ -83,7 +83,7 @@ export default function ProductsTable() {
             <TableHead className="text-left text-white">Total</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="divide-y divide-gray-200 md:text-sm text-2xs">
+        <TableBody className="divide-y divide-gray-200 text-2xs md:text-sm">
           {ProductsDetails?.map((product: any, index: number) => (
             <TableRow key={index} className={cn("group")}>
               <TableCell>

@@ -11,6 +11,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       role: UserRole;
+      stripeSubscriptionId: string | unknown;
     } & DefaultSession["user"];
   }
 }
@@ -39,6 +40,7 @@ export const {
         }
         session.user.name = token.name;
         session.user.image = token.picture;
+        session.user.stripeSubscriptionId = token.stripeSubscriptionId;
       }
 
       return session;
@@ -55,6 +57,7 @@ export const {
       token.email = dbUser.email;
       token.picture = dbUser.image;
       token.role = dbUser.role;
+      token.stripeSubscriptionId = dbUser.stripeSubscriptionId;
       return token;
     },
   },

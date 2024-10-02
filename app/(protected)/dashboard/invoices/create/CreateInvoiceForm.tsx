@@ -152,6 +152,7 @@ export function CreateInvoiceForm({ clients }: { clients: Customer[] }) {
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     try {
+      //@ts-expect-error
       const invoice = await createInvoice(values);
       if (invoice) {
         toast.success("La facture a été créé avec succès");

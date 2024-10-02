@@ -100,7 +100,7 @@ export const columns: ColumnDef<Client>[] = [
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">
-                Ouvrir le menu d'actions pour le client
+                Ouvrir le menu d&apos;actions pour le client
               </span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>

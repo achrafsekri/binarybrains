@@ -204,7 +204,7 @@ export default function SettingBar() {
             <DialogHeader>
               <DialogTitle>Sauvegarder</DialogTitle>
               <DialogDescription>
-                Vous pouvez choisir d'enregistrer le PDF ou de l'envoyer par
+                Vous pouvez choisir d&apos;enregistrer le PDF ou de l&apos;envoyer par
                 e-mail.
               </DialogDescription>
             </DialogHeader>

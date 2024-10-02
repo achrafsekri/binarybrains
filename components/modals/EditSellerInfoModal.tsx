@@ -24,7 +24,7 @@ export default function EditSellerInfoModal({
   const form = useContext(invoiceFormContext);
   return (
     <Modal
-      className="max-w-2xl p-4 max-h-[90vh] overflow-y-auto"
+      className="max-h-[90vh] max-w-2xl overflow-y-auto p-4"
       showModal={showModal}
       setShowModal={setShowModal}
     >
@@ -66,7 +66,11 @@ export default function EditSellerInfoModal({
             <FormItem>
               <FormLabel>SIRET</FormLabel>
               <FormControl>
-                <Input placeholder="Numéro de SIRET" {...field} />
+                <Input
+                  placeholder="Numéro de SIRET"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -79,7 +83,11 @@ export default function EditSellerInfoModal({
             <FormItem>
               <FormLabel>Téléphone</FormLabel>
               <FormControl>
-                <Input placeholder="Numéro de téléphone" {...field} />
+                <Input
+                  placeholder="Numéro de téléphone"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -92,7 +100,11 @@ export default function EditSellerInfoModal({
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Adresse email" {...field} />
+                <Input
+                  placeholder="Adresse email"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -105,7 +117,11 @@ export default function EditSellerInfoModal({
             <FormItem>
               <FormLabel>Numéro de TVA</FormLabel>
               <FormControl>
-                <Input placeholder="Numéro de TVA" {...field} />
+                <Input
+                  placeholder="Numéro de TVA"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

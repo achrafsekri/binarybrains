@@ -52,6 +52,7 @@ export function DataTable({ data }: { data: Customer[] }) {
 
   const table = useReactTable({
     data,
+    // @ts-expect-error
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
