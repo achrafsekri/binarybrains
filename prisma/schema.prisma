@@ -68,7 +68,6 @@ model User {
   name                   String?
   email                  String?    @unique
   emailVerified          DateTime?
-  emailVerifToken        String?    @db.VarChar(255)
   passwordResetToken     String?    @db.VarChar(255)
   password               String?
   image                  String?

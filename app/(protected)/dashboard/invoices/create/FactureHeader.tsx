@@ -22,17 +22,17 @@ const FactureHeader = () => {
             onDoubleClick={() => setIdFocus(true)}
             className="rounded-full border border-dashed border-gray-800 px-2 py-1"
           >
-            Facture° {invoiceDetails?.id}
+            Facture° {invoiceDetails?.invoiceNumber}
           </div>
         ) : (
           <Input
             autoFocus
             onBlur={() => setIdFocus(false)}
             className="size-fit rounded-full border border-dashed border-gray-800 px-2 py-1 text-[10px]"
-            value={invoiceDetails?.id}
+            value={invoiceDetails?.invoiceNumber}
             onKeyDown={(e) => e.key === "Enter" && setIdFocus(false)}
             onChange={(e) =>
-              form?.setValue("InvoiceDetails.id", e.target.value)
+              form?.setValue("InvoiceDetails.invoiceNumber", e.target.value)
             }
           />
         )}

@@ -53,7 +53,7 @@ const invoiceFormSchema = z.object({
   }),
 
   InvoiceDetails: z.object({
-    id: z.string(),
+    invoiceNumber: z.string(),
     startingDate: z.date().nullable(),
     deliveryDate: z.date().nullable(),
     dueDate: z.date().nullable(),
@@ -126,7 +126,7 @@ export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
     },
 
     InvoiceDetails: {
-      id: "",
+      invoiceNumber: "0000",
       startingDate: new Date("2023-05-01"), // Default invoice creation date
       deliveryDate: new Date("2023-05-05"), // Default delivery date
       dueDate: new Date("2023-05-15"), // Default due date

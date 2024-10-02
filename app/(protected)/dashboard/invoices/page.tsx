@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 
 import { InvoiceWithRelations } from "@/types/invoice-with-relations";
 import { prisma } from "@/lib/db";
+import { getCurrentUser } from "@/lib/session";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
@@ -15,8 +16,12 @@ export const metadata = constructMetadata({
   description: "Suivez les factures et les paiements pour vos projets.",
 });
 
-export default async function ScopeOfWork() {
+export default async function Page() {
+  const user = await getCurrentUser();
   const invoices: InvoiceWithRelations[] = await prisma.invoice.findMany({
+    where: {
+      userId: user!.id,
+    },
     include: {
       seller: true,
       customer: true,
@@ -29,7 +34,7 @@ export default async function ScopeOfWork() {
         text={`Suivez les factures et les paiements pour vos projets.`}
       >
         <Link href="/dashboard/invoices/create">
-        <Button>Creer une facture</Button>
+          <Button>Creer une facture</Button>
         </Link>
       </DashboardHeader>
       {invoices!.length == 0 && (
