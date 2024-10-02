@@ -11,6 +11,7 @@ import { Form } from "@/components/ui/form";
 import { createInvoice } from "./invoice-server";
 import InvoiceInterface from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
+import { Customer } from "@prisma/client";
 
 const invoiceFormSchema = z.object({
   SellerDetails: z.object({
@@ -69,8 +70,8 @@ const invoiceFormSchema = z.object({
 export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
-
-export function CreateInvoiceForm() {
+export const userCustomers = createContext<Customer[] | null>(null);
+export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
       logo: "jazjkaj",
@@ -167,10 +168,12 @@ export function CreateInvoiceForm() {
           onSubmit={form.handleSubmit(onSubmit, OnError)}
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
+          <userCustomers.Provider value={clients}>
           <invoiceFormContext.Provider value={form}>
             <InvoiceInterface />
             <SettingBar />
           </invoiceFormContext.Provider>
+          </userCustomers.Provider>
         </form>
       </Form>
     </main>

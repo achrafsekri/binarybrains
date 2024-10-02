@@ -1,17 +1,19 @@
-import { useContext } from "react";
-import { Minus, Plus } from "lucide-react";
+import { useContext, useState } from "react";
+import { Minus, Pencil, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormLabel } from "@/components/ui/form";
-
-import { invoiceFormContext } from "./CreateInvoiceForm";
+import EditClientInfoModal from "@/components/modals/EditClientInfoModal";
 import AutoGrowTextArea from "@/components/shared/AutoGrowTextarea";
 
+import { invoiceFormContext } from "./CreateInvoiceForm";
+
 export default function ClientForm() {
+  const [showEditModal, setShowEditModal] = useState(false);
   const form = useContext(invoiceFormContext);
   form?.watch("ClientDetails");
-  const ClientDetails:Record<string , any> = {
+  const ClientDetails: Record<string, any> = {
     name: {
       label: "Client Name:",
       value: form?.getValues("ClientDetails.name"),
@@ -42,61 +44,40 @@ export default function ClientForm() {
     (key) => ClientDetails[key].value === null,
   );
   return (
-    <div className="mb-8 rounded-lg bg-gray-50 p-4">
-      <h2 className="mb-2 text-xl font-semibold text-gray-800">
-        Client Details
-      </h2>
-      <div className="grid grid-cols-2 gap-4">
-        {Object.keys(ClientDetails).map(
-          (key) =>
-            ClientDetails[key].value && (
-              <FormField
-                key={key}
-                control={form?.control}
-                //@ts-ignore
-                name={`ClientDetails.${key}`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-medium text-gray-700">
-                      {ClientDetails[key].label}
-                    </FormLabel>
-                    <div className="group flex w-full gap-1 items-center">
-                      <Button
-                        onClick={() => field.onChange(null)}
-                        variant={"ghost"}
-                        className={cn(
-                          "invisible size-fit justify-end border-none p-1 text-primary hover:bg-transparent hover:text-primary",
-                          ClientDetails[key].nullable && "group-hover:visible",
-                        )}
-                      >
-                        <Minus className="size-4" />
-                      </Button>
-                      <AutoGrowTextArea
-                        placeholder={key}
-                        Value={field.value as string}
-                        onChange={field.onChange}
-                        className="w-full text-gray-600 h-max border-none"
-                      />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            ),
-        )}
-        <div className="group flex w-full justify-center">
-          <Button
-            variant={"ghost"}
-            //@ts-ignore
-            onClick={() => form?.resetField(`ClientDetails.${add[0]}`)}
-            className={cn(
-              "invisible size-fit rounded-full p-2 text-primary hover:text-primary",
-              add.length > 0 && "group-hover:visible",
-            )}
-          >
-            <Plus className="size-4" />
-          </Button>
-        </div>
-      </div>
+    <div className="relative flex flex-1 flex-col items-start border-2 border-dashed p-2 text-2xs hover:bg-gray-100 lg:min-w-64 lg:flex-none lg:text-sm">
+      <p className="font-semibold text-gray-600">À l’attention de:</p>
+      <p className="font-medium text-gray-600">
+        {ClientDetails.name.value || "Panorama"}
+      </p>
+      {/* //siret */}
+      <p className="text-gray-600">
+        SIRET: {ClientDetails.siret.value || "123456789"}{" "}
+      </p>
+      <p className="text-gray-600">
+        {ClientDetails.phone.value || "123-456-7890"}
+      </p>
+      <p className="text-gray-600">
+        {ClientDetails.email.value || "hello@Panorama.fr"}{" "}
+      </p>
+      <p className="text-gray-600">
+        {ClientDetails.address.value || "1234 Paris, France"}
+      </p>
+      <button
+        type="button"
+        className="absolute right-2 top-2 rounded-full p-2 text-gray-600 hover:bg-primary hover:text-white"
+        onClick={() => {
+          setShowEditModal(true);
+        }}
+      >
+        <Pencil size={16} className="" />
+      </button>
+      
+      {showEditModal && (
+        <EditClientInfoModal
+          showModal={showEditModal}
+          setShowModal={setShowEditModal}
+        />
+      )}
     </div>
   );
 }

@@ -88,7 +88,7 @@ export default function SellerForm() {
       </p>
       <button
         type="button"
-        className="absolute right-2 top-2 rounded-full px-2 py-2 text-gray-600 hover:bg-primary hover:text-white"
+        className="absolute right-2 top-2 rounded-full p-2 text-gray-600 hover:bg-primary hover:text-white"
         onClick={() => setShowEditModal(true)}
       >
         <Pencil size={16} className="" />

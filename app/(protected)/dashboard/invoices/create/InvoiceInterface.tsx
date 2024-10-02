@@ -15,9 +15,9 @@ export default function InvoiceInterface() {
 
       <div className="lg:mb-16 mb-8 gap-2 flex items-start justify-between">
         <SellerForm />
-        <InvoiceDetails />
+      <ClientForm />
+        {/* <InvoiceDetails /> */}
       </div>
-      {/* <ClientForm /> */}
       <ProductsTable />
       <PricingDetails />
       <TermsAndPaymentDetails />
