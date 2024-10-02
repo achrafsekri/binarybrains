@@ -13,17 +13,6 @@ import { invoiceFormContext } from "./CreateInvoiceForm";
 export default function SellerForm() {
   const [showEditModal, setShowEditModal] = useState(false);
   const form = useContext(invoiceFormContext);
-  function adjustInputWidth(value: string, key: string) {
-    const span = document.getElementById(`input-width-helper-${key}`);
-
-    // Update the span content to the current input value
-    span!.textContent = value || key; // Fallback to placeholder when empty
-
-    // Calculate and set input width based on the span's width
-    const input = span?.nextElementSibling;
-    //@ts-ignore
-    input!.style.width = `${span?.offsetWidth}px`;
-  }
   form?.watch("SellerDetails");
 
   const sellerDetails: Record<string, any> = {
@@ -63,10 +52,6 @@ export default function SellerForm() {
       tag: "p", // Use p for VAT number
     },
   };
-
-  const add = Object.keys(sellerDetails).filter(
-    (key: string) => sellerDetails[key].value === null,
-  );
 
   return (
     <div className="text-2xs relative flex flex-1 flex-col items-start border-2 border-dashed p-2 hover:bg-gray-100 lg:min-w-64 lg:flex-none lg:text-sm">

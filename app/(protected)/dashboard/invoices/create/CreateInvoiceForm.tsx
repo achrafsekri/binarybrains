@@ -61,7 +61,7 @@ const invoiceFormSchema = z.object({
     vatRate: z.number().nullable(),
     vatAmount: z.number().nullable(),
     total: z.number().nullable(),
-    paymentTerms: z.string().nullable(),
+    paymentMethod: z.string().nullable(),
     paymentDetails: z.string().nullable(),
     legalMentions: z.string().nullable(),
     paymentDate: z.string().nullable(),
@@ -134,7 +134,7 @@ export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
       vatRate: 20, // Default VAT rate
       vatAmount: 340, // Default VAT amount
       total: 2040, // Default total amount
-      paymentTerms: null, // Optional, default to null
+      paymentMethod: null, // Optional, default to null
       paymentDetails: null, // Optional, default to null
       legalMentions: null, // Optional, default to null
       paymentDate: null, // Optional, default to null
