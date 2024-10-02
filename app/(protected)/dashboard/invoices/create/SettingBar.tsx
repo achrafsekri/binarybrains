@@ -1,15 +1,26 @@
 import { useContext, useState } from "react";
-import { Download, Printer } from "lucide-react";
+import { Download, Printer, Send } from "lucide-react";
+import { useFormContext } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,12 +33,27 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import { invoiceFormContext } from "./CreateInvoiceForm";
+import { invoiceFormContext, invoiceFormSchema } from "./CreateInvoiceForm";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);
   form?.watch("Settings");
 
+  async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
+    console.log("the values: ", values);
+    toast.success("La facture a été créé avec succès");
+
+    try {
+      // const invoice = await createInvoice(values);
+      // if (invoice) {
+      //   toast.success("La facture a été créé avec succès");
+      // } else {
+      //   toast.error("Erreur lors de la création de la facture");
+      // }
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <Card className="z-10 h-fit lg:sticky lg:top-16 lg:mx-auto lg:max-w-md">
       <CardHeader>
@@ -167,21 +193,52 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-
-        <div className="mt-6 flex justify-end space-x-4">
-          <Button
-            className="font-white bg-primary hover:bg-yellow-600"
-            type="submit"
-          >
-            <Download className="mr-2 size-4" />
-            Télécharger
-          </Button>
-          <Button className="font-white bg-primary hover:bg-yellow-600">
-            <Printer className="mr-2 size-4" />
-            Imprimer
-          </Button>
-        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="mt-8 w-full" variant="outline">
+              <Download className="mr-2 size-4" />
+              Sauvegarder
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] ">
+            <DialogHeader>
+              <DialogTitle>Sauvegarder</DialogTitle>
+              <DialogDescription>
+                Vous pouvez choisir d'enregistrer le PDF ou de l'envoyer par
+                e-mail.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <div className="flex justify-center space-x-4">
+                <ConnectForm>
+                  {({ handleSubmit }: any) => (
+                    <>
+                      <Button
+                        className="font-white bg-primary hover:bg-primary/80"
+                        type="button"
+                        onClick={handleSubmit(onSubmit)}
+                      >
+                        <Download className="mr-2 size-4" />
+                        Enregistrer
+                      </Button>
+                    </>
+                  )}
+                </ConnectForm>
+                <Button className="font-white bg-primary hover:bg-primary/80">
+                  <Send className="mr-2 size-4" />
+                  Envoyer
+                </Button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
 }
+
+export const ConnectForm = ({ children }: any) => {
+  const methods = useFormContext();
+
+  return children({ ...methods });
+};

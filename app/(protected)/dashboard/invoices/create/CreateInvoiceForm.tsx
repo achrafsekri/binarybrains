@@ -2,6 +2,7 @@
 
 import { createContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Customer } from "@prisma/client";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -11,9 +12,8 @@ import { Form } from "@/components/ui/form";
 import { createInvoice } from "./invoice-server";
 import InvoiceInterface from "./InvoiceInterface";
 import SettingBar from "./SettingBar";
-import { Customer } from "@prisma/client";
 
-const invoiceFormSchema = z.object({
+export const invoiceFormSchema = z.object({
   SellerDetails: z.object({
     name: z.string(),
     address: z.string(),
@@ -71,7 +71,7 @@ export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
 export const userCustomers = createContext<Customer[] | null>(null);
-export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
+export function CreateInvoiceForm({ clients }: { clients: Customer[] }) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
       logo: "jazjkaj",
@@ -134,9 +134,10 @@ export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
       vatRate: 20, // Default VAT rate
       vatAmount: 340, // Default VAT amount
       total: 2040, // Default total amount
-      paymentMethod: null, // Optional, default to null
-      paymentDetails: null, // Optional, default to null
-      legalMentions: null, // Optional, default to null
+      paymentMethod: "Par virement bancaire", // Optional, default to null
+      paymentDetails: "IBAN : FR76 3000 3032 0000 0200 1234 567", // Optional, default to null
+      legalMentions:
+        "En cas de retard de paiement, et conformément au code du commerce, une indemnité calculée sur la base de trois fois le taux d'intérêt légal ainsi que des frais de recouvrement de 40 euros sont dus.", // Optional, default to null
       paymentDate: null, // Optional, default to null
     },
   };
@@ -169,10 +170,10 @@ export function CreateInvoiceForm({clients}:{clients:Customer[]}) {
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
           <userCustomers.Provider value={clients}>
-          <invoiceFormContext.Provider value={form}>
-            <InvoiceInterface />
-            <SettingBar />
-          </invoiceFormContext.Provider>
+            <invoiceFormContext.Provider value={form}>
+              <InvoiceInterface />
+              <SettingBar />
+            </invoiceFormContext.Provider>
           </userCustomers.Provider>
         </form>
       </Form>
