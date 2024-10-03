@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { User } from "@prisma/client";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -17,8 +20,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { redirect } from 'next/navigation'
-import { toast } from "@/components/ui/use-toast";
+
+import { createCustomer } from "./clients-server";
 
 const customerSchema = z.object({
   name: z.string().min(1, { message: "Le nom est requis" }),
@@ -30,9 +33,15 @@ const customerSchema = z.object({
 
 type CustomerFormValues = z.infer<typeof customerSchema>;
 
-export default function NewClientForm() {
+export default function NewClientForm({
+  hasAccess,
+  user,
+}: {
+  hasAccess: boolean;
+  user: User;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const router = useRouter();
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(customerSchema),
     defaultValues: {
@@ -46,23 +55,24 @@ export default function NewClientForm() {
 
   const onSubmit = async (data: CustomerFormValues) => {
     setIsSubmitting(true);
-    // Here you would typically send the form data to your backend
-    // For this example, we'll just simulate a submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    console.log(data);
-    toast({
-      title: "Client ajouté",
-      description: "Le nouveau client a été créé avec succès.",
-    });
-
-    setIsSubmitting(false);
-    form.reset();
-    redirect("/dashboard/clients");
+    try {
+      const res = await createCustomer(
+        { ...data, userId: user.id },
+        hasAccess,
+        user,
+      );
+      toast.success("Le nouveau client a été créé avec succès.");
+      form.reset();
+      router.push("/dashboard/clients");
+    } catch (error) {
+      toast.error("Erreur lors de la création du client. Veuillez récessayer.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <main className="w-full bg-background p-4 px-16">
+    <main className="w-full max-w-4xl bg-background p-4">
       <h1 className="mb-6 text-center text-2xl font-bold">
         Créer un nouveau client
       </h1>
@@ -80,7 +90,8 @@ export default function NewClientForm() {
                 <FormControl>
                   <Input
                     placeholder="Jean Dupont"
-                    {...field}
+                    value={field.value as string}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>
@@ -97,7 +108,8 @@ export default function NewClientForm() {
                 <FormControl>
                   <Textarea
                     placeholder="123 Rue de la Paix, 75000 Paris"
-                    {...field}
+                    value={field.value as string}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>
@@ -115,7 +127,8 @@ export default function NewClientForm() {
                   <Input
                     type="email"
                     placeholder="jean.dupont@example.com"
-                    {...field}
+                    value={field.value as string}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>
@@ -132,7 +145,8 @@ export default function NewClientForm() {
                 <FormControl>
                   <Input
                     placeholder="123 456 789 00012"
-                    {...field}
+                    value={field.value as string}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>
@@ -150,7 +164,8 @@ export default function NewClientForm() {
                   <Input
                     type="tel"
                     placeholder="01 23 45 67 89"
-                    {...field}
+                    value={field.value as string}
+                    onChange={field.onChange}
                     className="w-full"
                   />
                 </FormControl>
@@ -158,8 +173,16 @@ export default function NewClientForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Création en cours..." : "Créer le client"}
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitting || !hasAccess}
+          >
+            {!hasAccess
+              ? "Accès non autorisé"
+              : isSubmitting
+                ? "Création en cours..."
+                : "Créer le client"}
           </Button>
         </form>
       </Form>
