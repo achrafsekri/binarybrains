@@ -39,7 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { deleteInvoice } from "./delete-invoice.server";
+import { deleteInvoice as invoiceDelete } from "./delete-invoice.server";
 
 export const columns: ColumnDef<InvoiceWithRelations>[] = [
   {
@@ -144,22 +144,17 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     id: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const [loading, setLoading] = React.useState(false);
       const deleteInvoice = async () => {
-        setLoading(true);
-        const res = await deleteInvoice(row.original.id);
+        const res = await invoiceDelete(row.original.id);
         if (res.ok) {
           toast.success("Facture supprimée avec succès");
-          setLoading(false);
         } else {
           toast.error(
             "Erreur lors de la suppression de la facture. Veuillez réessayer.",
           );
-          setLoading(false);
         }
       };
       const sendNotice = async () => {
-        setLoading(true);
         const html = await render(
           <ReminderEmail
             senderName={row.original.seller.name}
@@ -184,11 +179,9 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
             row.original.customer.email ?? "",
           );
           toast.success("Rappel envoyé avec succès");
-          setLoading(false);
         } catch (e) {
           console.log("ERROR", e);
           toast.error("Erreur lors de l'envoi du rappel. Veuillez réessayer.");
-          setLoading(false);
         }
       };
       return (
@@ -223,7 +216,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                   <AlertDialogFooter>
                     <AlertDialogCancel>Annuler</AlertDialogCancel>
                     <AlertDialogAction onClick={sendNotice}>
-                      {loading ? "Envoi en cours..." : "Envoyer"}
+                      Envoyer
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -253,7 +246,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                       onClick={deleteInvoice}
                       className="bg-red-500 hover:bg-red-600"
                     >
-                      {loading ? "Suppression en cours..." : "Supprimer"}
+                      Supprimer
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
