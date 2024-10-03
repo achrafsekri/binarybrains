@@ -10,7 +10,7 @@ export const siteConfig: SiteConfig = {
   ogImage: `${site_url}/_static/og.jpg`,
   links: {
     twitter: "https://twitter.com/allofacture",
-    github: "https://github.com/mickasmt/next-saas-stripe-starter",
+    github: "https://github.com/allofacture",
   },
   mailSupport: "info@allofacture.com",
 };

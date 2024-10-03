@@ -39,9 +39,13 @@ import { columns } from "./columns";
 export type Client = Customer & {
   invoices: InvoiceWithRelations[];
   quotes: QuoteWithRelations[];
+  _count: {
+    invoices: number;
+    quotes: number;
+  };
 };
 
-export function DataTable({ data }: { data: Customer[] }) {
+export function DataTable({ data }: { data: Client[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -52,7 +56,6 @@ export function DataTable({ data }: { data: Customer[] }) {
 
   const table = useReactTable({
     data,
-    // @ts-expect-error
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -74,11 +77,12 @@ export function DataTable({ data }: { data: Customer[] }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
-          }
+          placeholder="Filter emails, names, etc."
+          // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => {
+            console.log(event.target.value);
+            table.getColumn("Email")?.setFilterValue(event.target.value);
+          }}
           className="max-w-sm"
         />
         <DropdownMenu>

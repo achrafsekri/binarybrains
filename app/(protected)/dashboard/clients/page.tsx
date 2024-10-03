@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
-import { DataTable } from "./Table";
+import { Client, DataTable } from "./Table";
 
 export const metadata = constructMetadata({
   title: "Les clients- alloFacture",
@@ -25,6 +25,12 @@ export default async function ScopeOfWork() {
       userId: user!.id ?? "",
     },
     include: {
+      _count: {
+        select: {
+          invoices: true,
+          quotes: true,
+        },
+      },
       invoices: {
         select: {
           id: true,
@@ -37,7 +43,7 @@ export default async function ScopeOfWork() {
       },
     },
   });
-
+  console.log(clients);
   return (
     <>
       <DashboardHeader
@@ -67,7 +73,7 @@ export default async function ScopeOfWork() {
           </Link>
         </EmptyPlaceholder>
       )}
-      {clients!.length > 0 && <DataTable data={clients} />}
+      {clients!.length > 0 && <DataTable data={clients as Client[]} />}
     </>
   );
 }

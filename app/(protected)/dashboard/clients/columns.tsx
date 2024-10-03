@@ -1,8 +1,21 @@
 import * as React from "react";
+import Link from "next/link";
 import { Customer, Quote, Seller } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Eye, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { toast } from "sonner";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,11 +28,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { deleteCustomer } from "./delete-client.server";
 import { type Client } from "./Table";
 
 export const columns: ColumnDef<Client>[] = [
   {
-    id: "select",
+    id: "Selection",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -41,17 +55,18 @@ export const columns: ColumnDef<Client>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    accessorKey: "Nom",
+    header: "Nom",
+    cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
   },
 
   {
-    accessorKey: "email",
+    accessorKey: "Email",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
@@ -59,66 +74,125 @@ export const columns: ColumnDef<Client>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.original.email}</div>,
   },
   {
-    accessorKey: "phone",
+    accessorKey: "Téléphone",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Téléphone
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
+    cell: ({ row }) => <div className="lowercase">{row.original.phone}</div>,
   },
   {
-    accessorKey: "total",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "Factures",
+    header: () => <div className="">Factures</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("total"));
+      const nbInvoices = row.original._count.invoices;
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="font-medium">{nbInvoices}</div>;
     },
   },
   {
-    id: "actions",
+    accessorKey: "Devis",
+    header: () => <div className="">Devis</div>,
+    cell: ({ row }) => {
+      const nbQuotes = row.original._count.quotes;
+
+      return <div className="font-medium">{nbQuotes}</div>;
+    },
+  },
+  {
+    id: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const deleteClient = async () => {
+        const res = await deleteCustomer(row.original.id);
+        if (res.ok) {
+          toast.success("Client deleted successfully");
+        } else {
+          toast.error("Error deleting client. Please try again.");
+        }
+      };
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">
-                Ouvrir le menu d&apos;actions pour le client
-              </span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-            //   onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Effacer
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              Modifier
-            </DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center ">
+          <Button variant="ghost" className="hidden lg:block">
+            <Link href={`/dashboard/clients/${row.original.id}`}>
+              <Pencil className="size-5 text-primary" />
+            </Link>
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost">
+                <Trash className="size-5 text-primary" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Tu es sûr de vouloir supprimer ce client ?
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Cette action ne peut pas être annulée.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={deleteClient}
+                  className="bg-red-500 hover:bg-red-600"
+                >
+                  Supprimer
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreHorizontal className="lg:hidden" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <Link href={`/dashboard/clients/${row.original.id}`}>Voir</Link>
+              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem onClick={deleteClient}>
+                    Supprimer
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Tu es sûr de vouloir supprimer ce client ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action ne peut pas être annulée.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={deleteClient}
+                      className="bg-red-500 hover:bg-red-600"
+                    >
+                      Supprimer
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },
