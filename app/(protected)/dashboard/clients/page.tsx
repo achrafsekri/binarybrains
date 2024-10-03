@@ -44,7 +44,9 @@ export default async function ScopeOfWork() {
         heading="Clients"
         text={`Ajoutez, modifiez et supprimez des clients pour suivre les factures et les paiements.`}
       >
-        <Button>Ajouter un client</Button>
+        <Link href="/dashboard/clients/create">
+          <Button>Ajouter un client</Button>
+        </Link>
       </DashboardHeader>
       {clients!.length == 0 && (
         <EmptyPlaceholder>
@@ -55,12 +57,14 @@ export default async function ScopeOfWork() {
           <EmptyPlaceholder.Description>
             Ajoutez un client pour suivre les factures et les paiements.
           </EmptyPlaceholder.Description>
-          <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
-            <Plus size={18} className="" />
-            <span className="flex-1 truncate text-center">
-              Ajouter un client
-            </span>
-          </Button>
+          <Link href="/dashboard/clients/create">
+            <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
+              <Plus size={18} className="" />
+              <span className="flex-1 truncate text-center">
+                Ajouter un client
+              </span>
+            </Button>
+          </Link>
         </EmptyPlaceholder>
       )}
       {clients!.length > 0 && <DataTable data={clients} />}

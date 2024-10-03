@@ -127,7 +127,7 @@ export const comparePlans: PlansRow[] = [
 ];
 type PlanLimits = Record <string, number | string>;
 export const planLimits:Record<string , PlanLimits> = {
-  débutant: { Factures: 10, Devis: 10 },
-  pro: { Factures: 100, Devis: 100 },
-  business: { Factures: "Illimité", Devis: "Illimité" },
+  débutant: { Factures: 10, Devis: 10, clients:3 },
+  pro: { Factures: 100, Devis: 100 , clients:"Illimité"},
+  business: { Factures: "Illimité", Devis: "Illimité" , clients:"Illimité"},
 };
