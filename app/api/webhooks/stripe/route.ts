@@ -3,6 +3,7 @@ import Stripe from "stripe";
 
 import { env } from "@/env.mjs";
 import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
 import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
@@ -17,7 +18,9 @@ export async function POST(req: Request) {
       signature,
       env.STRIPE_WEBHOOK_SECRET,
     );
+    logger.info(`Webhook received: ${event.type}`);
   } catch (error: any) {
+    logger.error(`Webhook Error: ${error.message}`);
     return new Response(`Webhook Error: ${error.message}`, { status: 400 });
   }
 
@@ -72,6 +75,6 @@ export async function POST(req: Request) {
       });
     }
   }
-
+  logger.info(`Webhook processed: ${event.type}`);
   return new Response(null, { status: 200 });
 }
