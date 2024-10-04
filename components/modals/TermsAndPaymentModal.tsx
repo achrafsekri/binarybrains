@@ -44,10 +44,10 @@ export default function TermsAndPaymenModal({
       <div className="w-full space-y-4 px-2">
         <FormField
           control={form!.control}
-          name="InvoiceDetails.paymentMethod"
+          name="InvoiceDetails.paymentTerms"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Methode de payement</FormLabel>
+              <FormLabel>Conditions de paiement </FormLabel>
               <FormControl>
                 <Textarea
                   value={field.value as string}
@@ -63,11 +63,13 @@ export default function TermsAndPaymenModal({
           name="InvoiceDetails.paymentDetails"
           render={() => (
             <FormItem>
-              <FormLabel>Details du compte bancaire</FormLabel>
+              <FormLabel>Details de paiement</FormLabel>
               <FormControl>
                 <Textarea
-                 defaultValue={bankDetails.split("%n%").join("\n")}
-                  onChange={(e) => setBankDetails(e.target.value.split("\n").join("%n%"))}
+                  defaultValue={bankDetails.split("%n%").join("\n")}
+                  onChange={(e) =>
+                    setBankDetails(e.target.value.split("\n").join("%n%"))
+                  }
                 />
               </FormControl>
               <FormMessage />

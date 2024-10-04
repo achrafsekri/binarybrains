@@ -13,6 +13,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { DialogTitle } from "../ui/dialog";
 
 export default function EditSellerInfoModal({
   showModal,
@@ -28,10 +29,11 @@ export default function EditSellerInfoModal({
       showModal={showModal}
       setShowModal={setShowModal}
     >
-      <h2 className="text-left text-2xl font-bold">
-        Modifier les informations du vendeur
-      </h2>
-      <hr className="my-4" />
+      <DialogTitle className="text-2xl font-bold">
+        Modifier les informations du 
+        <br />
+        vendeur
+      </DialogTitle>
       <div className="w-full space-y-4 px-2">
         <FormField
           control={form!.control}

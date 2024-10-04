@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import { Customer } from "@prisma/client";
+import { Plus, PlusCircle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
@@ -16,6 +17,7 @@ import {
 } from "@/app/(protected)/dashboard/invoices/create/CreateInvoiceForm";
 
 import SellerInfoForm from "../forms/seller-info-form";
+import { DialogTitle } from "../ui/dialog";
 import {
   FormControl,
   FormField,
@@ -41,16 +43,31 @@ export default function EditClientInfoModal({
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [customer, setCustomer] = useState<Customer | null>(null);
   const form = useContext(invoiceFormContext);
   const clients = useContext(userCustomers);
+  const [customer, setCustomer] = useState<Customer | null>(
+    //@ts-expect-error
+    form?.getValues("ClientDetails.id")
+      ? clients?.find(
+          (client) => client.id === form?.getValues("ClientDetails.id"),
+        )
+      : null,
+  );
   useEffect(() => {
     if (customer) {
+      form?.setValue("ClientDetails.id", customer.id);
       form?.setValue("ClientDetails.name", customer.name);
       form?.setValue("ClientDetails.address", customer.address);
       form?.setValue("ClientDetails.siret", customer.siret);
       form?.setValue("ClientDetails.phone", customer.phone);
       form?.setValue("ClientDetails.email", customer.email);
+    } else {
+      form?.setValue("ClientDetails.id", "");
+      form?.setValue("ClientDetails.name", "");
+      form?.setValue("ClientDetails.address", "");
+      form?.setValue("ClientDetails.siret", "");
+      form?.setValue("ClientDetails.phone", "");
+      form?.setValue("ClientDetails.email", "");
     }
   }, [customer, form]);
   return (
@@ -59,10 +76,12 @@ export default function EditClientInfoModal({
       showModal={showModal}
       setShowModal={setShowModal}
     >
-      <h2 className="text-left text-2xl font-bold">
-        Modifier les informations du client
-      </h2>
-      <hr className="my-4" />
+      <DialogTitle className="text-2xl font-bold">
+        {" "}
+        Modifier les informations du client{" "}
+      </DialogTitle>
+
+      {/* <hr className="my-4" /> */}
       {clients && clients.length > 0 && (
         <>
           <Label>Selectionner un client</Label>
@@ -76,7 +95,11 @@ export default function EditClientInfoModal({
             }}
           >
             <SelectTrigger>
-              {customer ? <div> {customer?.name}</div> : <div className="text-gray-400"> Nom du client </div>}
+              {customer ? (
+                <div> {customer?.name}</div>
+              ) : (
+                <div className="text-gray-400"> Nom du client </div>
+              )}
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
@@ -86,6 +109,9 @@ export default function EditClientInfoModal({
                   </SelectItem>
                 ))}
               </SelectGroup>
+              <SelectItem value={" "} className="font-bold">
+                Ajouter un nouveau client
+              </SelectItem>
             </SelectContent>
           </Select>
         </>
@@ -106,6 +132,7 @@ export default function EditClientInfoModal({
                 <Input
                   placeholder="Nom du client"
                   value={field.value as string}
+                  disabled={customer ? true : false}
                   onChange={(e) => {
                     field.onChange(e.target.value);
                     if (customer) {
@@ -128,6 +155,7 @@ export default function EditClientInfoModal({
                 <Input
                   placeholder="Adresse du client"
                   value={field.value as string}
+                  disabled={customer ? true : false}
                   onChange={(e) => {
                     field.onChange(e.target.value);
                     if (customer) {
@@ -150,6 +178,7 @@ export default function EditClientInfoModal({
                 <Input
                   placeholder="Numéro de client"
                   value={field.value as string}
+                  disabled={customer ? true : false}
                   onChange={(e) => {
                     field.onChange(e.target.value);
                     if (customer) {
@@ -172,6 +201,7 @@ export default function EditClientInfoModal({
                 <Input
                   placeholder="Numéro de téléphone"
                   value={field.value as string}
+                  disabled={customer ? true : false}
                   onChange={(e) => {
                     field.onChange(e.target.value);
                     if (customer) {
@@ -194,6 +224,7 @@ export default function EditClientInfoModal({
                 <Input
                   placeholder="Adresse email"
                   value={field.value as string}
+                  disabled={customer ? true : false}
                   onChange={(e) => {
                     field.onChange(e.target.value);
                     if (customer) {

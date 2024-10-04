@@ -247,38 +247,40 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <MoreHorizontal className="" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    Changer le status
-                  </DropdownMenuItem>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>
-                      Changer la status de votre facture
-                    </DialogTitle>
-                  </DialogHeader>
-                  <Select
-                    defaultValue={status[row.original.status]}
-                    onValueChange={ChangeStatus}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {Object.keys(status).map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {statusTranslator[status]}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </DialogContent>
-              </Dialog>
+              {row.original.status == "PENDING" && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      Changer le status
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        Changer la status de votre facture
+                      </DialogTitle>
+                    </DialogHeader>
+                    <Select
+                      defaultValue={status[row.original.status]}
+                      onValueChange={ChangeStatus}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.keys(status).map((status) => (
+                          <SelectItem key={status} value={status}>
+                            {statusTranslator[status]}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </DialogContent>
+                </Dialog>
+              )}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem

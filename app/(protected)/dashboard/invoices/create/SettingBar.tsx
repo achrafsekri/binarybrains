@@ -6,12 +6,7 @@ import { z } from "zod";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -34,22 +29,26 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 import { invoiceFormContext, invoiceFormSchema } from "./CreateInvoiceForm";
+import { createInvoice } from "./invoice-server";
 
 export default function SettingBar() {
   const form = useContext(invoiceFormContext);
   form?.watch("Settings");
 
+  const tablevals = form?.getValues("ProductsList");
+  const isSubmitting = form?.formState.isSubmitting;
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    toast.success("La facture a été créé avec succès");
-
     try {
-      // const invoice = await createInvoice(values);
-      // if (invoice) {
-      //   toast.success("La facture a été créé avec succès");
-      // } else {
-      //   toast.error("Erreur lors de la création de la facture");
-      // }
+      const res = await createInvoice(values);
+      if (res.ok) {
+        toast.success("La facture a été créé avec succès");
+      } else {
+        toast.error(res.message);
+      }
     } catch (e) {
+      toast.error(
+        "Une erreur s'est produite lors de la création de la facture",
+      );
       console.log(e);
     }
   }
@@ -199,12 +198,12 @@ export default function SettingBar() {
               Sauvegarder
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] ">
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Sauvegarder</DialogTitle>
               <DialogDescription>
-                Vous pouvez choisir d&apos;enregistrer le PDF ou de l&apos;envoyer par
-                e-mail.
+                Vous pouvez choisir d&apos;enregistrer le PDF ou de
+                l&apos;envoyer par e-mail.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -215,15 +214,19 @@ export default function SettingBar() {
                       <Button
                         className="font-white bg-primary hover:bg-primary/80"
                         type="button"
+                        disabled={isSubmitting}
                         onClick={handleSubmit(onSubmit)}
                       >
                         <Download className="mr-2 size-4" />
-                        Enregistrer
+                        {isSubmitting ? "En cours..." : "Télécharger"}
                       </Button>
                     </>
                   )}
                 </ConnectForm>
-                <Button className="font-white bg-primary hover:bg-primary/80">
+                <Button
+                  disabled={isSubmitting}
+                  className="font-white bg-primary hover:bg-primary/80"
+                >
                   <Send className="mr-2 size-4" />
                   Envoyer
                 </Button>

@@ -19,7 +19,7 @@ export default function SellerForm() {
     name: {
       value: form?.getValues("SellerDetails.name"),
       nullable: false, // Not nullable, as per schema
-      tag: "h1", // Use h1 for name
+      tag: "p", // Use h1 for name
     },
     address: {
       value: form?.getValues("SellerDetails.address"),
@@ -63,10 +63,10 @@ export default function SellerForm() {
         SIRET: {sellerDetails.siret.value || "000 000 000 00000"}{" "}
       </p>
       <p className="text-gray-600">
-        {sellerDetails.address.value || "123 Company Street, City, Country"}
+        {sellerDetails.address.value || "123 rue de la rue"}{" "}
       </p>
       <p className="text-gray-600">
-        {sellerDetails.phone.value || "+1 234 567 890"}
+        {sellerDetails.phone.value || "+46 123 456 789"}{" "}
       </p>
       <p className="text-gray-600">
         {sellerDetails.email.value || "example@example.com"}

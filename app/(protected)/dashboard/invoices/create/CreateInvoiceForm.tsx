@@ -2,7 +2,7 @@
 
 import { createContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Customer } from "@prisma/client";
+import { Customer, Seller } from "@prisma/client";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -26,6 +26,7 @@ export const invoiceFormSchema = z.object({
   }),
 
   ClientDetails: z.object({
+    id: z.string(),
     name: z.string(),
     address: z.string(),
     siret: z.string().nullable(),
@@ -36,8 +37,8 @@ export const invoiceFormSchema = z.object({
   ProductsList: z.array(
     z.object({
       name: z.string(),
-      quantity: z.number(),
-      unitPrice: z.number(),
+      quantity: z.string(),
+      unitPrice: z.string(),
       totalPrice: z.number(),
       vatRate: z.number().nullable(),
     }),
@@ -62,7 +63,7 @@ export const invoiceFormSchema = z.object({
     vatRate: z.number().nullable(),
     vatAmount: z.number().nullable(),
     total: z.number().nullable(),
-    paymentMethod: z.string().nullable(),
+    paymentTerms: z.string().nullable(),
     paymentDetails: z.string().nullable(),
     legalMentions: z.string().nullable(),
     paymentDate: z.string().nullable(),
@@ -74,51 +75,40 @@ export const invoiceFormContext = createContext<UseFormReturn<
 export const userCustomers = createContext<Customer[] | null>(null);
 export function CreateInvoiceForm({
   clients,
+  seller,
   currentInvoiceNumber = "0000",
 }: {
   clients: Customer[];
+  seller: Seller;
   currentInvoiceNumber: string;
 }) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
-      logo: "jazjkaj",
-      name: "Company Name", // Default company name
-      address: "123 Company Street, City, Country", // Default company address
-      phone: "+1 234 567 890", // Default phone number
-      email: "3sTqI@example.com", // Optional, default to null
-      siret: "123 456 789 00000", // Default SIRET number
-      vatNumber: "FR12345678900", // Default VAT number
+      logo: null, // Default logo
+      name: seller?.name, // Default company name
+      address: seller?.address, // Default company address
+      phone: seller?.phone, // Default company phone
+      email: seller?.email, // Default company email
+      siret: seller?.siret, // Default SIRET number
+      vatNumber: seller?.vatNumber, // Default VAT number
     },
 
     ClientDetails: {
-      name: "John Doe", // Default client name
+      id: "", // Default client id
+      name: "Nom du client", // Default client name
       address: "456 Client Street, Client City, Client Country", // Default client address
       siret: " 123 456 789 00000", // Optional field, default is null
       phone: "+1 987 654 321", // Default client contact
-      email: "vLlTq@example.com", // Optional field, default is null
+      email: "exemple@example.com", // Optional field, default is null
     },
 
     ProductsList: [
       {
-        name: "Website Design", // Default product 1
-        quantity: 1, // Default quantity
-        unitPrice: 1000, // Default unit price
-        totalPrice: 1000, // Default total price
+        name: "", // Default product 1
+        quantity: "1", // Default quantity
+        unitPrice: "0", // Default unit price
+        totalPrice: 0, // Default total price
         vatRate: 0, // Optional VAT rate, default is 0
-      },
-      {
-        name: "Logo Design", // Default product 2
-        quantity: 1, // Default quantity
-        unitPrice: 500, // Default unit price
-        totalPrice: 500, // Default total price
-        vatRate: 0, // Optional VAT rate, default is 0
-      },
-      {
-        name: "Hosting (per year)", // Default product 3
-        quantity: 1, // Default quantity
-        unitPrice: 200, // Default unit price
-        totalPrice: 200, // Default total price
-        vatRate: 0, // Optional VAT rate, default is null
       },
     ],
 
@@ -141,8 +131,8 @@ export function CreateInvoiceForm({
       vatRate: 20, // Default VAT rate
       vatAmount: 340, // Default VAT amount
       total: 2040, // Default total amount
-      paymentMethod: "Par virement bancaire", // Optional, default to null
-      paymentDetails: "IBAN : FR76 3000 3032 0000 0200 1234 567", // Optional, default to null
+      paymentTerms: "Par virement bancaire", // Optional, default to null
+      paymentDetails: "IBAN : Votre IBAN", // Optional, default to null
       legalMentions:
         "En cas de retard de paiement, et conformément au code du commerce, une indemnité calculée sur la base de trois fois le taux d'intérêt légal ainsi que des frais de recouvrement de 40 euros sont dus.", // Optional, default to null
       paymentDate: null, // Optional, default to null
@@ -153,13 +143,11 @@ export function CreateInvoiceForm({
     defaultValues: { ...defaultInvoiceFormValues },
   });
   function OnError(error: any) {
-    toast.error(JSON.stringify(error));
-
+    toast.error(error.message);
     logger.error("error", error);
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     try {
-      //@ts-expect-error
       const invoice = await createInvoice(values);
       if (invoice) {
         toast.success("La facture a été créé avec succès");
