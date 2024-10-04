@@ -34,6 +34,7 @@ import {
 
 import { columns } from "./columns";
 import { InvoiceWithRelations } from "@/types/invoice-with-relations";
+import DateRangePicker from "@/components/shared/DateRangePicker";
 
 export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -66,6 +67,8 @@ export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
+        <div className="flex gap-4">
+
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -73,11 +76,13 @@ export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
             table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-        />
+          />
+          <DateRangePicker onChange={(range)=>table.getColumn("date")?.setFilterValue(range)}/>
+          </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Columns <ChevronDown className="ml-2 size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

@@ -80,8 +80,7 @@ export function DataTable({ data }: { data: Client[] }) {
           placeholder="Filter emails, names, etc."
           // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) => {
-            console.log(event.target.value);
-            table.getColumn("Email")?.setFilterValue(event.target.value);
+            table.getColumn("email")?.setFilterValue(event.target.value);
           }}
           className="max-w-sm"
         />
@@ -96,6 +95,13 @@ export function DataTable({ data }: { data: Client[] }) {
               .getAllColumns()
               .filter((column) => column.getCanHide())
               .map((column) => {
+                const translator = {
+                  name: "Nom",
+                  email: "Email",
+                  phone: "Telephone",
+                  siret: "Siret",
+                  vatNumber: "TVA",
+                }
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -105,7 +111,7 @@ export function DataTable({ data }: { data: Client[] }) {
                       column.toggleVisibility(!!value)
                     }
                   >
-                    {column.id}
+                    {translator[column.id] || column.id}
                   </DropdownMenuCheckboxItem>
                 );
               })}

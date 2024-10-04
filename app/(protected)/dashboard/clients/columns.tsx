@@ -55,13 +55,13 @@ export const columns: ColumnDef<Client>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "Nom",
+    accessorKey: "name",
     header: "Nom",
     cell: ({ row }) => <div className="capitalize">{row.original.name}</div>,
   },
 
   {
-    accessorKey: "Email",
+    accessorKey: "email",
     header: ({ column }) => {
       return (
         <Button
@@ -77,7 +77,7 @@ export const columns: ColumnDef<Client>[] = [
     cell: ({ row }) => <div className="lowercase">{row.original.email}</div>,
   },
   {
-    accessorKey: "Téléphone",
+    accessorKey: "phone",
     header: ({ column }) => {
       return (
         <Button

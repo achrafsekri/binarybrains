@@ -56,7 +56,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Client
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
@@ -76,7 +76,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             entreprise
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="ml-2 size-4" />
           </Button>
         </div>
       );
@@ -96,7 +96,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="ml-2 size-4" />
         </Button>
       );
     },
@@ -105,6 +105,35 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
         {(row.getValue("customer") as Customer).email}
       </div>
     ),
+  },
+  {
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="lowercase">
+          {new Date(row.getValue("date")).toLocaleDateString("fr-FR")}
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const start = new Date(value.from)
+      const end = new Date(value.to)
+      const startDate = start.getTime()
+      const endDate = end.getTime()
+
+      return new Date(row.getValue("date")).getTime() >= startDate && new Date(row.getValue("date")).getTime() <= endDate
+    }
   },
   {
     accessorKey: "total",
@@ -130,9 +159,9 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button variant="ghost" className="size-8 p-0">
               <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
