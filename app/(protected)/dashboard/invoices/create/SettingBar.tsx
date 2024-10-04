@@ -1,4 +1,9 @@
+"use client";
+
 import { useContext, useState } from "react";
+import InvoiceTemplateA from "@/pdf/InvoiceTemplateA";
+import { pdf } from "@react-pdf/renderer";
+import { saveAs } from "file-saver";
 import { Download, Printer, Send } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
@@ -41,6 +46,8 @@ export default function SettingBar() {
     try {
       const res = await createInvoice(values);
       if (res.ok) {
+        const blob = await pdf(<InvoiceTemplateA />).toBlob();
+        saveAs(blob, "facture.pdf");
         toast.success("La facture a été créé avec succès");
       } else {
         toast.error(res.message);
