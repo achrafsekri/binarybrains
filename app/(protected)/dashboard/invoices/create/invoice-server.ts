@@ -8,6 +8,8 @@ import sellerExists from "@/actions/seller-exists.server";
 import { QuoteForm } from "@/types/quote-form";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { invoiceStatus } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export const createInvoice = async (data: QuoteForm) => {
   try {
@@ -72,3 +74,18 @@ export const createInvoice = async (data: QuoteForm) => {
     throw error;
   }
 };
+
+
+export const updateInvoiceStatus = async (invoiceId: string, status: invoiceStatus) => {
+  try {
+    const invoice = await prisma.invoice.update({
+      where: { id: invoiceId },
+      data: { status :status },
+    });
+    revalidatePath("/dashboard/invoices");
+    return invoice;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
