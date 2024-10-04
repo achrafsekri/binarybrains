@@ -5,6 +5,7 @@ import { auth } from "@/auth";
 import { UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
 import { userRoleSchema } from "@/lib/validations/user";
 
 export type FormData = {
@@ -34,7 +35,7 @@ export async function updateUserRole(userId: string, data: FormData) {
     revalidatePath("/dashboard/settings");
     return { status: "success" };
   } catch (error) {
-    // console.log(error)
+    logger.error("Error updating user role", error);
     return { status: "error" };
   }
 }

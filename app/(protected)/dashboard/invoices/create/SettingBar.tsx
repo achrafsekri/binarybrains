@@ -40,7 +40,6 @@ export default function SettingBar() {
   form?.watch("Settings");
 
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
-    console.log("the values: ", values);
     toast.success("La facture a été créé avec succès");
 
     try {

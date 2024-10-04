@@ -36,7 +36,7 @@ const SellerInfoForm = () => {
   });
 
   const onSubmit = (data: z.infer<typeof editSellerInfoSchema>) => {
-    console.log("submitted");
+    console.log(data);
   };
 
   return (

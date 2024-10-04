@@ -43,7 +43,6 @@ export default async function ScopeOfWork() {
       },
     },
   });
-  console.log(clients);
   return (
     <>
       <DashboardHeader

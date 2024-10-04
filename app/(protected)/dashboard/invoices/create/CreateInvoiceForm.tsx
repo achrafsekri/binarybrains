@@ -7,6 +7,7 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { logger } from "@/lib/logger";
 import { Form } from "@/components/ui/form";
 
 import { createInvoice } from "./invoice-server";
@@ -154,7 +155,7 @@ export function CreateInvoiceForm({
   function OnError(error: any) {
     toast.error(JSON.stringify(error));
 
-    console.log(error);
+    logger.error("error", error);
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     try {
@@ -166,7 +167,7 @@ export function CreateInvoiceForm({
         toast.error("Erreur lors de la création de la facture");
       }
     } catch (e) {
-      console.log(e);
+      logger.error("error creating invoice", e);
     }
   }
   return (

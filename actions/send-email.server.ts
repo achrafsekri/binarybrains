@@ -2,6 +2,8 @@
 
 import nodemailer from "nodemailer";
 
+import { logger } from "@/lib/logger";
+
 const transporter = nodemailer.createTransport({
   // @ts-expect-error
   host: process.env.EMAIL_SERVER_HOST,
@@ -23,7 +25,7 @@ export const sendEmail = async (html: any, subject: string, to: string) => {
     return await transporter.sendMail(options);
   } catch (error) {
     //@ts-ignore
-    console.log("ERROR", error!.message as string);
+    logger.error("Failed to send email", error);
     return { ok: false, msg: "Failed to send email" };
   }
 };

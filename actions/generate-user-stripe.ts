@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 
+import { logger } from "@/lib/logger";
 import { stripe } from "@/lib/stripe";
 import { getUserSubscriptionPlan } from "@/lib/subscription";
 import { absoluteUrl } from "@/lib/utils";
@@ -31,7 +32,6 @@ export async function generateUserStripe(
     }
 
     const subscriptionPlan = await getUserSubscriptionPlan(user.id);
-    console.log("subscriptionPlan", subscriptionPlan);
     if (subscriptionPlan.isPaid && subscriptionPlan.stripeCustomerId) {
       // User on Paid Plan - Create a portal session to manage subscription.
       const stripeSession = await stripe.billingPortal.sessions.create({
@@ -63,7 +63,7 @@ export async function generateUserStripe(
       redirectUrl = stripeSession.url as string;
     }
   } catch (error) {
-    console.log("Error generating user stripe session", error);
+    logger.error("Error generating user stripe session", error);
     throw new Error("Failed to generate user stripe session");
   }
 

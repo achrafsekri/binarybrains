@@ -28,8 +28,6 @@ export default async function UsageCard({
     now.getMonth() + 1,
     1,
   );
-
-  console.log("subscriptionPlan", subscriptionPlan.title.toLowerCase());
   const Limits = planLimits[subscriptionPlan.title.toLowerCase()];
   const QuotesUsagePromise = prisma.quote.count({
     where: {

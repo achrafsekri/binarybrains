@@ -3,6 +3,7 @@
 import { Customer, User } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 export const createCustomer = async (customer: Partial<Customer>, hasAcces: boolean , user:User) => {
   try {
@@ -10,7 +11,7 @@ export const createCustomer = async (customer: Partial<Customer>, hasAcces: bool
     const { id } = await prisma.customer.create({ data: customer as Customer });
     return id;
   } catch (error) {
-    console.log(error);
+    logger.error("Error creating customer", error);
     throw error;
   }
 };

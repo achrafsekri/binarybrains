@@ -4,6 +4,7 @@ import React from "react";
 import { uploadFilesToServer } from "@/actions/upload-files.server";
 import { PlusIcon } from "lucide-react";
 
+import { logger } from "@/lib/logger";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -64,7 +65,7 @@ const AssetsPicker = ({
                 type: file.type,
               });
             } catch (error) {
-              console.error("Upload failed for file:", file.name, error);
+              logger.error("Error uploading file", error);
               reject(error); // Reject the promise if any error occurs
             }
           } else {
@@ -85,11 +86,11 @@ const AssetsPicker = ({
         type: string;
       }[];
       await uploadFilesToServer(taskId, filesToUpload);
-      console.log("All files uploaded successfully");
+      logger.info("All files uploaded successfully");
       setIsUploading(false);
       setOpen(false);
     } catch (error) {
-      console.error("Some files failed to upload", error);
+      logger.error("Some files failed to upload", error);
       setIsUploading(false);
     }
   };

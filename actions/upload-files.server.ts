@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 
 import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
 
 export const uploadFilesToServer = async (
   taskId: string,
@@ -25,7 +26,7 @@ export const uploadFilesToServer = async (
     revalidatePath("/dashboard");
     return "All files uploaded successfully";
   } catch (error) {
-    console.error("Some files failed to upload", error);
+    logger.error("Error uploading files", error);
     throw new Error("Some files failed to upload");
   }
 };

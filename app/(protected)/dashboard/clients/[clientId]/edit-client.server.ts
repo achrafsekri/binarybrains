@@ -4,6 +4,7 @@ import { Customer, User } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { logger } from "@/lib/logger";
 
 export const editCustomer = async (
   customerId: string,
@@ -18,7 +19,7 @@ export const editCustomer = async (
     });
     return { ok: true };
   } catch (error) {
-    console.log(error);
+    logger.error("Error editing customer", error);
     return { ok: false };
   }
 };

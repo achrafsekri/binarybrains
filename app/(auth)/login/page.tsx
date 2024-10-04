@@ -9,8 +9,8 @@ import { Icons } from "@/components/shared/icons";
 import Logo from "@/components/layout/logo";
 
 export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
+  title: "Connexion",
+  description: "Connectez-vous à votre compte alloFacture",
 };
 
 export default function LoginPage() {
