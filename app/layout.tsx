@@ -19,6 +19,7 @@ interface RootLayoutProps {
 export const metadata = constructMetadata();
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  logger.info("logger started");
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
