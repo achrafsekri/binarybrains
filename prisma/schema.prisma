@@ -127,28 +127,28 @@ model Customer {
 }
 
 model Invoice {
-  id             String   @id @default(uuid())
+  id             String        @id @default(uuid())
   number         String
   date           DateTime
-  seller         Seller   @relation(fields: [sellerId], references: [id])
+  seller         Seller        @relation(fields: [sellerId], references: [id])
   sellerId       String
-  customer       Customer @relation(fields: [customerId], references: [id])
+  customer       Customer      @relation(fields: [customerId], references: [id])
   customerId     String
   items          Item[]
   subtotal       Float //prix ht
   vatRate        Float? //taux de tva
   vatAmount      Float? //montant de tva
   total          Float? //prix ttc
-  paymentTerms   String?  @db.Text
-  paymentDetails String?  @db.Text
-  legalMentions  String?  @db.Text
-
-  user         User     @relation(fields: [userId], references: [id])
-  userId       String
+  paymentTerms   String?       @db.Text
+  paymentDetails String?       @db.Text
+  legalMentions  String?       @db.Text
+  status         invoiceStatus @default(PENDING)
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
   //settings
-  vatActivated Boolean? @default(true) //tva activée
-  vatPerItem   Boolean? @default(false) //tva par article
-  devise       String?  @default("€") //devise
+  vatActivated   Boolean?      @default(true) //tva activée
+  vatPerItem     Boolean?      @default(false) //tva par article
+  devise         String?       @default("€") //devise
 
   paymentDate DateTime?
   dueDate     DateTime?

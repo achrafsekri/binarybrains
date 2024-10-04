@@ -45,7 +45,7 @@ export default async function Dashboard({ children }: ProtectedLayoutProps) {
               <SearchCommand links={filteredLinks} />
             </div>
 
-            <ModeToggle />
+            {/* <ModeToggle /> */}
             <UserAccountNav />
           </MaxWidthWrapper>
         </header>

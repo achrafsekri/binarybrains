@@ -123,7 +123,7 @@ export const columns: ColumnDef<Client>[] = [
         }
       };
       return (
-        <div className="flex items-center ">
+        <div className="flex items-center">
           <Button variant="ghost" className="hidden lg:block">
             <Link href={`/dashboard/clients/${row.original.id}`}>
               <Pencil className="size-5 text-primary" />
@@ -166,7 +166,7 @@ export const columns: ColumnDef<Client>[] = [
               </DropdownMenuItem>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <DropdownMenuItem onClick={deleteClient}>
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                     Supprimer
                   </DropdownMenuItem>
                 </AlertDialogTrigger>

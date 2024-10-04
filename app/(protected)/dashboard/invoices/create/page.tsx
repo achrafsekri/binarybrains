@@ -1,13 +1,24 @@
 import { prisma } from "@/lib/db";
-import {CreateInvoiceForm} from "./CreateInvoiceForm";
 import { getCurrentUser } from "@/lib/session";
 
+import { CreateInvoiceForm } from "./CreateInvoiceForm";
+
 export default async function Page() {
-  const user = await getCurrentUser()
-  const clients = await prisma.customer.findMany({where:{userId: user?.id}});
+  const user = await getCurrentUser();
+  const clients = await prisma.customer.findMany({
+    where: { userId: user?.id },
+  });
+  const invoiceNumber = await prisma.invoice.count({
+    where: { userId: user?.id },
+  });
+  //should be a string with 4 digits
+  const formattedInvoiceNumber = invoiceNumber.toString().padStart(4, "0");
   return (
     <>
-    <CreateInvoiceForm clients={clients} />
+      <CreateInvoiceForm
+        clients={clients}
+        currentInvoiceNumber={formattedInvoiceNumber}
+      />
     </>
   );
 }

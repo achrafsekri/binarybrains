@@ -18,6 +18,52 @@ type EmailProps = {
   amount: string;
 };
 
+const styles = {
+  body: {
+    backgroundColor: "white",
+    fontFamily: "sans-serif",
+    color: "#1f2937",
+  },
+  container: {
+    margin: "0 auto",
+    padding: "20px 0 48px 0",
+  },
+  logo: {
+    width: "112px",
+    margin: "0 auto",
+  },
+  text: {
+    fontSize: "16px",
+    lineHeight: "1.5",
+    margin: "16px 0",
+  },
+  buttonContainer: {
+    margin: "20px 0",
+    textAlign: "center" as const,
+  },
+  button: {
+    display: "inline-block",
+    borderRadius: "6px",
+    backgroundColor: "#7f5af0",
+    padding: "8px 16px",
+    fontSize: "16px",
+    color: "white",
+    textDecoration: "none",
+  },
+  divider: {
+    margin: "16px 0",
+    borderTop: "2px solid #e5e7eb",
+  },
+  footer: {
+    fontSize: "14px",
+    color: "#4b5563",
+  },
+  link: {
+    color: "#7f5af0",
+    textDecoration: "none",
+  },
+};
+
 export const ReminderEmail = ({
   senderName = "",
   documentLink,
@@ -37,44 +83,43 @@ export const ReminderEmail = ({
         Rappel : {isInvoice ? "Paiement de facture" : "Devis en attente"} de{" "}
         {senderName}
       </Preview>
-      <Body className="bg-white font-sans text-gray-800">
-        <Container className="mx-auto py-5 pb-12">
+      <Body style={styles.body}>
+        <Container style={styles.container}>
           <Img
             src="https://allofacture.s3.amazonaws.com/Group+1.png"
             alt="allofacture-logo"
-            className="mx-auto w-28"
+            style={styles.logo}
           />
-          <Text className="text-base">
+          <Text style={styles.text}>
             Bonjour <b>{receiverName}</b>,
           </Text>
-          <Text className="text-base">
+          <Text style={styles.text}>
             Ceci est un rappel concernant{" "}
             {isInvoice ? "la facture" : "le devis"} de <b>{senderName}</b>.
           </Text>
-          <Text className="text-base">
+          <Text style={styles.text}>
             {isInvoice
-              ? `Le paiement de la facture d'un montant de ${amount}€ est dû le ${dueDate}.`
+              ? `Le paiement de la facture d'un montant de ${amount} est dû le ${dueDate}.`
               : `Le devis d'un montant de ${amount}€ est en attente de votre examen. Il expire le ${dueDate}.`}
           </Text>
-          <Text className="text-base">
+          <Text style={styles.text}>
             Veuillez cliquer sur le lien ci-dessous pour {action}{" "}
             {isInvoice ? "la facture" : "le devis"} :
           </Text>
-          <Section className="my-5 text-center">
-            <Button
-              className="inline-block rounded-md bg-[#7f5af0] px-4 py-2 text-base text-white no-underline"
-              href={documentLink}
-            >
+          <Section style={styles.buttonContainer}>
+            <Button style={styles.button} href={documentLink}>
               {isInvoice ? "Examiner la facture" : "Examiner le devis"}
             </Button>
           </Section>
-          <Text className="text-base">
+          <Text style={styles.text}>
             Si vous avez des questions, n'hésitez pas à contacter {senderName}.
           </Text>
-          <Hr className="my-4 border-t-2 border-gray-300" />
-          <Text className="text-sm text-gray-600">
+          <Hr style={styles.divider} />
+          <Text style={styles.footer}>
             Email envoyé par{" "}
-            <a href="https://www.allofacture.com">alloFacture</a>
+            <a href="https://www.allofacture.com" style={styles.link}>
+              alloFacture
+            </a>
           </Text>
         </Container>
       </Body>

@@ -71,7 +71,13 @@ export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
 export const userCustomers = createContext<Customer[] | null>(null);
-export function CreateInvoiceForm({ clients }: { clients: Customer[] }) {
+export function CreateInvoiceForm({
+  clients,
+  currentInvoiceNumber = "0000",
+}: {
+  clients: Customer[];
+  currentInvoiceNumber: string;
+}) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
       logo: "jazjkaj",
@@ -126,7 +132,7 @@ export function CreateInvoiceForm({ clients }: { clients: Customer[] }) {
     },
 
     InvoiceDetails: {
-      invoiceNumber: "0000",
+      invoiceNumber: currentInvoiceNumber, // Default invoice number
       startingDate: new Date("2023-05-01"), // Default invoice creation date
       deliveryDate: new Date("2023-05-05"), // Default delivery date
       dueDate: new Date("2023-05-15"), // Default due date

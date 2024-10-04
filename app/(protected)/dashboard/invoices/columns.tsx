@@ -1,10 +1,32 @@
 import * as React from "react";
-import { Customer, Quote, Seller } from "@prisma/client";
+import Link from "next/link";
+import { sendEmail } from "@/actions/send-email.server";
+import { ReminderEmail } from "@/emails/reminder-email";
+import { Customer, Invoice, Quote, Seller } from "@prisma/client";
+import { render } from "@react-email/components";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import {
+  ArrowUpDown,
+  Eye,
+  MoreHorizontal,
+  Pencil,
+  Space,
+  Trash,
+} from "lucide-react";
+import { toast } from "sonner";
 
 import { InvoiceWithRelations } from "@/types/invoice-with-relations";
-import { QuoteWithRelations } from "@/types/quote-with-relations";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -17,9 +39,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { deleteInvoice as invoiceDelete } from "./delete-invoice.server";
+
 export const columns: ColumnDef<InvoiceWithRelations>[] = [
   {
-    id: "select",
+    id: "Selection",
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -41,69 +65,36 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "Nombre",
+    header: "Nombre de facture",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <div className="capitalize">Facture°{row.original.number}</div>
+    ),
+  },
+
+  {
+    accessorKey: "Client",
+    header: "Client",
+    cell: ({ row }) => (
+      <div className="lowercase">{row.original.customer.name}</div>
     ),
   },
   {
-    accessorKey: "customer",
+    accessorKey: "Téléphone",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
+          className="p-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Client
-          <ArrowUpDown className="ml-2 size-4" />
+          Téléphone
+          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => (
-      <div className="ml-4 lowercase">
-        {(row.getValue("customer") as Customer).name}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "seller",
-    header: ({ column }) => {
-      return (
-        <div className="">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            entreprise
-            <ArrowUpDown className="ml-2 size-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="ml-4 lowercase">
-        {(row.getValue("seller") as Seller).name}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="lowercase">
-        {(row.getValue("customer") as Customer).email}
-      </div>
+      <div className="lowercase">{row.original.customer.phone}</div>
     ),
   },
   {
@@ -136,46 +127,191 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     }
   },
   {
-    accessorKey: "total",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("total"));
+      return (
+        <div className="lowercase">
+          {new Date(row.getValue("date")).toLocaleDateString("fr-FR")}
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const start = new Date(value.from)
+      const end = new Date(value.to)
+      const startDate = start.getTime()
+      const endDate = end.getTime()
 
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      return new Date(row.getValue("date")).getTime() >= startDate && new Date(row.getValue("date")).getTime() <= endDate
+    }
+  },
+  {
+    accessorKey: "Date de création",
+    header: "Date de création",
+    cell: ({ row }) => {
+      const formattedDate = new Date(
+        row.original.createdAt,
+      )?.toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+      return <div className="capitalize">{formattedDate}</div>;
     },
   },
   {
-    id: "actions",
-    enableHiding: false,
+    accessorKey: "Status",
+    header: () => <div className="">Status</div>,
     cell: ({ row }) => {
-      const payment = row.original;
+      const status = row.original.status;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-            //   onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="font-medium">
+          {status === "PAID" ? (
+            <span className="rounded-full bg-green-100 px-2 py-1 text-green-800">
+              Payée
+            </span>
+          ) : status === "PENDING" ? (
+            <span className="rounded-full bg-yellow-100 px-2 py-1 text-yellow-800">
+              En attente de paiement
+            </span>
+          ) : status === "CANCELED" ? (
+            <span className="rounded-full bg-red-100 px-2 py-1 text-red-800">
+              Annulée
+            </span>
+          ) : (
+            <span className="rounded-full bg-gray-100 px-2 py-1 text-gray-800">
+              Inconnu
+            </span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    id: "Actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const deleteInvoice = async () => {
+        const res = await invoiceDelete(row.original.id);
+        if (res.ok) {
+          toast.success("Facture supprimée avec succès");
+        } else {
+          toast.error(
+            "Erreur lors de la suppression de la facture. Veuillez réessayer.",
+          );
+        }
+      };
+      const sendNotice = async () => {
+        const html = await render(
+          <ReminderEmail
+            senderName={row.original.seller.name}
+            documentLink={`https://allofacture.com/documents/${row.original.id}?type=invoice`}
+            receiverName={row.original.customer.name}
+            type="FACTURE"
+            dueDate={new Date(row.original.dueDate ?? "")?.toLocaleDateString(
+              "fr-FR",
+              {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              },
+            )}
+            amount={`${row.original.total}${row.original.devise}`}
+          />,
+        );
+        try {
+          await sendEmail(
+            html,
+            `Rappel de paiement pour la facture n°${row.original.number}`,
+            row.original.customer.email ?? "",
+          );
+          toast.success("Rappel envoyé avec succès");
+        } catch (e) {
+          console.log("ERROR", e);
+          toast.error("Erreur lors de l'envoi du rappel. Veuillez réessayer.");
+        }
+      };
+      return (
+        <div className="flex items-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="cursor-pointer">
+              <MoreHorizontal className="" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem className="cursor-pointer">
+                Changer le status
+              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Envoyer un rappel
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Tu es sûr de vouloir envoyer un rappel pour cette facture
+                      ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action ne peut pas être annulée.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction onClick={sendNotice}>
+                      Envoyer
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Supprimer
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Tu es sûr de vouloir supprimer cette facture ?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Cette action ne peut pas être annulée.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Annuler</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={deleteInvoice}
+                      className="bg-red-500 hover:bg-red-600"
+                    >
+                      Supprimer
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },
