@@ -1,29 +1,38 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { addDays, format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
-import { DateRange } from "react-day-picker"
+import * as React from "react";
+import { addDays, format } from "date-fns";
+//import fr from date-fns/locale
+import { fr } from "date-fns/locale/fr";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 export default function DateRangePicker({
-    defaultValue,
-    placeholder,
+  defaultValue,
+  placeholder,
   className,
-  onChange
-}: { className?: string; onChange?: (date: DateRange | undefined) => void  , defaultValue?: DateRange | undefined, placeholder?: string }) {
-  const [date, setDate] = React.useState<DateRange | undefined>(defaultValue || {
-    from: new Date(2024, 0, 20),
-    to: addDays(new Date(2024, 0, 20), 20),
-  })
+  onChange,
+}: {
+  className?: string;
+  onChange?: (date: DateRange | undefined) => void;
+  defaultValue?: DateRange | undefined;
+  placeholder?: string;
+}) {
+  const [date, setDate] = React.useState<DateRange | undefined>(
+    defaultValue || {
+      from: addDays(new Date(), -30),
+      to: new Date(),
+    },
+  );
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -34,7 +43,7 @@ export default function DateRangePicker({
             variant={"outline"}
             className={cn(
               "w-[300px] justify-start text-left font-normal",
-              !date && "text-muted-foreground"
+              !date && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 size-4" />
@@ -60,13 +69,13 @@ export default function DateRangePicker({
             selected={date}
             onSelect={(range) => {
               setDate(range);
-              if(onChange)
-              onChange(range)
+              if (onChange) onChange(range);
             }}
             numberOfMonths={2}
+            locale={fr}
           />
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

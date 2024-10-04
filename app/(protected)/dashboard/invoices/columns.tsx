@@ -1,4 +1,5 @@
 import * as React from "react";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { sendEmail } from "@/actions/send-email.server";
 import { ReminderEmail } from "@/emails/reminder-email";
@@ -11,6 +12,7 @@ import {
 } from "@prisma/client";
 import { render } from "@react-email/components";
 import { ColumnDef } from "@tanstack/react-table";
+import { isWithinInterval, parseISO } from "date-fns";
 import {
   ArrowUpDown,
   Eye,
@@ -36,6 +38,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -54,7 +63,6 @@ import {
 
 import { updateInvoiceStatus } from "./create/invoice-server";
 import { deleteInvoice as invoiceDelete } from "./delete-invoice.server";
-import { revalidatePath } from "next/cache";
 
 export const columns: ColumnDef<InvoiceWithRelations>[] = [
   {
@@ -95,22 +103,41 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     ),
   },
   {
-    accessorKey: "Téléphone",
-    header: ({ column }) => {
+    accessorKey: "email",
+    header: "Email",
+
+    cell: ({ row }) => (
+      <div className="lowercase">{row.original.customer.email}</div>
+    ),
+  },
+  {
+    accessorKey: "Status",
+    header: () => <div className="">Statut de paiement</div>,
+    cell: ({ row }) => {
+      const status = row.original.status;
+
       return (
-        <Button
-          variant="ghost"
-          className="p-0"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Téléphone
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="text-sm font-medium sm:text-base">
+          {status === "PAID" ? (
+            <span className="inline-flex truncate rounded-full bg-green-100 px-1.5 py-0.5 text-green-800 sm:px-2 sm:py-1">
+              Payée
+            </span>
+          ) : status === "PENDING" ? (
+            <span className="inline-flex truncate rounded-full bg-yellow-100 px-1.5 py-0.5 text-yellow-800 sm:px-2 sm:py-1">
+              En attente
+            </span>
+          ) : status === "CANCELED" ? (
+            <span className="inline-flex truncate rounded-full bg-red-100 px-1.5 py-0.5 text-red-800 sm:px-2 sm:py-1">
+              Annulée
+            </span>
+          ) : (
+            <span className="inline-flex truncate rounded-full bg-gray-100 px-1.5 py-0.5 text-gray-800 sm:px-2 sm:py-1">
+              Inconnu
+            </span>
+          )}
+        </div>
       );
     },
-    cell: ({ row }) => (
-      <div className="lowercase">{row.original.customer.phone}</div>
-    ),
   },
   {
     accessorKey: "date",
@@ -126,29 +153,6 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
       );
     },
     cell: ({ row }) => {
-      return (
-        <div className="lowercase">
-          {new Date(row.getValue("date")).toLocaleDateString("fr-FR")}
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const start = new Date(value.from);
-      const end = new Date(value.to);
-      const startDate = start.getTime();
-      const endDate = end.getTime();
-
-      return (
-        new Date(row.getValue("date")).getTime() >= startDate &&
-        new Date(row.getValue("date")).getTime() <= endDate
-      );
-    },
-  },
-  {
-    accessorKey: "date",
-    header: "Date de création",
-
-    cell: ({ row }) => {
       const formattedDate = new Date(
         row.original.createdAt,
       )?.toLocaleDateString("fr-FR", {
@@ -156,48 +160,20 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
         month: "long",
         day: "numeric",
       });
-      return <div className="capitalize">{formattedDate}</div>;
+      return <div className="lowercase">{formattedDate}</div>;
     },
     filterFn: (row, id, value) => {
-      const start = new Date(value.from);
-      const end = new Date(value.to);
-      const startDate = start.getTime();
-      const endDate = end.getTime();
-
-      return (
-        new Date(row.original.createdAt).getTime() >= startDate &&
-        new Date(row.original.createdAt).getTime() <= endDate
-      );
-    },
-  },
-
-  {
-    accessorKey: "Status",
-    header: () => <div className="">Status</div>,
-    cell: ({ row }) => {
-      const status = row.original.status;
-
-      return (
-        <div className="font-medium">
-          {status === "PAID" ? (
-            <span className="rounded-full bg-green-100 px-2 py-1 text-green-800">
-              Payée
-            </span>
-          ) : status === "PENDING" ? (
-            <span className="rounded-full bg-yellow-100 px-2 py-1 text-yellow-800">
-              En attente de paiement
-            </span>
-          ) : status === "CANCELED" ? (
-            <span className="rounded-full bg-red-100 px-2 py-1 text-red-800">
-              Annulée
-            </span>
-          ) : (
-            <span className="rounded-full bg-gray-100 px-2 py-1 text-gray-800">
-              Inconnu
-            </span>
-          )}
-        </div>
-      );
+      try {
+        // Parse the filter dates
+        const filterInterval = {
+          start: value.from,
+          end: value.to,
+        };
+        return isWithinInterval(row.original.createdAt, filterInterval);
+      } catch (error) {
+        console.error("Date filtering error:", error);
+        return false;
+      }
     },
   },
   {
@@ -205,7 +181,11 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const status = invoiceStatus;
-      const statusTranslator ={PAID:"Payée",PENDING:"En attente de paiement",CANCELED:"Annulée"}
+      const statusTranslator = {
+        PAID: "Payée",
+        PENDING: "En attente de paiement",
+        CANCELED: "Annulée",
+      };
       const ChangeStatus = async (status: invoiceStatus) => {
         try {
           const res = await updateInvoiceStatus(row.original.id, status);
@@ -267,21 +247,21 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <MoreHorizontal className="" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
+              <Dialog>
+                <DialogTrigger asChild>
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onSelect={(e) => e.preventDefault()}
                   >
                     Changer le status
                   </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
                       Changer la status de votre facture
-                    </AlertDialogTitle>
-                  </AlertDialogHeader>
+                    </DialogTitle>
+                  </DialogHeader>
                   <Select
                     defaultValue={status[row.original.status]}
                     onValueChange={ChangeStatus}
@@ -297,11 +277,8 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                       ))}
                     </SelectContent>
                   </Select>
-                  <AlertDialogFooter>
-                    <AlertDialogAction>Confirmer</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                </DialogContent>
+              </Dialog>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem

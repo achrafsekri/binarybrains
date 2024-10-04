@@ -56,11 +56,7 @@ export default function NewClientForm({
   const onSubmit = async (data: CustomerFormValues) => {
     setIsSubmitting(true);
     try {
-      const res = await createCustomer(
-        { ...data, userId: user.id },
-        hasAccess,
-        user,
-      );
+      const res = await createCustomer({ ...data, userId: user.id }, hasAccess);
       toast.success("Le nouveau client a été créé avec succès.");
       form.reset();
       router.push("/dashboard/clients");
