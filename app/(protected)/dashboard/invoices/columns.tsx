@@ -2,7 +2,13 @@ import * as React from "react";
 import Link from "next/link";
 import { sendEmail } from "@/actions/send-email.server";
 import { ReminderEmail } from "@/emails/reminder-email";
-import { Customer, Invoice, Quote, Seller } from "@prisma/client";
+import {
+  Customer,
+  Invoice,
+  invoiceStatus,
+  Quote,
+  Seller,
+} from "@prisma/client";
 import { render } from "@react-email/components";
 import { ColumnDef } from "@tanstack/react-table";
 import {
@@ -38,8 +44,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
+import { updateInvoiceStatus } from "./create/invoice-server";
 import { deleteInvoice as invoiceDelete } from "./delete-invoice.server";
+import { revalidatePath } from "next/cache";
 
 export const columns: ColumnDef<InvoiceWithRelations>[] = [
   {
@@ -118,46 +133,21 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      const start = new Date(value.from)
-      const end = new Date(value.to)
-      const startDate = start.getTime()
-      const endDate = end.getTime()
+      const start = new Date(value.from);
+      const end = new Date(value.to);
+      const startDate = start.getTime();
+      const endDate = end.getTime();
 
-      return new Date(row.getValue("date")).getTime() >= startDate && new Date(row.getValue("date")).getTime() <= endDate
-    }
+      return (
+        new Date(row.getValue("date")).getTime() >= startDate &&
+        new Date(row.getValue("date")).getTime() <= endDate
+      );
+    },
   },
   {
     accessorKey: "date",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 size-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return (
-        <div className="lowercase">
-          {new Date(row.getValue("date")).toLocaleDateString("fr-FR")}
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => {
-      const start = new Date(value.from)
-      const end = new Date(value.to)
-      const startDate = start.getTime()
-      const endDate = end.getTime()
-
-      return new Date(row.getValue("date")).getTime() >= startDate && new Date(row.getValue("date")).getTime() <= endDate
-    }
-  },
-  {
-    accessorKey: "Date de création",
     header: "Date de création",
+
     cell: ({ row }) => {
       const formattedDate = new Date(
         row.original.createdAt,
@@ -168,7 +158,19 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
       });
       return <div className="capitalize">{formattedDate}</div>;
     },
+    filterFn: (row, id, value) => {
+      const start = new Date(value.from);
+      const end = new Date(value.to);
+      const startDate = start.getTime();
+      const endDate = end.getTime();
+
+      return (
+        new Date(row.original.createdAt).getTime() >= startDate &&
+        new Date(row.original.createdAt).getTime() <= endDate
+      );
+    },
   },
+
   {
     accessorKey: "Status",
     header: () => <div className="">Status</div>,
@@ -202,6 +204,22 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     id: "Actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const status = invoiceStatus;
+      const statusTranslator ={PAID:"Payée",PENDING:"En attente de paiement",CANCELED:"Annulée"}
+      const ChangeStatus = async (status: invoiceStatus) => {
+        try {
+          const res = await updateInvoiceStatus(row.original.id, status);
+          if (res) {
+            toast.success("Statut mis à jour avec succès");
+          } else {
+            throw new Error("Erreur lors de la mise à jour du statut.");
+          }
+        } catch (error) {
+          toast.error(
+            "Erreur lors de la mise à jour du statut. Veuillez réessayer.",
+          );
+        }
+      };
       const deleteInvoice = async () => {
         const res = await invoiceDelete(row.original.id);
         if (res.ok) {
@@ -249,9 +267,41 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <MoreHorizontal className="" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem className="cursor-pointer">
-                Changer le status
-              </DropdownMenuItem>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onSelect={(e) => e.preventDefault()}
+                  >
+                    Changer le status
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Changer la status de votre facture
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
+                  <Select
+                    defaultValue={status[row.original.status]}
+                    onValueChange={ChangeStatus}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(status).map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {statusTranslator[status]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <AlertDialogFooter>
+                    <AlertDialogAction>Confirmer</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
