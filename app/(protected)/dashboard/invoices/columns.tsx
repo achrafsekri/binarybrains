@@ -247,6 +247,14 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <MoreHorizontal className="" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <Link href={`/invoices/${row.original.id}`} target="_blank">
+                  Voire la facture
+                </Link>
+              </DropdownMenuItem>
               {row.original.status == "PENDING" && (
                 <Dialog>
                   <DialogTrigger asChild>

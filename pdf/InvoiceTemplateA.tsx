@@ -4,6 +4,7 @@ import {
   Document,
   Image,
   Line,
+  Link,
   Page,
   StyleSheet,
   Svg,
@@ -82,6 +83,8 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     fontSize: 12,
     color: "rgb(55 65 81)",
+    //remove link underline
+    textDecoration: "none",
   },
   table: {
     flexDirection: "column",
@@ -197,16 +200,24 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
             <Text style={styles.highlight}>{seller.name}</Text>
             <Text style={styles.normal}>SIRET: {seller?.siret}</Text>
             <Text style={styles.normal}>{seller?.address}</Text>
-            <Text style={styles.normal}>{seller?.phone}</Text>
-            <Text style={styles.normal}>{seller?.email}</Text>
+            <Link style={styles.normal} src={`tel:${seller?.phone}`}>
+              {seller?.phone}
+            </Link>
+            <Link style={styles.normal} src={`mailto:${seller?.email}`}>
+              {seller?.email}
+            </Link>
           </View>
           <View style={styles.customerInfo}>
             <Text style={styles.highlight}>À l'attention de:</Text>
             <Text style={styles.normal}>{customer?.name}</Text>
             <Text style={styles.normal}>SIRET: {customer?.siret}</Text>
             <Text style={styles.normal}>{customer?.address}</Text>
-            <Text style={styles.normal}>{customer?.phone}</Text>
-            <Text style={styles.normal}>{customer?.email}</Text>
+            <Link style={styles.normal} src={`tel:${customer?.phone}`}>
+              {customer?.phone}
+            </Link>
+            <Link style={styles.normal} src={`mailto:${customer?.email}`}>
+              {customer?.email}
+            </Link>
           </View>
         </View>
 
