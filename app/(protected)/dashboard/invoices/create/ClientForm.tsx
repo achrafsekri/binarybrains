@@ -1,11 +1,7 @@
 import { useContext, useState } from "react";
 import { Minus, Pencil, Plus } from "lucide-react";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { FormField, FormItem, FormLabel } from "@/components/ui/form";
 import EditClientInfoModal from "@/components/modals/EditClientInfoModal";
-import AutoGrowTextArea from "@/components/shared/AutoGrowTextarea";
 
 import { invoiceFormContext } from "./CreateInvoiceForm";
 
@@ -71,7 +67,7 @@ export default function ClientForm() {
       >
         <Pencil size={16} className="" />
       </button>
-      
+
       {showEditModal && (
         <EditClientInfoModal
           showModal={showEditModal}

@@ -1,17 +1,18 @@
 "use server";
 
-import createCustomer from "@/actions/create-customer.server";
-import createSeller from "@/actions/create-seller.server";
-import customerExists from "@/actions/customer-exists.server";
-import sellerExists from "@/actions/seller-exists.server";
-
-import { QuoteForm } from "@/types/quote-form";
-import { prisma } from "@/lib/db";
-import { getCurrentUser } from "@/lib/session";
-import { invoiceStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
+import { invoiceStatus } from "@prisma/client";
+import { z } from "zod";
 
-export const createInvoice = async (data: QuoteForm) => {
+import { prisma } from "@/lib/db";
+import { logger } from "@/lib/logger";
+import { getCurrentUser } from "@/lib/session";
+
+import { invoiceFormSchema } from "./CreateInvoiceForm";
+
+export const createInvoice = async (
+  data: z.infer<typeof invoiceFormSchema>,
+) => {
   try {
     const {
       SellerDetails,
@@ -22,37 +23,55 @@ export const createInvoice = async (data: QuoteForm) => {
     } = data;
     // Get the current session to retrieve the user ID
     const user = await getCurrentUser();
-
+    if (!user) {
+      return { ok: false, error: "User not found" };
+    }
     const userId = user?.id as string;
 
-    // Create or get the seller
-    const existingSeller = await sellerExists(SellerDetails);
+    // update the seller
+    const seller = await prisma.seller.findFirst({
+      where: { userId: userId },
+    });
 
-    const sellerId = existingSeller
-      ? existingSeller.id
-      : (await createSeller({ SellerDetails, userId })).id;
+    if (!seller) {
+      logger.error("Seller not found");
+      return { ok: false, error: "Seller not found" };
+    }
 
-    // Create or get the customer
-    const existingCustomer = await customerExists(ClientDetails);
+    await prisma.seller.update({
+      where: { id: seller.id },
+      data: { ...SellerDetails, userId: userId },
+    });
 
-    const customerId = existingCustomer
-      ? existingCustomer.id
-      : (await createCustomer(ClientDetails)).id;
-
-    // Create Quote
-    const quote = await prisma.invoice.create({
+    let customer;
+    // update the customer
+    if (!ClientDetails.id) {
+      customer = await prisma.customer.create({
+        data: {
+          name: ClientDetails.name,
+          address: ClientDetails.address,
+          email: ClientDetails.email,
+          phone: ClientDetails.phone,
+          siret: ClientDetails.siret,
+          userId: userId,
+        },
+      });
+    }
+    console.log("new customer", customer);
+    // Create the invoice
+    const createInvoice = await prisma.invoice.create({
       data: {
-        sellerId: sellerId,
-        customerId: customerId,
+        sellerId: seller.id,
+        customerId: ClientDetails.id ? ClientDetails.id : customer.id,
         items: {
           create: ProductsList.map((item) => ({
+            description: item.name ?? "",
             name: item.name ?? "",
-            description: item.description ?? "",
-            quantity: item.quantity ?? 0,
-            unitPrice: item.unitPrice ?? 0,
+            quantity: parseInt(item.quantity) ?? 0,
+            unitPrice: parseFloat(item.unitPrice) ?? 0,
             totalPrice: item.totalPrice ?? 0,
-            totalVat: item.totalVat ?? 0,
-            vatRate: item.vatRate ?? 0,
+            totalVat: item.totalPrice ?? 0,
+            vatRate: item.vatRate,
           })),
         },
         subtotal: InvoiceDetails.subtotal,
@@ -62,25 +81,40 @@ export const createInvoice = async (data: QuoteForm) => {
         vatActivated: Settings.vatActivated,
         vatPerItem: Settings.vatPerItem,
         devise: Settings.devise,
-        number: InvoiceDetails.id,
+        number: InvoiceDetails.invoiceNumber,
         date: InvoiceDetails.startingDate as Date,
         userId: userId,
+        dueDate: InvoiceDetails.dueDate as Date,
+        paymentDetails: InvoiceDetails.paymentDetails,
+        paymentTerms: InvoiceDetails.paymentTerms,
+        legalMentions: InvoiceDetails.legalMentions,
       },
     });
-
-    return quote;
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: createInvoice.id },
+      include: {
+        items: true,
+        customer: true,
+        seller: true,
+      },
+    });
+    logger.info("Invoice created successfully");
+    revalidatePath("/dashboard/invoices");
+    return { ok: true, message: "Invoice created successfully", invoice };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-
-export const updateInvoiceStatus = async (invoiceId: string, status: invoiceStatus) => {
+export const updateInvoiceStatus = async (
+  invoiceId: string,
+  status: invoiceStatus,
+) => {
   try {
     const invoice = await prisma.invoice.update({
       where: { id: invoiceId },
-      data: { status :status },
+      data: { status: status },
     });
     revalidatePath("/dashboard/invoices");
     return invoice;
@@ -88,4 +122,4 @@ export const updateInvoiceStatus = async (invoiceId: string, status: invoiceStat
     console.log(error);
     throw error;
   }
-}
+};

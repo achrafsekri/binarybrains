@@ -24,6 +24,7 @@ export default async function Page() {
     },
     include: {
       seller: true,
+      items: true,
       customer: true,
     },
   });

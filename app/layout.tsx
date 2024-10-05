@@ -42,7 +42,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
             <TooltipProvider delayDuration={200}>
               <ModalProvider>{children}</ModalProvider>
               <Analytics />
-              <Toaster richColors closeButton position="top-right" />
+              <Toaster
+                richColors
+                theme="light"
+                closeButton
+                position="top-right"
+              />
 
               <TailwindIndicator />
             </TooltipProvider>

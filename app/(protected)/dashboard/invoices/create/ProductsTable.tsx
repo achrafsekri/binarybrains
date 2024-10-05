@@ -3,7 +3,6 @@ import { Minus, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -90,7 +89,7 @@ export default function ProductsTable() {
                 <Button
                   onClick={() => removeProduct(index)}
                   variant={"ghost"}
-                  className="size-fit justify-end border-none p-1 text-primary hover:bg-gray-100 hover:text-primary"
+                  className="size-fit justify-end border-none p-1 text-primary hover:bg-gray-50 hover:text-primary"
                 >
                   <Minus className="size-4" />
                 </Button>
@@ -98,7 +97,7 @@ export default function ProductsTable() {
               <TableCell>
                 <input
                   value={product.name}
-                  className="no-spinner size-full border-none py-2 text-left"
+                  className="no-spinner size-full rounded-md border-none bg-gray-50 p-1 py-2 text-left"
                   type="text"
                   {...register(`ProductsList.${index}.name`)}
                   onChange={(e) =>
@@ -110,12 +109,16 @@ export default function ProductsTable() {
                 <TableCell className="text-left">
                   <input
                     value={product.quantity}
-                    className="no-spinner size-full border-none py-2"
+                    className="no-spinner size-full rounded-md border-none bg-gray-50 p-1 py-2"
                     type="number"
                     min={0}
                     {...register(`ProductsList.${index}.quantity`)}
                     onChange={(e) =>
-                      handleProductChange(index, "quantity", e.target.value)
+                      handleProductChange(
+                        index,
+                        "quantity",
+                        parseInt(e.target.value),
+                      )
                     }
                   />
                 </TableCell>
@@ -124,7 +127,7 @@ export default function ProductsTable() {
                 <TableCell className="flex items-center text-left">
                   <input
                     value={product.vatRate}
-                    className="no-spinner size-full border-none py-2"
+                    className="no-spinner size-full rounded-md border-none bg-gray-50 p-1 py-2"
                     type="number"
                     min={0}
                     max={100}
@@ -143,12 +146,12 @@ export default function ProductsTable() {
               <TableCell className="text-left">
                 <input
                   value={product.unitPrice}
-                  className="no-spinner size-full border-none py-2"
+                  className="no-spinner size-full rounded-md border-none bg-gray-50 p-1 py-2"
                   type="number"
                   min={0}
                   {...register(`ProductsList.${index}.unitPrice`)}
                   onChange={(e) =>
-                    handleProductChange(index, "unitPrice", e.target.value)
+                    handleProductChange(index, "unitPrice", parseFloat(e.target.value))
                   }
                 />
               </TableCell>

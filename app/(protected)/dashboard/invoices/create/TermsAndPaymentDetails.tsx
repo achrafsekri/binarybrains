@@ -13,7 +13,7 @@ const TermsAndPaymentDetails = () => {
   return (
     <div className="relative my-8 border-2 border-dashed p-2 hover:bg-gray-100">
       <h2 className="mb-2 text-sm font-semibold lg:text-base">Reglement</h2>
-      {!invoiceDetails?.paymentMethod &&
+      {!invoiceDetails?.paymentTerms &&
       !invoiceDetails?.paymentDetails &&
       !invoiceDetails?.legalMentions ? (
         <div className="">
@@ -43,14 +43,16 @@ const TermsAndPaymentDetails = () => {
       ) : (
         <div>
           <h3 className="mb-1 text-xs font-semibold md:text-sm">
-            {invoiceDetails?.paymentMethod}{" "}
+            {invoiceDetails?.paymentTerms}{" "}
           </h3>
-         {invoiceDetails?.paymentDetails && <div className="flex flex-col space-y-0.5 text-2xs md:text-xs">
-            <p>Veuillez effectuer le virement sur le compte suivant :</p>
-            {invoiceDetails?.paymentDetails
-              ?.split("%n%")
-              .map((chunk) => <p>{chunk}</p>)}
-          </div>}
+          {invoiceDetails?.paymentDetails && (
+            <div className="flex flex-col space-y-0.5 text-2xs md:text-xs">
+              <p>Veuillez effectuer le virement sur le compte suivant :</p>
+              {invoiceDetails?.paymentDetails
+                ?.split("%n%")
+                .map((chunk, index) => <p key={index}>{chunk}</p>)}
+            </div>
+          )}
           <p className="mt-2 text-2xs md:text-xs">
             {invoiceDetails?.legalMentions}{" "}
           </p>

@@ -214,7 +214,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
         const html = await render(
           <ReminderEmail
             senderName={row.original.seller.name}
-            documentLink={`https://allofacture.com/documents/${row.original.id}?type=invoice`}
+            documentLink={`${process.env.NEXT_PUBLIC_APP_URL}/invoices/${row.original.id}`}
             receiverName={row.original.customer.name}
             type="FACTURE"
             dueDate={new Date(row.original.dueDate ?? "")?.toLocaleDateString(
@@ -247,6 +247,15 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <MoreHorizontal className="" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <Link href={`/invoices/${row.original.id}`} target="_blank">
+                  Voire la facture
+                </Link>
+              </DropdownMenuItem>
+
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem
@@ -279,33 +288,36 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                   </Select>
                 </DialogContent>
               </Dialog>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem
-                    className="cursor-pointer"
-                    onSelect={(e) => e.preventDefault()}
-                  >
-                    Envoyer un rappel
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Tu es sûr de vouloir envoyer un rappel pour cette facture
-                      ?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action ne peut pas être annulée.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction onClick={sendNotice}>
-                      Envoyer
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+
+              {row.original.status === "PENDING" && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      Envoyer un rappel
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Tu es sûr de vouloir envoyer un rappel pour cette
+                        facture ?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action ne peut pas être annulée.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction onClick={sendNotice}>
+                        Envoyer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
