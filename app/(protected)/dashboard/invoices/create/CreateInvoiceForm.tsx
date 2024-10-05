@@ -94,7 +94,7 @@ export function CreateInvoiceForm({
     },
 
     ClientDetails: {
-      id: "", // Default client id
+      id: null, // Default client id
       name: "Nom du client", // Default client name
       address: "456 Client Street, Client City, Client Country", // Default client address
       siret: " 123 456 789 00000", // Optional field, default is null

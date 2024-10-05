@@ -47,12 +47,19 @@ export const createInvoice = async (
     // update the customer
     if (!ClientDetails.id) {
       customer = await prisma.customer.create({
-        data: { ...ClientDetails, userId: userId },
+        data: {
+          name: ClientDetails.name,
+          address: ClientDetails.address,
+          email: ClientDetails.email,
+          phone: ClientDetails.phone,
+          siret: ClientDetails.siret,
+          userId: userId,
+        },
       });
     }
-
-    // Create Quote
-    await prisma.invoice.create({
+    console.log("new customer", customer);
+    // Create the invoice
+    const createInvoice = await prisma.invoice.create({
       data: {
         sellerId: seller.id,
         customerId: ClientDetails.id ? ClientDetails.id : customer.id,
@@ -77,14 +84,23 @@ export const createInvoice = async (
         number: InvoiceDetails.invoiceNumber,
         date: InvoiceDetails.startingDate as Date,
         userId: userId,
+        dueDate: InvoiceDetails.dueDate as Date,
         paymentDetails: InvoiceDetails.paymentDetails,
         paymentTerms: InvoiceDetails.paymentTerms,
         legalMentions: InvoiceDetails.legalMentions,
       },
     });
+    const invoice = await prisma.invoice.findUnique({
+      where: { id: createInvoice.id },
+      include: {
+        items: true,
+        customer: true,
+        seller: true,
+      },
+    });
     logger.info("Invoice created successfully");
     revalidatePath("/dashboard/invoices");
-    return { ok: true, message: "Invoice created successfully" };
+    return { ok: true, message: "Invoice created successfully", invoice };
   } catch (error) {
     console.log(error);
     throw error;

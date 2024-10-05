@@ -45,6 +45,7 @@ export default function EditClientInfoModal({
 }) {
   const form = useContext(invoiceFormContext);
   const clients = useContext(userCustomers);
+  console.log("clients", clients);
   const [customer, setCustomer] = useState<Customer | null>(
     //@ts-expect-error
     form?.getValues("ClientDetails.id")
@@ -114,13 +115,14 @@ export default function EditClientInfoModal({
               </SelectItem>
             </SelectContent>
           </Select>
+          <div className="flex items-center gap-4 text-sm font-light text-gray-400">
+            <hr className="my-4 w-full" />
+            Ou
+            <hr className="my-4 w-full" />
+          </div>
         </>
       )}
-      <div className="flex items-center gap-4 text-sm font-light text-gray-400">
-        <hr className="my-4 w-full" />
-        Ou
-        <hr className="my-4 w-full" />
-      </div>
+
       <div className="w-full space-y-4 px-2">
         <FormField
           control={form!.control}

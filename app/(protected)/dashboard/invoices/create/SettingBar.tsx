@@ -1,22 +1,25 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { sendEmail } from "@/actions/send-email.server";
+import { InvoiceEmail } from "@/emails/invoice-email";
 import InvoiceTemplateA from "@/pdf/InvoiceTemplateA";
+import { render } from "@react-email/components";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import { Download, Printer, Send } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
+import { custom, z } from "zod";
 
+import { InvoiceWithRelations } from "@/types/invoice-with-relations";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -37,18 +40,29 @@ import { invoiceFormContext, invoiceFormSchema } from "./CreateInvoiceForm";
 import { createInvoice } from "./invoice-server";
 
 export default function SettingBar() {
+  const router = useRouter();
   const form = useContext(invoiceFormContext);
   form?.watch("Settings");
 
-  const tablevals = form?.getValues("ProductsList");
+  const [CustomerEmail, setCustomerEmail] = useState<string | null>(
+    form?.getValues("ClientDetails.email") ?? null,
+  );
   const isSubmitting = form?.formState.isSubmitting;
+
+  useEffect(() => {
+    setCustomerEmail(form?.getValues("ClientDetails.email") ?? null);
+  }, [form?.getValues("ClientDetails.email")]);
+
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     try {
       const res = await createInvoice(values);
       if (res.ok) {
-        const blob = await pdf(<InvoiceTemplateA />).toBlob();
+        const blob = await pdf(
+          <InvoiceTemplateA invoice={res.invoice as InvoiceWithRelations} />,
+        ).toBlob();
         saveAs(blob, "facture.pdf");
         toast.success("La facture a été créé avec succès");
+        router.push("/dashboard/invoices");
       } else {
         toast.error(res.message);
       }
@@ -56,9 +70,44 @@ export default function SettingBar() {
       toast.error(
         "Une erreur s'est produite lors de la création de la facture",
       );
-      console.log(e);
     }
   }
+
+  async function sendInvoiceEmail(values: z.infer<typeof invoiceFormSchema>) {
+    try {
+      if (!CustomerEmail) {
+        toast.error("Veuillez entrer un email valide");
+        return;
+      }
+      const res = await createInvoice(values);
+      if (res.ok) {
+        const link = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${res.invoice?.id}`;
+        const html = await render(
+          <InvoiceEmail
+            senderName={res.invoice?.seller.name ?? ""}
+            documentLink={link}
+            receiverName={res.invoice?.customer.name ?? ""}
+            type="FACTURE"
+          />,
+        );
+
+        await sendEmail(
+          html,
+          `${res.invoice?.seller.name} vous a envoyé une facture`,
+          CustomerEmail ?? "",
+        );
+        toast.success("La facture a été créé et envoyé avec succès");
+        router.push("/dashboard/invoices");
+      } else {
+        toast.error(res.message);
+      }
+    } catch (e) {
+      toast.error(
+        "Une erreur s'est produite lors de la création de la facture",
+      );
+    }
+  }
+
   return (
     <Card className="z-10 h-fit lg:sticky lg:top-16 lg:mx-auto lg:max-w-md">
       <CardHeader>
@@ -207,13 +256,61 @@ export default function SettingBar() {
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Sauvegarder</DialogTitle>
-              <DialogDescription>
-                Vous pouvez choisir d&apos;enregistrer le PDF ou de
-                l&apos;envoyer par e-mail.
-              </DialogDescription>
+              <DialogTitle>Sauvegarder ou envoyer la facture</DialogTitle>
             </DialogHeader>
-            <DialogFooter>
+            <DialogContent>
+              <h2 className="text-lg font-bold">Sauvegarder la facture</h2>
+              <p className="-mt-2 text-sm text-gray-500">
+                Téléchargez la facture en format PDF
+              </p>
+              <ConnectForm>
+                {({ handleSubmit }: any) => (
+                  <>
+                    <Button
+                      className="font-white bg-primary hover:bg-primary/80"
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={handleSubmit(onSubmit)}
+                    >
+                      <Download className="mr-2 size-4" />
+                      {isSubmitting ? "En cours..." : "Télécharger"}
+                    </Button>
+                  </>
+                )}
+              </ConnectForm>
+              <div className="flex items-center gap-4 text-sm font-light text-gray-400">
+                <hr className="my-4 w-full" />
+                Ou
+                <hr className="my-4 w-full" />
+              </div>
+              <h2 className="text-lg font-bold">Envoyer la facture</h2>
+              <p className="-mt-2 text-sm text-gray-500">
+                Envoyez la facture par email à votre client
+              </p>
+              <Input
+                type="email"
+                placeholder="Email du client"
+                className="w-full"
+                value={CustomerEmail ?? ""}
+                onChange={(e) => setCustomerEmail(e.target.value)}
+              />
+              <ConnectForm>
+                {({ handleSubmit }: any) => (
+                  <>
+                    <Button
+                      className="font-white bg-primary hover:bg-primary/80"
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={handleSubmit(sendInvoiceEmail)}
+                    >
+                      <Send className="mr-2 size-4" />
+                      {isSubmitting ? "En cours..." : "Envoyer"}
+                    </Button>
+                  </>
+                )}
+              </ConnectForm>
+            </DialogContent>
+            {/* <DialogFooter>
               <div className="flex justify-center space-x-4">
                 <ConnectForm>
                   {({ handleSubmit }: any) => (
@@ -238,7 +335,7 @@ export default function SettingBar() {
                   Envoyer
                 </Button>
               </div>
-            </DialogFooter>
+            </DialogFooter> */}
           </DialogContent>
         </Dialog>
       </CardContent>

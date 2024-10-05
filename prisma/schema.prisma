@@ -145,10 +145,12 @@ model Invoice {
   status         invoiceStatus @default(PENDING)
   user           User          @relation(fields: [userId], references: [id])
   userId         String
+  viewd          Boolean?      @default(false)
+
   //settings
-  vatActivated   Boolean?      @default(true) //tva activée
-  vatPerItem     Boolean?      @default(false) //tva par article
-  devise         String?       @default("€") //devise
+  vatActivated Boolean? @default(true) //tva activée
+  vatPerItem   Boolean? @default(false) //tva par article
+  devise       String?  @default("€") //devise
 
   paymentDate DateTime?
   dueDate     DateTime?
@@ -173,6 +175,7 @@ model Quote {
   terms      String?     @db.Text
   notes      String?     @db.Text
   status     QuoteStatus @default(PENDING)
+  viewd      Boolean?    @default(false)
 
   user         User     @relation(fields: [userId], references: [id])
   userId       String
@@ -194,7 +197,7 @@ model Item {
   totalPrice  Float
   totalVat    Float?
   vatRate     Float?
-  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId   String
 }
 
@@ -207,7 +210,7 @@ model QuoteItem {
   totalPrice  Float
   totalVat    Float?
   vatRate     Float?
-  quote       Quote  @relation(fields: [quoteId], references: [id])
+  quote       Quote  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
   quoteId     String
 }
 
