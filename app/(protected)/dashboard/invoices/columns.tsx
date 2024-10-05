@@ -214,7 +214,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
         const html = await render(
           <ReminderEmail
             senderName={row.original.seller.name}
-            documentLink={`https://allofacture.com/documents/${row.original.id}?type=invoice`}
+            documentLink={`${process.env.NEXT_PUBLIC_APP_URL}/invoices/${row.original.id}`}
             receiverName={row.original.customer.name}
             type="FACTURE"
             dueDate={new Date(row.original.dueDate ?? "")?.toLocaleDateString(
@@ -255,67 +255,69 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                   Voire la facture
                 </Link>
               </DropdownMenuItem>
-              {row.original.status == "PENDING" && (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <DropdownMenuItem
-                      className="cursor-pointer"
-                      onSelect={(e) => e.preventDefault()}
-                    >
-                      Changer le status
-                    </DropdownMenuItem>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>
-                        Changer la status de votre facture
-                      </DialogTitle>
-                    </DialogHeader>
-                    <Select
-                      defaultValue={status[row.original.status]}
-                      onValueChange={ChangeStatus}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.keys(status).map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {statusTranslator[status]}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </DialogContent>
-                </Dialog>
-              )}
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
+
+              <Dialog>
+                <DialogTrigger asChild>
                   <DropdownMenuItem
                     className="cursor-pointer"
                     onSelect={(e) => e.preventDefault()}
                   >
-                    Envoyer un rappel
+                    Changer le status
                   </DropdownMenuItem>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Tu es sûr de vouloir envoyer un rappel pour cette facture
-                      ?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Cette action ne peut pas être annulée.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Annuler</AlertDialogCancel>
-                    <AlertDialogAction onClick={sendNotice}>
-                      Envoyer
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>
+                      Changer la status de votre facture
+                    </DialogTitle>
+                  </DialogHeader>
+                  <Select
+                    defaultValue={status[row.original.status]}
+                    onValueChange={ChangeStatus}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.keys(status).map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {statusTranslator[status]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </DialogContent>
+              </Dialog>
+
+              {row.original.status === "PENDING" && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      Envoyer un rappel
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Tu es sûr de vouloir envoyer un rappel pour cette
+                        facture ?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action ne peut pas être annulée.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction onClick={sendNotice}>
+                        Envoyer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
