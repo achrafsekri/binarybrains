@@ -89,6 +89,7 @@ export default function ProductsTable() {
                 <Button
                   onClick={() => removeProduct(index)}
                   variant={"ghost"}
+                  type="button"
                   className="size-fit justify-end border-none p-1 text-primary hover:bg-gray-50 hover:text-primary"
                 >
                   <Minus className="size-4" />

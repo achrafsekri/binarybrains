@@ -3,6 +3,7 @@ import { format } from "date-fns";
 
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/shared/DatePicker";
+import { InvoiceFileUploader } from "@/components/shared/invoice-file-uploader";
 
 import { invoiceFormContext } from "./CreateInvoiceForm";
 
@@ -12,7 +13,10 @@ const FactureHeader = () => {
   const invoiceDetails = form?.getValues("InvoiceDetails");
   form?.watch("InvoiceDetails");
   return (
-    <div>
+    <div className="relative">
+      <div className="absolute top-0 right-0 z-10">
+        <InvoiceFileUploader />
+      </div>
       <h1 className="mb-2 text-4xl font-semibold text-gray-800 lg:text-5xl">
         Facture
       </h1>

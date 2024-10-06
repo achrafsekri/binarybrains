@@ -9,11 +9,9 @@ import Dropzone, {
 } from "react-dropzone";
 import { toast } from "sonner";
 
-import { cn, formatBytes } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useControllableState } from "@/hooks/use-controllable-state";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
@@ -201,7 +199,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
             <div
               {...getRootProps()}
               className={cn(
-                "group relative grid h-28 w-28 cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 px-2 py-2.5 text-center transition hover:bg-muted/25",
+                "group relative grid size-20 cursor-pointer place-items-center rounded-lg border-2 border-dashed border-muted-foreground/25 p-1 text-center transition hover:bg-muted/25",
                 "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                 isDragActive && "border-muted-foreground/50",
                 isDisabled && "pointer-events-none opacity-60",
@@ -211,19 +209,19 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
             >
               <input {...getInputProps()} />
               {isDragActive ? (
-                <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
+                <div className="flex flex-col items-center justify-center gap-4">
                   <div className="rounded-full border border-dashed p-3">
                     <UploadIcon
-                      className="size-7 text-muted-foreground"
+                      className="size-5 text-muted-foreground"
                       aria-hidden="true"
                     />
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
+                <div className="flex flex-col items-center justify-center gap-4">
                   <div className="rounded-full border border-dashed p-3">
                     <UploadIcon
-                      className="size-7 text-muted-foreground"
+                      className="size-5 text-muted-foreground"
                       aria-hidden="true"
                     />
                   </div>
@@ -235,7 +233,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
       )}
       {files?.length ? (
         // <ScrollArea className="h-fit w-full px-3">
-        <div className="flex max-h-28 flex-col gap-4">
+        <div className="flex size-20 flex-col gap-4">
           {files?.map((file, index) => (
             <FileCard
               key={index}
@@ -260,32 +258,18 @@ interface FileCardProps {
 function FileCard({ file, progress, onRemove }: FileCardProps) {
   return (
     <div className="relative flex items-center gap-2.5">
-      {/* <div className="flex flex-1 gap-2.5"> */}
       {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
-      {/* <div className="flex w-full flex-col gap-2">
-          <div className="flex flex-col gap-px">
-            <p className="line-clamp-1 text-sm font-medium text-foreground/80">
-              {file.name}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {formatBytes(file.size)}
-            </p>
-          </div>
-          {progress ? <Progress value={progress} /> : null}
-        </div> */}
-      {/* </div> */}
-      <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className="size-7"
-          onClick={onRemove}
-        >
-          <Cross2Icon className="size-4" aria-hidden="true" />
-          <span className="sr-only">Remove file</span>
-        </Button>
-      </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className="absolute right-1 top-1 size-5 bg-red-500 text-white"
+        onClick={onRemove}
+      >
+        <Cross2Icon className="size-4" aria-hidden="true" />
+        <span className="sr-only">Remove file</span>
+      </Button>
     </div>
   );
 }
@@ -307,7 +291,7 @@ function FilePreview({ file }: FilePreviewProps) {
         width={48}
         height={48}
         loading="lazy"
-        className="aspect-square h-28 w-28 shrink-0 rounded-md object-cover"
+        className="aspect-square size-20 shrink-0 rounded-md object-cover"
       />
     );
   }
