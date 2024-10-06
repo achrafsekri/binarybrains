@@ -3,6 +3,7 @@
 import { createContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Customer, Seller } from "@prisma/client";
+import { addDays } from "date-fns";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -40,7 +41,7 @@ export const invoiceFormSchema = z.object({
       quantity: z.string(),
       unitPrice: z.string(),
       totalPrice: z.number(),
-      vatRate: z.number().nullable(),
+      vatRate: z.string().nullable(),
     }),
   ),
 
@@ -105,10 +106,10 @@ export function CreateInvoiceForm({
     ProductsList: [
       {
         name: "", // Default product 1
-        quantity: "1", // Default quantity
-        unitPrice: "0", // Default unit price
+        quantity: "", // Default quantity
+        unitPrice: "", // Default unit price
         totalPrice: 0, // Default total price
-        vatRate: 0, // Optional VAT rate, default is 0
+        vatRate: "", // Optional VAT rate, default is 0
       },
     ],
 
@@ -124,9 +125,9 @@ export function CreateInvoiceForm({
 
     InvoiceDetails: {
       invoiceNumber: currentInvoiceNumber, // Default invoice number
-      startingDate: new Date("2023-05-01"), // Default invoice creation date
-      deliveryDate: new Date("2023-05-05"), // Default delivery date
-      dueDate: new Date("2023-05-15"), // Default due date
+      startingDate: new Date(), // Default invoice creation date
+      deliveryDate: new Date(), // Default delivery date
+      dueDate: addDays(new Date(), 7), // Default due date
       subtotal: 1700, // Default subtotal
       vatRate: 20, // Default VAT rate
       vatAmount: 340, // Default VAT amount
@@ -143,7 +144,7 @@ export function CreateInvoiceForm({
     defaultValues: { ...defaultInvoiceFormValues },
   });
   function OnError(error: any) {
-    toast.error(error.message);
+    toast.error("An error ocured");
     logger.error("error", error);
   }
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {

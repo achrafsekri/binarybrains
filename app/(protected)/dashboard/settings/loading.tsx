@@ -6,7 +6,7 @@ export default function DashboardSettingsLoading() {
     <>
       <DashboardHeader
         heading="Settings"
-        text="Configure your Project settings."
+        text="Configurez vos paramètres pour personnaliser votre expérience."
       />
       <div className="divide-y divide-muted pb-10">
         <SkeletonSection />

@@ -29,19 +29,22 @@ export const createInvoice = async (
     const userId = user?.id as string;
 
     // update the seller
-    const seller = await prisma.seller.findFirst({
+    let seller;
+    seller = await prisma.seller.findFirst({
       where: { userId: userId },
     });
 
     if (!seller) {
-      logger.error("Seller not found");
+      seller = await prisma.seller.create({
+        data: { ...SellerDetails, userId: userId },
+      });
       return { ok: false, error: "Seller not found" };
+    } else {
+      seller = await prisma.seller.update({
+        where: { id: seller.id },
+        data: { ...SellerDetails, userId: userId },
+      });
     }
-
-    await prisma.seller.update({
-      where: { id: seller.id },
-      data: { ...SellerDetails, userId: userId },
-    });
 
     let customer;
     // update the customer
@@ -57,7 +60,6 @@ export const createInvoice = async (
         },
       });
     }
-    console.log("new customer", customer);
     // Create the invoice
     const createInvoice = await prisma.invoice.create({
       data: {
@@ -71,7 +73,7 @@ export const createInvoice = async (
             unitPrice: parseFloat(item.unitPrice) ?? 0,
             totalPrice: item.totalPrice ?? 0,
             totalVat: item.totalPrice ?? 0,
-            vatRate: item.vatRate,
+            vatRate: parseFloat(item.vatRate ?? "0"),
           })),
         },
         subtotal: InvoiceDetails.subtotal,

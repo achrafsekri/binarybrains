@@ -32,10 +32,10 @@ export default function ProductsTable() {
       ...ProductsList,
       {
         name: "", // Default product name
-        quantity: 1, // Default quantity
-        unitPrice: 0, // Default unit price
+        quantity: "1", // Default quantity
+        unitPrice: "0", // Default unit price
         totalPrice: 0, // Default total price
-        vatRate: 0, // Optional VAT rate, default is null
+        vatRate: "0", // Optional VAT rate, default is null
       },
     ]);
   };
@@ -103,6 +103,7 @@ export default function ProductsTable() {
                   onChange={(e) =>
                     handleProductChange(index, "name", e.target.value)
                   }
+                  placeholder="Nom du produit"
                 />
               </TableCell>
               {showQuantity && (
@@ -114,12 +115,9 @@ export default function ProductsTable() {
                     min={0}
                     {...register(`ProductsList.${index}.quantity`)}
                     onChange={(e) =>
-                      handleProductChange(
-                        index,
-                        "quantity",
-                        parseInt(e.target.value),
-                      )
+                      handleProductChange(index, "quantity", e.target.value)
                     }
+                    placeholder="Quantité"
                   />
                 </TableCell>
               )}
@@ -133,12 +131,9 @@ export default function ProductsTable() {
                     max={100}
                     {...register(`ProductsList.${index}.vatRate`)}
                     onChange={(e) =>
-                      handleProductChange(
-                        index,
-                        "vatRate",
-                        parseFloat(e.target.value),
-                      )
+                      handleProductChange(index, "vatRate", e.target.value)
                     }
+                    placeholder="TVA"
                   />
                   %
                 </TableCell>
@@ -151,8 +146,9 @@ export default function ProductsTable() {
                   min={0}
                   {...register(`ProductsList.${index}.unitPrice`)}
                   onChange={(e) =>
-                    handleProductChange(index, "unitPrice", parseFloat(e.target.value))
+                    handleProductChange(index, "unitPrice", e.target.value)
                   }
+                  placeholder="Prix unitaire"
                 />
               </TableCell>
               <TableCell className="text-left">
@@ -165,6 +161,7 @@ export default function ProductsTable() {
       <div className="group flex w-full justify-center">
         <Button
           variant={"ghost"}
+          type="button"
           //@ts-ignore
           onClick={() => addProduct()}
           className={cn(

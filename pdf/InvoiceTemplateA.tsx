@@ -1,5 +1,4 @@
 import React from "react";
-import { Invoice } from "@prisma/client";
 import {
   Document,
   Image,
@@ -178,7 +177,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
         <View style={styles.header}>
           <Text style={styles.title}>Facture</Text>
           <View style={styles.invoiceInfo}>
-            <Text style={styles.infoItem}>Facture* {invoice?.number}</Text>
+            <Text style={styles.infoItem}>Facture° {invoice?.number}</Text>
             <Text style={styles.infoItem}>{invoiceDate}</Text>
             <Text style={styles.infoItem}>Échéance {dueDate}</Text>
           </View>

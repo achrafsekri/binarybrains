@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { invoiceFormContext } from "./CreateInvoiceForm";
 
@@ -8,6 +8,7 @@ export default function PricingDetails() {
   form?.watch("ProductsList");
   const settings = form?.getValues("Settings");
   const Products = form?.getValues("ProductsList");
+
   const subTotal = Products?.reduce(
     (acc: number, product) =>
       acc +
@@ -25,6 +26,12 @@ export default function PricingDetails() {
     : 0;
   const total = (subTotal || 0) + ((vat / 100) * (subTotal || 0) || 0);
   const devise = form?.getValues("Settings.devise");
+  useEffect(() => {
+    form?.setValue("InvoiceDetails.subtotal", subTotal ?? 0);
+    form?.setValue("InvoiceDetails.vatRate", vat);
+    form?.setValue("InvoiceDetails.vatAmount", (vat / 100) * (subTotal || 0));
+    form?.setValue("InvoiceDetails.total", total);
+  }, [Products]);
   return (
     <div className="mt-0 flex justify-end lg:mt-4">
       <div className="w-1/2 text-xs md:text-base lg:w-1/3">

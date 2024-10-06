@@ -47,7 +47,7 @@ export default async function ScopeOfWork() {
     <>
       <DashboardHeader
         heading="Clients"
-        text={`Ajoutez, modifiez et supprimez des clients pour suivre les factures et les paiements.`}
+        text={`Ajouter, modifier ou supprimer des clients, pour les utiliser dans vos factures et devis.`}
       >
         <Link href="/dashboard/clients/create">
           <Button>Ajouter un client</Button>

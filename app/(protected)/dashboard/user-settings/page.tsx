@@ -20,12 +20,11 @@ export default async function SettingsPage() {
   return (
     <>
       <DashboardHeader
-        heading="My Account Settings"
-        text="Configure your account settings."
+        heading="Mes paramètres de compte"
+        text="Configurez vos paramètres de compte."
       />
       <div className="divide-y divide-muted pb-10">
         <UserNameForm user={{ id: user.id, name: user.name || "" }} />
-        <UserRoleForm user={{ id: user.id, role: user.role }} />
         <DeleteAccountSection />
       </div>
     </>

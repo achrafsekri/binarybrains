@@ -27,6 +27,9 @@ export default async function Page() {
       items: true,
       customer: true,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   return (
     <>

@@ -2,6 +2,7 @@ import * as React from "react";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { sendEmail } from "@/actions/send-email.server";
+import { InvoiceEmail } from "@/emails/invoice-email";
 import { ReminderEmail } from "@/emails/reminder-email";
 import {
   Customer,
@@ -15,15 +16,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { isWithinInterval, parseISO } from "date-fns";
 import {
   ArrowUpDown,
+  CalendarClock,
   Eye,
   MoreHorizontal,
   Pencil,
+  Send,
   Space,
   Trash,
 } from "lucide-react";
+import { MdSwitchAccessShortcut } from "react-icons/md";
 import { toast } from "sonner";
 
 import { InvoiceWithRelations } from "@/types/invoice-with-relations";
+import { logger } from "@/lib/logger";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -109,6 +114,10 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
     cell: ({ row }) => (
       <div className="lowercase">{row.original.customer.email}</div>
     ),
+    filterFn: (row, id, value) => {
+      if (value === "" || value === undefined) return true;
+      return row.original.customer?.email?.includes(value) ?? false;
+    },
   },
   {
     accessorKey: "Status",
@@ -117,7 +126,7 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
       const status = row.original.status;
 
       return (
-        <div className="text-sm font-medium sm:text-base">
+        <div className="text-sm font-medium">
           {status === "PAID" ? (
             <span className="inline-flex truncate rounded-full bg-green-100 px-1.5 py-0.5 text-green-800 sm:px-2 sm:py-1">
               Payée
@@ -137,6 +146,10 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
           )}
         </div>
       );
+    },
+    filterFn: (row, id, value) => {
+      if (value === "all") return true;
+      return row.original.status === value;
     },
   },
   {
@@ -240,6 +253,31 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
           toast.error("Erreur lors de l'envoi du rappel. Veuillez réessayer.");
         }
       };
+
+      const sendInvoice = async () => {
+        try {
+          const html = await render(
+            <InvoiceEmail
+              senderName={row.original.seller.name}
+              documentLink={`${process.env.NEXT_PUBLIC_APP_URL}/invoices/${row.original.id}`}
+              receiverName={row.original.customer.name}
+              type="FACTURE"
+            />,
+          );
+
+          await sendEmail(
+            html,
+            `${row.original.seller.name} vous a envoyé une facture`,
+            row.original.customer.email ?? "",
+          );
+        } catch (e) {
+          logger.error("Error sending invoice", e);
+          toast.error(
+            "Erreur lors de l'envoi de la facture. Veuillez réessayer.",
+          );
+        }
+      };
+
       return (
         <div className="flex items-center">
           <DropdownMenu>
@@ -251,7 +289,12 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                 className="cursor-pointer"
                 onSelect={(e) => e.preventDefault()}
               >
-                <Link href={`/invoices/${row.original.id}`} target="_blank">
+                <Link
+                  href={`/invoices/${row.original.id}`}
+                  target="_blank"
+                  className="flex items-center"
+                >
+                  <Eye className="mr-2 size-4" />
                   Voire la facture
                 </Link>
               </DropdownMenuItem>
@@ -259,9 +302,10 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <Dialog>
                 <DialogTrigger asChild>
                   <DropdownMenuItem
-                    className="cursor-pointer"
+                    className="flex cursor-pointer items-center"
                     onSelect={(e) => e.preventDefault()}
                   >
+                    <ArrowUpDown className="mr-2 size-4" />
                     Changer le status
                   </DropdownMenuItem>
                 </DialogTrigger>
@@ -293,9 +337,39 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <DropdownMenuItem
-                      className="cursor-pointer"
+                      className="flex cursor-pointer items-center"
                       onSelect={(e) => e.preventDefault()}
                     >
+                      <Send className="mr-2 size-4" />
+                      Envoyer la facture
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Tu es sûr de vouloir envoyer cette facture ?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Cette action ne peut pas être annulée.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction onClick={sendInvoice}>
+                        Envoyer
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+              {row.original.status === "PENDING" && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      className="flex cursor-pointer items-center"
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <CalendarClock className="mr-2 size-4" />
                       Envoyer un rappel
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
@@ -321,9 +395,10 @@ export const columns: ColumnDef<InvoiceWithRelations>[] = [
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
-                    className="cursor-pointer"
+                    className="flex cursor-pointer items-center"
                     onSelect={(e) => e.preventDefault()}
                   >
+                    <Trash className="mr-2 size-4" />
                     Supprimer
                   </DropdownMenuItem>
                 </AlertDialogTrigger>

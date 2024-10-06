@@ -5,8 +5,8 @@ export default function DashboardLoading() {
   return (
     <>
       <DashboardHeader
-        heading="Bienvenue de nouveau"
-        text="Voici un aperçu de votre compte."
+        heading="Clients"
+        text="Ajouter, modifier ou supprimer des clients, pour les utiliser dans vos factures et devis."
       />
       <Skeleton className="size-full rounded-lg" />
     </>

@@ -45,7 +45,6 @@ export default function EditClientInfoModal({
 }) {
   const form = useContext(invoiceFormContext);
   const clients = useContext(userCustomers);
-  console.log("clients", clients);
   const [customer, setCustomer] = useState<Customer | null>(
     //@ts-expect-error
     form?.getValues("ClientDetails.id")

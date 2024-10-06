@@ -8,8 +8,8 @@ import { UserNameForm } from "@/components/forms/user-name-form";
 import { UserRoleForm } from "@/components/forms/user-role-form";
 
 export const metadata = constructMetadata({
-  title: "Settings - Modhif",
-  description: "Configure your Project settings.",
+  title: "Settings - AlloFacture",
+  description: "Configurer vos paramètres pour personnaliser votre expérience.",
 });
 
 export default async function SettingsPage() {
@@ -21,11 +21,10 @@ export default async function SettingsPage() {
     <>
       <DashboardHeader
         heading="Settings"
-        text="Configure your Project settings."
+        text="Configurez vos paramètres pour personnaliser votre expérience."
       />
       <div className="divide-y divide-muted pb-10">
         <UserNameForm user={{ id: user.id, name: user.name || "" }} />
-        <UserRoleForm user={{ id: user.id, role: user.role }} />
         <DeleteAccountSection />
       </div>
     </>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import InvoiceTemplateA from "@/pdf/InvoiceTemplateA";
-import { BlobProvider, PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"; // Your PDF component
+import { PDFViewer } from "@react-pdf/renderer"; // Your PDF component
 
 import { InvoiceWithRelations } from "@/types/invoice-with-relations";
 
