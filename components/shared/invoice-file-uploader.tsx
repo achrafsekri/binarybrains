@@ -130,6 +130,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
       const file = new File([blob], "logo.png", {
         type: "image/png",
       });
+      //@ts-ignore
       file.preview = url;
       return file;
     };
