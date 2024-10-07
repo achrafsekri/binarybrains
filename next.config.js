@@ -20,6 +20,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "randomuser.me",
       },
+      {
+        protocol: "https",
+        hostname: "enlace-freelance.s3.eu-central-1.amazonaws.com",
+      },
     ],
   },
   experimental: {

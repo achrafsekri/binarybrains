@@ -23,8 +23,9 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
   },
   logo: {
-    width: 40,
+    width: 45,
     position: "absolute",
+    objectFit: "contain",
     top: 45,
     right: 60,
   },
@@ -169,10 +170,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        <Image
-          src="https://react-pdf.org/images/logo.png"
-          style={styles.logo}
-        />
+        {seller.logo && <Image style={styles.logo} src={seller.logo} />}
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Facture</Text>

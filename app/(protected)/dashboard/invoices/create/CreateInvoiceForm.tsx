@@ -85,7 +85,7 @@ export function CreateInvoiceForm({
 }) {
   const defaultInvoiceFormValues = {
     SellerDetails: {
-      logo: null, // Default logo
+      logo: seller?.logo, // Default company logo
       name: seller?.name, // Default company name
       address: seller?.address, // Default company address
       phone: seller?.phone, // Default company phone

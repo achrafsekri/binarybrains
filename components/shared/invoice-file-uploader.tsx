@@ -88,6 +88,14 @@ interface FileUploaderProps extends React.HTMLAttributes<HTMLDivElement> {
    * @example disabled
    */
   disabled?: boolean;
+
+  /**
+   * Additional class name for the uploader.
+   * @type string | undefined
+   * @default undefined
+   * @example defvalue="https://example.com/logo.png"
+   */
+  defvalue?: string;
 }
 
 export function InvoiceFileUploader(props: FileUploaderProps) {
@@ -96,6 +104,7 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
     onValueChange,
     onUpload,
     progresses,
+    defvalue,
     accept = {
       "image/*": [],
     },
@@ -111,6 +120,22 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
     prop: valueProp,
     onChange: onValueChange,
   });
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  React.useEffect(() => {
+    const createFileFromUrl = async (url: string | null) => {
+      if (!url) return null;
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const file = new File([blob], "logo.png", {
+        type: "image/png",
+      });
+      file.preview = url;
+      return file;
+    };
+    const preview = createFileFromUrl(defvalue as string);
+    preview.then((file) => setFiles(file ? [file] : []));
+  }, []);
 
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
@@ -148,28 +173,31 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
         const target =
           updatedFiles.length > 0 ? `${updatedFiles.length} files` : `file`;
 
+        setIsUploading(true);
         toast.promise(onUpload(updatedFiles), {
           loading: `Uploading ${target}...`,
           success: () => {
-            setFiles([]);
+            setIsUploading(false);
+            // Only clear files after successful upload
             return `${target} uploaded`;
           },
-          error: `Failed to upload ${target}`,
+          error: (err) => {
+            setIsUploading(false);
+            return `Failed to upload ${target}`;
+          },
         });
       }
     },
-
     [files, maxFileCount, multiple, onUpload, setFiles],
   );
-
   function onRemove(index: number) {
-    if (!files) return;
+    if (!files || isUploading) return; // Prevent removal during upload
     const newFiles = files.filter((_, i) => i !== index);
     setFiles(newFiles);
     onValueChange?.(newFiles);
   }
 
-  // Revoke preview url when component unmounts
+  // Cleanup preview URLs
   React.useEffect(() => {
     return () => {
       if (!files) return;
@@ -179,10 +207,10 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
         }
       });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [files]);
 
-  const isDisabled = disabled || (files?.length ?? 0) >= maxFileCount;
+  const isDisabled =
+    disabled || (files?.length ?? 0) >= maxFileCount || isUploading;
 
   return (
     <div className="relative flex flex-col gap-6 overflow-hidden">
@@ -208,43 +236,32 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
               {...dropzoneProps}
             >
               <input {...getInputProps()} />
-              {isDragActive ? (
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="rounded-full border border-dashed p-3">
-                    <UploadIcon
-                      className="size-5 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                  </div>
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="rounded-full border border-dashed p-3">
+                  <UploadIcon
+                    className="size-5 text-muted-foreground"
+                    aria-hidden="true"
+                  />
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center gap-4">
-                  <div className="rounded-full border border-dashed p-3">
-                    <UploadIcon
-                      className="size-5 text-muted-foreground"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
         </Dropzone>
       )}
       {files?.length ? (
-        // <ScrollArea className="h-fit w-full px-3">
         <div className="flex size-20 flex-col gap-4">
           {files?.map((file, index) => (
             <FileCard
               key={index}
               file={file}
+              defvalue={defvalue}
               onRemove={() => onRemove(index)}
               progress={progresses?.[file.name]}
+              isUploading={isUploading}
             />
           ))}
         </div>
-      ) : // </ScrollArea>
-      null}
+      ) : null}
     </div>
   );
 }
@@ -252,10 +269,18 @@ export function InvoiceFileUploader(props: FileUploaderProps) {
 interface FileCardProps {
   file: File;
   onRemove: () => void;
+  defvalue?: string;
   progress?: number;
+  isUploading: boolean;
 }
 
-function FileCard({ file, progress, onRemove }: FileCardProps) {
+function FileCard({
+  file,
+  progress,
+  defvalue,
+  onRemove,
+  isUploading,
+}: FileCardProps) {
   return (
     <div className="relative flex items-center gap-2.5">
       {isFileWithPreview(file) ? <FilePreview file={file} /> : null}
@@ -266,6 +291,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
         size="icon"
         className="absolute right-1 top-1 size-5 bg-red-500 text-white"
         onClick={onRemove}
+        disabled={isUploading}
       >
         <Cross2Icon className="size-4" aria-hidden="true" />
         <span className="sr-only">Remove file</span>
@@ -275,6 +301,7 @@ function FileCard({ file, progress, onRemove }: FileCardProps) {
 }
 
 function isFileWithPreview(file: File): file is File & { preview: string } {
+  if (typeof file !== "object" || file === null) return false;
   return "preview" in file && typeof file.preview === "string";
 }
 
@@ -288,10 +315,10 @@ function FilePreview({ file }: FilePreviewProps) {
       <Image
         src={file.preview}
         alt={file.name}
-        width={48}
-        height={48}
+        width={128}
+        height={128}
         loading="lazy"
-        className="aspect-square size-20 shrink-0 rounded-md object-cover"
+        className="aspect-square size-20 shrink-0 rounded-md object-contain"
       />
     );
   }
