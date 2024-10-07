@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 45,
     position: "absolute",
-    objectFit: "contain",
+    //objectFit: "contain",
     top: 45,
     right: 60,
   },
@@ -167,6 +167,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
   // french date format october 19, 2021
   const invoiceDate = format(new Date(invoice.createdAt), "MMMM dd, yyyy");
   const dueDate = format(new Date(invoice.dueDate ?? ""), "MMMM dd, yyyy");
+  console.log("logo", seller.logo);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
