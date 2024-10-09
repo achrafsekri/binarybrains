@@ -59,6 +59,7 @@ const FactureHeader = () => {
         {
           <InvoiceFileUploader
             onUpload={onUpload}
+            accept={{ "image/png": [".png"], "image/jpeg": [".jpg", ".jpeg"] }}
             defvalue={form?.getValues("SellerDetails.logo") as string}
           />
         }

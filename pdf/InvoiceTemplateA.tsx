@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 45,
+    height: 45, // Add this line
     position: "absolute",
     //objectFit: "contain",
     top: 45,
@@ -167,11 +168,20 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
   // french date format october 19, 2021
   const invoiceDate = format(new Date(invoice.createdAt), "MMMM dd, yyyy");
   const dueDate = format(new Date(invoice.dueDate ?? ""), "MMMM dd, yyyy");
+  
+  // Convert logo to PNG format
+  const logoUrl = seller.logo ? seller.logo.replace(/\.[^/.]+$/, ".png") : null;
+  
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {seller.logo && (
-          <Image style={styles.logo} source={seller.logo}  />
+        {logoUrl && (
+          <View>
+            <Image
+              style={styles.logo}
+              source={logoUrl}
+            />
+          </View>
         )}
         {/* Header */}
         <View style={styles.header}>
@@ -308,3 +318,4 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
 };
 
 export default InvoiceTemplateA;
+

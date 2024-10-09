@@ -1,5 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import clsx from "clsx";
 import { Minus, Pencil, Plus } from "lucide-react";
+import { toast } from "sonner";
 
 import EditClientInfoModal from "@/components/modals/EditClientInfoModal";
 
@@ -39,8 +41,13 @@ export default function ClientForm() {
   const add = Object.keys(ClientDetails).filter(
     (key) => ClientDetails[key].value === null,
   );
+
   return (
-    <div className="relative flex flex-1 flex-col items-start border-2 border-dashed p-2 text-2xs hover:bg-gray-100 lg:min-w-64 lg:flex-none lg:text-sm">
+    <div
+      className={clsx(
+        `relative flex flex-1 flex-col items-start border-2 border-dashed p-2 text-2xs hover:bg-gray-100 lg:min-w-64 lg:flex-none lg:text-sm`,
+      )}
+    >
       <p className="font-semibold text-gray-600">À l’attention de:</p>
       <p className="font-medium text-gray-600">
         {ClientDetails.name.value || "Panorama"}

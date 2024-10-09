@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Customer, Seller } from "@prisma/client";
 import { addDays } from "date-fns";
@@ -74,6 +74,7 @@ export const invoiceFormContext = createContext<UseFormReturn<
   z.infer<typeof invoiceFormSchema>
 > | null>(null);
 export const userCustomers = createContext<Customer[] | null>(null);
+
 export function CreateInvoiceForm({
   clients,
   seller,
@@ -143,10 +144,15 @@ export function CreateInvoiceForm({
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: { ...defaultInvoiceFormValues },
   });
-  function OnError(error: any) {
-    toast.error("An error ocured");
-    logger.error("error", error);
-  }
+  const errors = form.formState.errors;
+  console.log("errors", errors);
+  useEffect(() => {
+    if (Object.keys(errors).length > 0) {
+      toast.error("Veuillez vérifier les informations du client et vos information pour les erreurs.");
+      logger.error("error", errors);
+    }
+  }, [errors]);
+
   async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
     try {
       const invoice = await createInvoice(values);
@@ -163,7 +169,7 @@ export function CreateInvoiceForm({
     <main>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit, OnError)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:p-4"
         >
           <userCustomers.Provider value={clients}>
