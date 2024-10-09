@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#EEEEEE",
-    padding: 10,
+    padding: 5,
     fontSize: 14,
   },
   description: {
@@ -167,11 +167,12 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
   // french date format october 19, 2021
   const invoiceDate = format(new Date(invoice.createdAt), "MMMM dd, yyyy");
   const dueDate = format(new Date(invoice.dueDate ?? ""), "MMMM dd, yyyy");
-  console.log("logo", seller.logo);
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {seller.logo && <Image style={styles.logo} src={seller.logo} />}
+        {seller.logo && (
+          <Image style={styles.logo} source={seller.logo}  />
+        )}
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Facture</Text>
@@ -235,7 +236,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
               <Text style={styles.quantity}>{item.quantity}</Text>
               {item.vatRate && <Text style={styles.price}>{item.vatRate}</Text>}
               <Text style={styles.price}>{item.unitPrice}</Text>
-              <Text style={styles.total}>{item.totalPrice}</Text>
+              <Text style={styles.price}>{item.totalPrice}</Text>
             </View>
           ))}
         </View>
@@ -248,24 +249,28 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
               {subtotal} {invoice.devise ? invoice.devise : ""}
             </Text>
           </View>
-          <Svg height="6" width="180px">
-            <Line
-              x1="0"
-              y1="5"
-              x2="180"
-              y2="5"
-              strokeWidth={1}
-              stroke="rgb(229 231 235)"
-            />
-          </Svg>
-          <View style={styles.subtotalRow}>
-            {invoice.vatActivated && (
-              <Text style={styles.subtotalLabel}>VAT ({invoice.vatRate}%)</Text>
-            )}
-            <Text style={styles.subtotalValue}>
-              {vatAmount} {invoice.devise ? invoice.devise : ""}
-            </Text>
-          </View>
+          {invoice.vatActivated && (
+            <>
+              <Svg height="6" width="180px">
+                <Line
+                  x1="0"
+                  y1="5"
+                  x2="180"
+                  y2="5"
+                  strokeWidth={1}
+                  stroke="rgb(229 231 235)"
+                />
+              </Svg>
+              <View style={styles.subtotalRow}>
+                <Text style={styles.subtotalLabel}>
+                  VAT ({invoice.vatRate}%)
+                </Text>
+                <Text style={styles.subtotalValue}>
+                  {vatAmount} {invoice.devise ? invoice.devise : ""}
+                </Text>
+              </View>
+            </>
+          )}
           <Svg height="6" width="180px">
             <Line
               x1="0"
