@@ -151,6 +151,7 @@ model Invoice {
   vatActivated Boolean? @default(true) //tva activée
   vatPerItem   Boolean? @default(false) //tva par article
   devise       String?  @default("€") //devise
+  showQuantity Boolean? @default(true) //afficher la quantité
 
   paymentDate DateTime?
   dueDate     DateTime?

@@ -8,6 +8,9 @@ export default function PricingDetails() {
   form?.watch("ProductsList");
   const settings = form?.getValues("Settings");
   const Products = form?.getValues("ProductsList");
+  const vatActivated = settings?.vatActivated;
+
+  console.log("vatActivated", vatActivated);
 
   const subTotal = Products?.reduce(
     (acc: number, product) =>
@@ -16,7 +19,7 @@ export default function PricingDetails() {
         (settings?.showQuantity ? parseInt(product.quantity) : 1),
     0,
   );
-  const vat = form?.getValues("Settings.vatActivated")
+  const vat = vatActivated
     ? form?.getValues("Settings.vatPerItem")
       ? (Products?.reduce(
           (acc, product) => acc + parseFloat(product.vatRate + "" || 0 + ""),
@@ -24,14 +27,19 @@ export default function PricingDetails() {
         ) || 0) / (Products?.length || 0)
       : form?.getValues("Settings.vatRate")
     : 0;
-  const total = (subTotal || 0) + ((vat / 100) * (subTotal || 0) || 0);
+  const total = vatActivated
+    ? (subTotal || 0) + ((vat / 100) * (subTotal || 0) || 0)
+    : subTotal;
   const devise = form?.getValues("Settings.devise");
   useEffect(() => {
     form?.setValue("InvoiceDetails.subtotal", subTotal ?? 0);
     form?.setValue("InvoiceDetails.vatRate", vat);
     form?.setValue("InvoiceDetails.vatAmount", (vat / 100) * (subTotal || 0));
-    form?.setValue("InvoiceDetails.total", total);
-  }, [Products]);
+    form?.setValue(
+      "InvoiceDetails.total",
+      vatActivated ? (total ?? 0) : (subTotal ?? 0),
+    );
+  }, [Products, vatActivated]);
   return (
     <div className="mt-0 flex justify-end lg:mt-4">
       <div className="w-1/2 text-xs md:text-base lg:w-1/3">
@@ -55,7 +63,7 @@ export default function PricingDetails() {
           <span className="text-gray-800">Total</span>
           <span className="text-gray-800">
             {form?.getValues("Settings.showUnit") && (devise || "$")}
-            {total.toLocaleString("en")}
+            {total?.toLocaleString("en")}
           </span>
         </div>
       </div>

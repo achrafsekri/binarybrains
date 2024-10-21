@@ -181,7 +181,6 @@ export default function SettingBar() {
                 type="number"
                 value={field.value}
                 onChange={(e) => {
-                  
                   field.onChange(e.target.value);
                 }}
                 className="w-full"
@@ -230,32 +229,36 @@ export default function SettingBar() {
             </FormItem>
           )}
         />
-        <hr className="my-6" />
-        <FormField
-          control={form?.control}
-          name="Settings.devise"
-          render={({ field }) => (
-            <FormItem>
-              <Label htmlFor="currency" className="text-sm font-medium">
-                Devise
-              </Label>
-              <Select
-                onValueChange={(value) => field.onChange(value)}
-                defaultValue={field.value}
-                value={field.value}
-              >
-                <SelectTrigger id="currency">
-                  <SelectValue placeholder="Sélectionnez une devise" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="€">Euro (€)</SelectItem>
-                  <SelectItem value="$">Dollar ($)</SelectItem>
-                  <SelectItem value="£">Livre Sterling (£)</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
+        {form?.getValues("Settings.showUnit") && (
+          <>
+            <hr className="my-6" />
+            <FormField
+              control={form?.control}
+              name="Settings.devise"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="currency" className="text-sm font-medium">
+                    Devise
+                  </Label>
+                  <Select
+                    onValueChange={(value) => field.onChange(value)}
+                    defaultValue={field.value}
+                    value={field.value}
+                  >
+                    <SelectTrigger id="currency">
+                      <SelectValue placeholder="Sélectionnez une devise" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="€">Euro (€)</SelectItem>
+                      <SelectItem value="$">Dollar ($)</SelectItem>
+                      <SelectItem value="£">Livre Sterling (£)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+              )}
+            />
+          </>
+        )}
         <Dialog>
           <DialogTrigger asChild>
             <Button className="mt-8 w-full" variant="outline">

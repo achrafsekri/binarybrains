@@ -171,6 +171,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
   
   // Convert logo to PNG format
   const logoUrl = seller.logo ? seller.logo.replace(/\.[^/.]+$/, ".png") : null;
+  const showQuantity = invoice?.showQuantity;
   
   return (
     <Document>
@@ -243,7 +244,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
           {items.map((item) => (
             <View style={styles.tableRow}>
               <Text style={styles.description}>{item.description}</Text>
-              <Text style={styles.quantity}>{item.quantity}</Text>
+              {showQuantity && <Text style={styles.quantity}>{item.quantity}</Text>}
               {item.vatRate && <Text style={styles.price}>{item.vatRate}</Text>}
               <Text style={styles.price}>{item.unitPrice}</Text>
               <Text style={styles.price}>{item.totalPrice}</Text>

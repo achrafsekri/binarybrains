@@ -83,6 +83,7 @@ export const createInvoice = async (
         vatActivated: Settings.vatActivated,
         vatPerItem: Settings.vatPerItem,
         devise: Settings.showUnit ? Settings.devise : "",
+        showQuantity: Settings.showQuantity,
         number: InvoiceDetails.invoiceNumber,
         date: InvoiceDetails.startingDate as Date,
         userId: userId,
