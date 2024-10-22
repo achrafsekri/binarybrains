@@ -23,11 +23,16 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
   },
   logo: {
-    width: 45,
-    height: 45, // Add this line
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+  },
+  logoContainer: {
     position: "absolute",
-    //objectFit: "contain",
-    top: 45,
+    width: 45,
+    height: 45,
+    backgroundColor: "#222222",
+    top: 30,
     right: 60,
   },
   header: {
@@ -177,7 +182,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
     <Document>
       <Page size="A4" style={styles.page}>
         {logoUrl && (
-          <View>
+          <View style={styles.logoContainer}>
             <Image
               style={styles.logo}
               source={logoUrl}
@@ -218,7 +223,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
             </Link>
           </View>
           <View style={styles.customerInfo}>
-            <Text style={styles.highlight}>À l'attention de:</Text>
+            <Text style={styles.highlight}>À l&apos;attention de:</Text>
             <Text style={styles.normal}>{customer?.name}</Text>
             <Text style={styles.normal}>SIRET: {customer?.siret}</Text>
             <Text style={styles.normal}>{customer?.address}</Text>
@@ -235,7 +240,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
         <View style={styles.table}>
           <View style={styles.tableHeader}>
             <Text style={styles.description}>Description</Text>
-            <Text style={styles.quantity}>Quantité</Text>
+            {showQuantity && <Text style={styles.quantity}>Quantité</Text>}
             {invoice.vatPerItem && <Text style={styles.price}>TVA</Text>}
             <Text style={styles.price}>Prix</Text>
             <Text style={styles.total}>Total</Text>
@@ -255,7 +260,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
         {/* Subtotal Section */}
         <View style={styles.subtotalSection}>
           <View style={styles.subtotalRow}>
-            <Text style={styles.subtotalLabel}>Subtotal</Text>
+            <Text style={styles.subtotalLabel}>Total HT</Text>
             <Text style={styles.subtotalValue}>
               {subtotal} {invoice.devise ? invoice.devise : ""}
             </Text>
@@ -274,7 +279,7 @@ const InvoiceTemplateA = ({ invoice }: InvoiceTemplateAProps) => {
               </Svg>
               <View style={styles.subtotalRow}>
                 <Text style={styles.subtotalLabel}>
-                  VAT ({invoice.vatRate}%)
+                  TVA ({invoice.vatRate}%)
                 </Text>
                 <Text style={styles.subtotalValue}>
                   {vatAmount} {invoice.devise ? invoice.devise : ""}

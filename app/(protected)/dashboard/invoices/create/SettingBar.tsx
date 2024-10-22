@@ -79,29 +79,28 @@ export default function SettingBar() {
         toast.error("Veuillez entrer un email valide");
         return;
       }
-      console.log(values);
-      // const res = await createInvoice(values);
-      // if (res.ok) {
-      //   const link = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${res.invoice?.id}`;
-      //   const html = await render(
-      //     <InvoiceEmail
-      //       senderName={res.invoice?.seller.name ?? ""}
-      //       documentLink={link}
-      //       receiverName={res.invoice?.customer.name ?? ""}
-      //       type="FACTURE"
-      //     />,
-      //   );
+      const res = await createInvoice(values);
+      if (res.ok) {
+        const link = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${res.invoice?.id}`;
+        const html = await render(
+          <InvoiceEmail
+            senderName={res.invoice?.seller.name ?? ""}
+            documentLink={link}
+            receiverName={res.invoice?.customer.name ?? ""}
+            type="FACTURE"
+          />,
+        );
 
-      //   await sendEmail(
-      //     html,
-      //     `${res.invoice?.seller.name} vous a envoyé une facture`,
-      //     CustomerEmail ?? "",
-      //   );
-      //   toast.success("La facture a été créé et envoyé avec succès");
-      //   router.push("/dashboard/invoices");
-      // } else {
-      //   toast.error(res.message);
-      // }
+        await sendEmail(
+          html,
+          `${res.invoice?.seller.name} vous a envoyé une facture`,
+          CustomerEmail ?? "",
+        );
+        toast.success("La facture a été créé et envoyé avec succès");
+        router.push("/dashboard/invoices");
+      } else {
+        toast.error(res.message);
+      }
     } catch (e) {
       toast.error(
         "Une erreur s'est produite lors de la création de la facture",

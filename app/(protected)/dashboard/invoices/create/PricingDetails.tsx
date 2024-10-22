@@ -24,8 +24,8 @@ export default function PricingDetails() {
       ? (Products?.reduce(
           (acc, product) => acc + parseFloat(product.vatRate + "" || 0 + ""),
           0,
-        ) || 0) / (Products?.length || 0)
-      : form?.getValues("Settings.vatRate")
+        ) || 0) / (Products?.length || 0) || 0
+      : form?.getValues("Settings.vatRate") || 0
     : 0;
   const total = vatActivated
     ? (subTotal || 0) + ((vat / 100) * (subTotal || 0) || 0)
@@ -44,7 +44,7 @@ export default function PricingDetails() {
     <div className="mt-0 flex justify-end lg:mt-4">
       <div className="w-1/2 text-xs md:text-base lg:w-1/3">
         <div className="flex justify-between border-b border-gray-200 py-2">
-          <span className="font-medium text-gray-600">Subtotal</span>
+          <span className="font-medium text-gray-600">Total HT</span>
           <span className="text-gray-800">
             {form?.getValues("Settings.showUnit") && (devise || "$")}
             {subTotal?.toLocaleString("en")}
@@ -52,7 +52,7 @@ export default function PricingDetails() {
         </div>
         <div className="flex justify-between border-b border-gray-200 py-2">
           <span className="font-medium text-gray-600">
-            VAT ({parseInt(`${vat}`)?.toFixed(2) || 0}%)
+            TVA ({parseInt(`${vat}`)?.toFixed(2) || 0}%)
           </span>
           <span className="text-gray-800">
             {form?.getValues("Settings.showUnit") && (devise || "$")}

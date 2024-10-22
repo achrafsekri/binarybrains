@@ -193,7 +193,7 @@ model Item {
   id          String  @id @default(uuid())
   name        String
   description String
-  quantity    Int
+  quantity    Int?
   unitPrice   Float
   totalPrice  Float
   totalVat    Float?
@@ -206,7 +206,7 @@ model QuoteItem {
   id          String @id @default(uuid())
   name        String
   description String
-  quantity    Int
+  quantity    Int?
   unitPrice   Float
   totalPrice  Float
   totalVat    Float?
@@ -228,6 +228,7 @@ model Contact {
   email     String
   subject   String
   message   String
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
