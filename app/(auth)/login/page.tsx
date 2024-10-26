@@ -9,7 +9,7 @@ import { Icons } from "@/components/shared/icons";
 import Logo from "@/components/layout/logo";
 
 export const metadata: Metadata = {
-  title: "Connexion",
+  title: "Connexion | alloFacture",
   description: "Connectez-vous à votre compte alloFacture",
 };
 

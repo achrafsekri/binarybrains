@@ -5,6 +5,11 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Icons } from "@/components/shared/icons";
 
+export const metadata = {
+  title: "Paiement échoué | alloFacture",
+  description: "Votre payement a été échoué.",
+};
+
 const page = () => {
   return (
     <section className="space-y-6 py-12 sm:py-20 lg:py-20">

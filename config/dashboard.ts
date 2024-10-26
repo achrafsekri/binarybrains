@@ -20,12 +20,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Facture",
       },
       { href: "/dashboard/quotes", icon: "page", title: "Devis" },
-      {
-        href: "/dashboard/billing",
-        icon: "billing",
-        title: "Billing",
-        authorizeOnly: UserRole.USER,
-      },
+      // {
+      //   href: "/dashboard/billing",
+      //   icon: "billing",
+      //   title: "Billing",
+      //   authorizeOnly: UserRole.USER,
+      // },
 
       // {
       //   href: "#/dashboard/posts",

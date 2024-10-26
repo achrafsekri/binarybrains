@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { invoiceStatus } from "@prisma/client";
+import { QuoteStatus } from "@prisma/client";
 import {
   ColumnFiltersState,
   flexRender,
@@ -47,7 +47,7 @@ import DateRangePicker from "@/components/shared/DateRangePicker";
 
 import { columns } from "./columns";
 
-export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
+export function DataTable({ data }: { data: QuoteWithRelations[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -77,13 +77,13 @@ export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex gap-2 md:gap-4 items-center py-4">
+      <div className="flex items-center gap-2 py-4 md:gap-4">
         <div className="flex gap-2 md:gap-4">
           <Input
-            placeholder="Filter emails..."
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+            placeholder="Filtrer les devis..."
+            value={(table.getColumn("Nombre")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("email")?.setFilterValue(event.target.value)
+              table.getColumn("Nombre")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -97,34 +97,37 @@ export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
             }}
           >
             <SelectTrigger className="">
-              <SelectValue placeholder="Status de paiement" />
+              <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Status de paiement</SelectLabel>
+                <SelectLabel>Status</SelectLabel>
                 <SelectItem value="all">
                   <div className="flex items-center">
                     <div className="mr-2 size-3 rounded-full bg-gray-300"></div>
                     Tous
                   </div>
                 </SelectItem>
-                {Object.values(invoiceStatus).map((status) => (
+                {Object.values(QuoteStatus).map((status) => (
                   <SelectItem key={status} value={status}>
                     <div className="flex items-center">
                       <div
                         className={clsx("mr-2 size-3 rounded-full", {
-                          "bg-green-500": status === invoiceStatus.PAID,
-                          "bg-yellow-500": status === invoiceStatus.PENDING,
-                          "bg-red-500": status === invoiceStatus.CANCELED,
+                          "bg-green-500": status === QuoteStatus.ACCEPTED,
+                          "bg-yellow-500": status === QuoteStatus.PENDING,
+                          "bg-red-500": status === QuoteStatus.REJECTED,
+                          "bg-gray-500": status === QuoteStatus.EXPIRED,
                         })}
                       ></div>
-                      {status === invoiceStatus.PAID
-                        ? "Payé"
-                        : status === invoiceStatus.PENDING
+                      {status === QuoteStatus.ACCEPTED
+                        ? "Accepté"
+                        : status === QuoteStatus.PENDING
                           ? "En attente"
-                          : status === invoiceStatus.CANCELED
-                            ? "Annulé"
-                            : status}
+                          : status === QuoteStatus.REJECTED
+                            ? "Rejeté"
+                            : status === QuoteStatus.EXPIRED
+                              ? "Expiré"
+                              : status}
                     </div>
                   </SelectItem>
                 ))}
@@ -202,7 +205,7 @@ export function DataTable({ data }: { data: InvoiceWithRelations[] }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Aucun résultat.
                 </TableCell>
               </TableRow>
             )}

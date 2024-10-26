@@ -5,6 +5,11 @@ import { prisma } from "@/lib/db";
 
 import InvoiceContainer from "./InvoiceContainer";
 
+export const metadata = {
+  title: "Facture | alloFacture",
+  description: "Votre facture.",
+};
+
 const PDFPreview = async ({ params }: { params: { invoiceId: string } }) => {
   const { invoiceId } = params;
   const invoice = await prisma.invoice.findUnique({

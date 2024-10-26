@@ -4,16 +4,16 @@ import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { sendEmail } from "@/actions/send-email.server";
 import { InvoiceEmail } from "@/emails/invoice-email";
-import InvoiceTemplateA from "@/pdf/InvoiceTemplateA";
+import QuoteTemplateA from "@/pdf/QuoteTemplateA";
 import { render } from "@react-email/components";
 import { pdf } from "@react-pdf/renderer";
 import { saveAs } from "file-saver";
 import { Download, Printer, Send } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { custom, z } from "zod";
+import { z } from "zod";
 
-import { InvoiceWithRelations } from "@/types/invoice-with-relations";
+import { QuoteWithRelations } from "@/types/quote-with-relations";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,12 +36,12 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 
-import { invoiceFormContext, invoiceFormSchema } from "./CreateInvoiceForm";
-import { createInvoice } from "./invoice-server";
+import { devisFormContext, devisFormSchema } from "./CreateDevisForm";
+import { createDevis } from "./devis-server";
 
 export default function SettingBar() {
   const router = useRouter();
-  const form = useContext(invoiceFormContext);
+  const form = useContext(devisFormContext);
   form?.watch("Settings");
 
   const [CustomerEmail, setCustomerEmail] = useState<string | null>(
@@ -53,16 +53,16 @@ export default function SettingBar() {
     setCustomerEmail(form?.getValues("ClientDetails.email") ?? null);
   }, [form?.getValues("ClientDetails.email")]);
 
-  async function onSubmit(values: z.infer<typeof invoiceFormSchema>) {
+  async function onSubmit(values: z.infer<typeof devisFormSchema>) {
     try {
-      const res = await createInvoice(values);
+      const res = await createDevis(values);
       if (res.ok) {
         const blob = await pdf(
-          <InvoiceTemplateA invoice={res.invoice as InvoiceWithRelations} />,
+          <QuoteTemplateA quote={res.devis as QuoteWithRelations} />,
         ).toBlob();
-        saveAs(blob, "facture.pdf");
-        toast.success("La facture a été créé avec succès");
-        router.push("/dashboard/invoices");
+        saveAs(blob, "devis.pdf");
+        toast.success("Le devis a été créé avec succès");
+        router.push("/dashboard/quotes");
       } else {
         toast.error(res.message);
       }
@@ -74,38 +74,37 @@ export default function SettingBar() {
     }
   }
 
-  async function sendInvoiceEmail(values: z.infer<typeof invoiceFormSchema>) {
+  async function sendInvoiceEmail(values: z.infer<typeof devisFormSchema>) {
+    console.log("sendInvoiceEmail", values);
     try {
       if (!CustomerEmail) {
-        toast.error("Veuillez entrer un email valide");
+        toast.error("Veuillez choisir un client ou créer un nouveau client");
         return;
       }
-      const res = await createInvoice(values);
+      const res = await createDevis(values);
       if (res.ok) {
-        const link = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${res.invoice?.id}`;
+        const link = `${process.env.NEXT_PUBLIC_APP_URL}/quotes/${res.devis?.id}`;
         const html = await render(
           <InvoiceEmail
-            senderName={res.invoice?.seller.name ?? ""}
+            senderName={res.devis?.seller.name ?? ""}
             documentLink={link}
-            receiverName={res.invoice?.customer.name ?? ""}
-            type="FACTURE"
+            receiverName={res.devis?.customer.name ?? ""}
+            type="DEVIS"
           />,
         );
 
         await sendEmail(
           html,
-          `${res.invoice?.seller.name} vous a envoyé une facture`,
+          `${res.devis?.seller.name} vous a envoyé un devis`,
           CustomerEmail ?? "",
         );
-        toast.success("La facture a été créé et envoyé avec succès");
-        router.push("/dashboard/invoices");
+        toast.success("Le devis a été créé et envoyé avec succès");
+        router.push("/dashboard/quotes");
       } else {
         toast.error(res.message);
       }
     } catch (e) {
-      toast.error(
-        "Une erreur s'est produite lors de la création de la facture",
-      );
+      toast.error("Une erreur s'est produite lors de la création du devis");
     }
   }
 

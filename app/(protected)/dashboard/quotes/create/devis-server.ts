@@ -1,24 +1,22 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { invoiceStatus } from "@prisma/client";
+import { QuoteStatus } from "@prisma/client";
 import { z } from "zod";
 
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getCurrentUser } from "@/lib/session";
 
-import { invoiceFormSchema } from "./CreateInvoiceForm";
+import { devisFormSchema } from "./CreateDevisForm";
 
-export const createInvoice = async (
-  data: z.infer<typeof invoiceFormSchema>,
-) => {
+export const createDevis = async (data: z.infer<typeof devisFormSchema>) => {
   try {
     const {
       SellerDetails,
       ClientDetails,
       ProductsList,
-      InvoiceDetails,
+      DevisDetails,
       Settings,
     } = data;
     // Get the current session to retrieve the user ID
@@ -59,8 +57,8 @@ export const createInvoice = async (
         },
       });
     }
-    // Create the invoice
-    const createInvoice = await prisma.invoice.create({
+    // Create the devis
+    const createDevis = await prisma.quote.create({
       data: {
         sellerId: seller.id,
         customerId: ClientDetails.id ? ClientDetails.id : customer.id,
@@ -77,51 +75,49 @@ export const createInvoice = async (
             vatRate: Number(item.vatRate ?? 0),
           })),
         },
-        subtotal: InvoiceDetails.subtotal,
-        vatRate: Settings.vatActivated ? InvoiceDetails.vatRate : 0,
-        vatAmount: Settings.vatActivated ? InvoiceDetails.vatAmount : 0,
-        total: InvoiceDetails.total,
+        subtotal: DevisDetails.subtotal,
+        vatRate: Settings.vatActivated ? DevisDetails.vatRate : 0,
+        vatAmount: Settings.vatActivated ? DevisDetails.vatAmount : 0,
+        total: DevisDetails.total,
         vatActivated: Settings.vatActivated,
         vatPerItem: Settings.vatPerItem,
         devise: Settings.showUnit ? Settings.devise : "",
         showQuantity: Settings.showQuantity,
-        number: InvoiceDetails.invoiceNumber,
-        date: InvoiceDetails.startingDate as Date,
+        number: DevisDetails.devisNumber,
+        date: DevisDetails.startingDate as Date,
         userId: userId,
-        dueDate: InvoiceDetails.dueDate as Date,
-        paymentDetails: InvoiceDetails.paymentDetails,
-        paymentTerms: InvoiceDetails.paymentTerms,
-        legalMentions: InvoiceDetails.legalMentions,
+        validUntil: DevisDetails.dueDate as Date,
+        comment: DevisDetails.comment,
       },
     });
-    const invoice = await prisma.invoice.findUnique({
-      where: { id: createInvoice.id },
+    const devis = await prisma.quote.findUnique({
+      where: { id: createDevis.id },
       include: {
         items: true,
         customer: true,
         seller: true,
       },
     });
-    logger.info("Invoice created successfully");
-    revalidatePath("/dashboard/invoices");
-    return { ok: true, message: "Invoice created successfully", invoice };
+    logger.info("Devis created successfully");
+    revalidatePath("/dashboard/deviss");
+    return { ok: true, message: "Devis created successfully", devis };
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
 
-export const updateInvoiceStatus = async (
-  invoiceId: string,
-  status: invoiceStatus,
+export const updateDevisStatus = async (
+  devisId: string,
+  status: QuoteStatus,
 ) => {
   try {
-    const invoice = await prisma.invoice.update({
-      where: { id: invoiceId },
+    const devis = await prisma.quote.update({
+      where: { id: devisId },
       data: { status: status },
     });
-    revalidatePath("/dashboard/invoices");
-    return invoice;
+    revalidatePath("/dashboard/deviss");
+    return devis;
   } catch (error) {
     console.log(error);
     throw error;

@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction, useContext } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/modal";
-import { invoiceFormContext } from "@/app/(protected)/dashboard/invoices/create/CreateInvoiceForm";
+import { devisFormContext } from "@/app/(protected)/dashboard/quotes/create/CreateDevisForm";
+
 import { DialogTitle } from "../ui/dialog";
 import {
   FormControl,
@@ -13,14 +14,14 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 
-export default function EditSellerInfoModal({
+export default function EditDevisSellerInfoModal({
   showModal,
   setShowModal,
 }: {
   showModal: boolean;
   setShowModal: Dispatch<SetStateAction<boolean>>;
 }) {
-  const form = useContext(invoiceFormContext);
+  const form = useContext(devisFormContext);
   return (
     <Modal
       className="max-h-[90vh] max-w-2xl overflow-y-auto p-4"
