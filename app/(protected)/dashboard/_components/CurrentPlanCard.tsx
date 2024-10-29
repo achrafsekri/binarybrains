@@ -43,13 +43,17 @@ export default function CurrentPlanCard({
           </p>
         )}
       </CardContent>
-      <CardFooter>
-        <Button className="w-full" onClick={stripeSessionAction}>
-          Gérer l&apos;Abonnement
-          {!isPending && <ArrowUpRight className="ml-2 size-4" />}
-          {isPending && <Icons.spinner className="ml-2 size-4 animate-spin" />}
-        </Button>
-      </CardFooter>
+      {subscriptionPlan.isPaid && (
+        <CardFooter>
+          <Button className="w-full" onClick={stripeSessionAction}>
+            Gérer l&apos;Abonnement
+            {!isPending && <ArrowUpRight className="ml-2 size-4" />}
+            {isPending && (
+              <Icons.spinner className="ml-2 size-4 animate-spin" />
+            )}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

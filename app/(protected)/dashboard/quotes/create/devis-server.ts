@@ -4,9 +4,14 @@ import { revalidatePath } from "next/cache";
 import { QuoteStatus } from "@prisma/client";
 import { z } from "zod";
 
+import { planLimits } from "@/config/subscriptions";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getCurrentUser } from "@/lib/session";
+import {
+  getUserSubscriptionPlan,
+  isQuotePlanExceeded,
+} from "@/lib/subscription";
 
 import { devisFormSchema } from "./CreateDevisForm";
 
@@ -25,6 +30,12 @@ export const createDevis = async (data: z.infer<typeof devisFormSchema>) => {
       return { ok: false, error: "User not found" };
     }
     const userId = user?.id as string;
+
+    // Check if the user has reached the limit of devis
+    const exceeded = await isQuotePlanExceeded();
+    if (exceeded) {
+      return { ok: false, message: "Vous avez atteint la limite de devis" };
+    }
 
     // update the seller
     let seller;

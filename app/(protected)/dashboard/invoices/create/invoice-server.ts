@@ -4,9 +4,14 @@ import { revalidatePath } from "next/cache";
 import { invoiceStatus } from "@prisma/client";
 import { z } from "zod";
 
+import { planLimits } from "@/config/subscriptions";
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getCurrentUser } from "@/lib/session";
+import {
+  getUserSubscriptionPlan,
+  isInvoicePlanExceeded,
+} from "@/lib/subscription";
 
 import { invoiceFormSchema } from "./CreateInvoiceForm";
 
@@ -24,9 +29,15 @@ export const createInvoice = async (
     // Get the current session to retrieve the user ID
     const user = await getCurrentUser();
     if (!user) {
-      return { ok: false, error: "User not found" };
+      return { ok: false, message: "User not found" };
     }
     const userId = user?.id as string;
+
+    // Check if the user has reached the limit of invoices
+    const exceeded = await isInvoicePlanExceeded();
+    if (exceeded) {
+      return { ok: false, message: "Vous avez atteint la limite de factures" };
+    }
 
     // update the seller
     let seller;
@@ -107,7 +118,7 @@ export const createInvoice = async (
     return { ok: true, message: "Invoice created successfully", invoice };
   } catch (error) {
     console.log(error);
-    throw error;
+    return { ok: false, message: error.message };
   }
 };
 

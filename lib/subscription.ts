@@ -1,9 +1,11 @@
 // @ts-nocheck
 // TODO: Fix this when we turn strict mode on.
 import { UserSubscriptionPlan } from "types";
-import { pricingData } from "@/config/subscriptions";
+import { planLimits, pricingData } from "@/config/subscriptions";
 import { prisma } from "@/lib/db";
 import { stripe } from "@/lib/stripe";
+
+import { getCurrentUser } from "./session";
 
 export async function getUserSubscriptionPlan(
   userId: string,
@@ -64,4 +66,64 @@ export async function getUserSubscriptionPlan(
     interval,
     isCanceled,
   };
+}
+
+export async function isInvoicePlanExceeded() {
+  const user = await getCurrentUser();
+  const subscriptionPlan = await getUserSubscriptionPlan(user?.id as string);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstDayOfNextMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    1,
+  );
+
+  const invoices = await prisma.invoice.count({
+    where: {
+      userId: user!.id,
+      createdAt: {
+        gte: firstDayOfMonth,
+        lt: firstDayOfNextMonth,
+      },
+    },
+  });
+  const limitInvoices =
+    planLimits[subscriptionPlan?.title?.toLocaleLowerCase()];
+  let exceeded = false;
+  if (!limitInvoices || !limitInvoices.Factures) {
+    exceeded = false;
+  } else if (typeof limitInvoices?.Factures === "number") {
+    exceeded = invoices > limitInvoices.Factures;
+  }
+  return exceeded;
+}
+
+export async function isQuotePlanExceeded() {
+  const user = await getCurrentUser();
+  const subscriptionPlan = await getUserSubscriptionPlan(user?.id as string);
+  const now = new Date();
+  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const firstDayOfNextMonth = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    1,
+  );
+  const quotes = await prisma.quote.count({
+    where: {
+      userId: user!.id,
+      createdAt: {
+        gte: firstDayOfMonth,
+        lt: firstDayOfNextMonth,
+      },
+    },
+  });
+  const limitQuotes = planLimits[subscriptionPlan?.title?.toLocaleLowerCase()];
+  let exceeded = false;
+  if (!limitQuotes || !limitQuotes.Quotes) {
+    exceeded = false;
+  } else if (typeof limitQuotes?.Quotes === "number") {
+    exceeded = quotes > limitQuotes.Quotes;
+  }
+  return exceeded;
 }

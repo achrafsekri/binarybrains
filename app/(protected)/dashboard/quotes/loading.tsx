@@ -5,8 +5,8 @@ export default function DashboardLoading() {
   return (
     <>
       <DashboardHeader
-        heading="Mes factures"
-        text="Suivez les factures et les paiements pour vos projets."
+        heading="Mes devis"
+        text="Suivez les devis effectués."
       />
       <Skeleton className="size-full rounded-lg" />
     </>

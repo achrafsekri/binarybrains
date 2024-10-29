@@ -65,6 +65,16 @@ export function UserAccountNav() {
             <ul role="list" className="mb-14 mt-1 w-full text-muted-foreground">
               <li className="rounded-lg text-foreground hover:bg-muted">
                 <Link
+                  href="/dashboard/fillSellerInfo"
+                  onClick={closeDrawer}
+                  className="flex w-full items-center gap-3 px-2.5 py-2"
+                >
+                  <Settings className="size-4" />
+                  <p className="text-sm">Mettre à jour mes informations</p>
+                </Link>
+              </li>
+              <li className="rounded-lg text-foreground hover:bg-muted">
+                <Link
                   href="/dashboard/settings"
                   onClick={closeDrawer}
                   className="flex w-full items-center gap-3 px-2.5 py-2"
@@ -119,8 +129,17 @@ export function UserAccountNav() {
 
         <DropdownMenuItem asChild>
           <Link
+            href="/dashboard/fillSellerInfo"
+            className="flex items-center space-x-2.5 cursor-pointer"
+          >
+            <Settings className="size-4" />
+            <p className="text-sm">Mettre à jour mes informations</p>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link
             href="/dashboard/user-settings"
-            className="flex items-center space-x-2.5"
+            className="flex items-center space-x-2.5 cursor-pointer"
           >
             <Settings className="size-4" />
             <p className="text-sm">Account Settings</p>

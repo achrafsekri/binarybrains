@@ -4,12 +4,20 @@ import { Plus } from "lucide-react";
 import { QuoteWithRelations } from "@/types/quote-with-relations";
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
+import { isQuotePlanExceeded } from "@/lib/subscription";
 import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 import { DataTable } from "./Table";
+import clsx from "clsx";
 
 export const metadata = constructMetadata({
   title: "Mes devis- alloFacture",
@@ -31,18 +39,39 @@ export default async function Page() {
       createdAt: "desc",
     },
   });
+  const isPlanExceeded = await isQuotePlanExceeded();
   return (
     <>
-      <DashboardHeader
-        heading="Mes Devis"
-        text={`Suivez les devis effectués.`}
-      >
-        <Link href="/dashboard/quotes/create">
-          <Button>
-            <span className="hidden md:block">Créer un devis</span>
-            <Plus size={18} className="md:hidden" />
-          </Button>
-        </Link>
+      <DashboardHeader heading="Mes Devis" text={`Suivez les devis effectués.`}>
+        {isPlanExceeded && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  className={clsx(
+                    "relative flex h-9 items-center justify-center gap-2 p-2",
+                    isPlanExceeded && "cursor-not-allowed opacity-50",
+                  )}
+                  disabled={isPlanExceeded}
+                >
+                  <Plus size={18} className="" />
+                  <span className="">Créer un devis</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Vous avez atteint la limite de devis pour votre plan.
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+        {!isPlanExceeded && (
+          <Link href="/dashboard/quotes/create">
+            <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
+              <Plus size={18} className="" />
+              <span className="hidden md:block">Créer un devis</span>
+            </Button>
+          </Link>
+        )}
       </DashboardHeader>
       {quotes!.length == 0 && (
         <EmptyPlaceholder>
