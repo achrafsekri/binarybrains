@@ -34,6 +34,8 @@ import {
   User,
   Users,
   X,
+  MapPin,
+  Calendar
 } from "lucide-react";
 import { LiaFileInvoiceDollarSolid, LiaRedoAltSolid } from "react-icons/lia";
 import { PiInvoiceLight, PiUsers } from "react-icons/pi";
@@ -57,6 +59,7 @@ export const Icons = {
   pdf: VscFilePdf,
   clients: PiUsers,
   add: Plus,
+  calendar: Calendar,
   arrowRight: ArrowRight,
   arrowUpRight: ArrowUpRight,
   billing: CreditCard,
@@ -65,6 +68,7 @@ export const Icons = {
   chevronRight: ChevronRight,
   check: Check,
   close: X,
+  mapPin: MapPin,
   copy: Copy,
   dashboard: LayoutPanelLeft,
   ellipsis: MoreVertical,

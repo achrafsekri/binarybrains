@@ -6,34 +6,41 @@ export const sidebarLinks: SidebarNavItem[] = [
   {
     title: "MENU",
     items: [
-      // {
-      //   href: "/admin",
-      //   icon: "laptop",
-      //   title: "Admin Panel",
-      //   authorizeOnly: UserRole.ADMIN,
-      // },
-      { href: "/dashboard", icon: "dashboard", title: "Tableau de bord" },
-      { href: "/dashboard/clients", icon: "users", title: "Clients" },
       {
-        href: "/dashboard/invoices",
-        icon: "handshake",
-        title: "Facture",
+        href: "/admin",
+        icon: "laptop",
+        title: "Admin Panel",
+        authorizeOnly: UserRole.ADMIN,
       },
-      { href: "/dashboard/quotes", icon: "page", title: "Devis" },
-      // {
-      //   href: "/dashboard/billing",
-      //   icon: "billing",
-      //   title: "Billing",
-      //   authorizeOnly: UserRole.USER,
-      // },
+      {
+        href: "/dashboard",
+        icon: "dashboard",
+        title: "Tableau de bord",
+        authorizeOnly: UserRole.USER,
+      },
+      {
+        href: "/dashboard/points-de-vente",
+        icon: "mapPin",
+        title: "Points de vente",
+      },
 
-      // {
-      //   href: "#/dashboard/posts",
-      //   icon: "post",
-      //   title: "User Posts",
-      //   authorizeOnly: UserRole.USER,
-      //   disabled: true,
-      // },
+      {
+        href: "/dashboard/visites",
+        icon: "calendar",
+        title: "Mes visites",
+        authorizeOnly: UserRole.USER,
+      },
+      {
+        href: "/admin/commerciaux",
+        icon: "users",
+        title: "Commerciaux",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/dashboard/stats",
+        icon: "lineChart",
+        title: "Statistiques",
+      },
     ],
   },
   {
