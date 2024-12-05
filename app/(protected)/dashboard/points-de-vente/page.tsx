@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { State } from "@prisma/client";
 import { Plus, PlusCircle } from "lucide-react";
 
 import { prisma } from "@/lib/db";
@@ -9,14 +10,31 @@ import { DashboardHeader } from "@/components/dashboard/header";
 import Map from "@/components/layout/Map";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
+import StatesFilter from "./_components/StatesFilter";
+
 export const metadata = constructMetadata({
   title: "Les clients- alloFacture",
   description:
     "Ajoutez, modifiez et supprimez des clients pour suivre les factures et les paiements.",
 });
 
-export default async function ScopeOfWork() {
-  const pos = await prisma.pos.findMany({});
+export default async function Pos({
+  searchParams,
+}: {
+  searchParams: { state: State };
+}) {
+  const user = await getCurrentUser();
+  const isAdmin = user?.role === "ADMIN";
+  const userStates = user?.states;
+  const allStates = Object.values(State);
+  const filterByStates = searchParams.state
+    ? { state: searchParams.state }
+    : isAdmin
+      ? {}
+      : { state: { in: userStates || [] } };
+  const pos = await prisma.pos.findMany({
+    where: filterByStates,
+  });
 
   return (
     <>
@@ -31,7 +49,7 @@ export default async function ScopeOfWork() {
           </Button>
         </Link>
       </DashboardHeader>
-
+      <StatesFilter states={isAdmin ? allStates : userStates || []} />
       {pos.length === 0 ? (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="mapPin" />

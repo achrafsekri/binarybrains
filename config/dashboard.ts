@@ -25,7 +25,7 @@ export const sidebarLinks: SidebarNavItem[] = [
       },
 
       {
-        href: "/dashboard/visites",
+        href: "/dashboard/visits",
         icon: "calendar",
         title: "Mes visites",
         authorizeOnly: UserRole.USER,

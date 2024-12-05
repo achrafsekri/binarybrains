@@ -1,6 +1,6 @@
 import authConfig from "@/auth.config";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { UserRole } from "@prisma/client";
+import { State, UserRole } from "@prisma/client";
 import NextAuth, { type DefaultSession } from "next-auth";
 
 import { prisma } from "@/lib/db";
@@ -12,6 +12,7 @@ declare module "next-auth" {
     user: {
       role: UserRole;
       stripeSubscriptionId: string | unknown;
+      states: State[];
     } & DefaultSession["user"];
   }
 }
@@ -41,6 +42,7 @@ export const {
         session.user.name = token.name;
         session.user.image = token.picture;
         session.user.stripeSubscriptionId = token.stripeSubscriptionId;
+        session.user.states = token.states as State[];
       }
 
       return session;
@@ -58,6 +60,7 @@ export const {
       token.picture = dbUser.image;
       token.role = dbUser.role;
       token.stripeSubscriptionId = dbUser.stripeSubscriptionId;
+      token.states = dbUser.states;
       return token;
     },
   },

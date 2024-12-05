@@ -6,6 +6,7 @@ import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
 
+import Link from "next/link";
 import { Pos } from "@prisma/client";
 
 import { Button } from "../ui/button";
@@ -13,7 +14,7 @@ import { Button } from "../ui/button";
 export default function Map({ pos }: { pos: Pos[] }) {
   const [position, setPosition] = useState<LatLngExpression | null>(null);
   const housingIcon = new Icon({
-    iconUrl: "https://img.icons8.com/plasticine/100/exterior.png",
+    iconUrl: "https://img.icons8.com/dusk/64/small-business.png",
     iconSize: [38, 45], // size of the icon
     iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
     popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
@@ -32,7 +33,7 @@ export default function Map({ pos }: { pos: Pos[] }) {
         center={position}
         zoom={13}
         scrollWheelZoom={false}
-        style={{ height: "630px", width: "100%" }}
+        style={{ height: "630px", width: "100%", zIndex: 10 }}
       >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {pos.map((p) => (
@@ -46,7 +47,9 @@ export default function Map({ pos }: { pos: Pos[] }) {
                 <span className="text-lg font-bold">{p.nom}</span>
                 <span className="text-sm">{p.city}</span>
                 <Button variant="outline" size="sm">
-                  Voir le point de vente
+                  <Link href={`/dashboard/points-de-vente/${p.id}`}>
+                    Voir le point de vente
+                  </Link>
                 </Button>
               </div>
             </Popup>
