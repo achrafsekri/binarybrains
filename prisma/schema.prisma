@@ -173,9 +173,9 @@ model Visit {
 model Disponibility {
   id            String   @id @default(cuid())
   visitId       String
-  visit         Visit    @relation(fields: [visitId], references: [id])
+  visit         Visit    @relation(fields: [visitId], references: [id], onDelete: Cascade)
   productId     String
-  product       Product  @relation(fields: [productId], references: [id])
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   disponibility Boolean  @default(false)
   price         Float
   createdAt     DateTime @default(now())
@@ -187,6 +187,7 @@ model Plan {
   name      String
   date      DateTime
   posId     String
+  isDone    Boolean  @default(false)
   pos       Pos      @relation(fields: [posId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])

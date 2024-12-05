@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Visit } from "@prisma/client";
+import { Disponibility, Pos, Visit } from "@prisma/client";
 import { Plus } from "lucide-react";
 
 import { prisma } from "@/lib/db";
@@ -17,12 +17,24 @@ export const metadata = constructMetadata({
     "Ajoutez, modifiez et supprimez des visites pour suivre les visites.",
 });
 
+export type VisitWithDisponibilities = Visit & {
+  disponibilities: Disponibility[];
+  pos: Pos;
+};
+
 export default async function Visits() {
   const user = await getCurrentUser();
   //number of invoices and quotes per client
   const visits = await prisma.visit.findMany({
     where: {
       userId: user!.id ?? "",
+    },
+    include: {
+      disponibilities: true,
+      pos: true,
+    },
+    orderBy: {
+      createdAt: "desc",
     },
   });
   return (

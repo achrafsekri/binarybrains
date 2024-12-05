@@ -1,5 +1,8 @@
 "use server";
+
+import { revalidatePath } from "next/cache";
 import { State } from "@prisma/client";
+
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 
@@ -20,6 +23,7 @@ export const createPos = async (values: PosFormValues) => {
         lng: values.lng ?? "",
       },
     });
+    revalidatePath("/dashboard/points-de-vente");
     return { ok: true };
   } catch (error) {
     throw error;

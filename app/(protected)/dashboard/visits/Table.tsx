@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { Customer } from "@prisma/client";
 import {
   ColumnFiltersState,
   flexRender,
@@ -33,19 +32,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import DateRangePicker from "@/components/shared/DateRangePicker";
 
 import { columns } from "./columns";
+import { VisitWithDisponibilities } from "./page";
 
-export type Client = Customer & {
-  invoices: InvoiceWithRelations[];
-  quotes: QuoteWithRelations[];
-  _count: {
-    invoices: number;
-    quotes: number;
-  };
-};
-
-export function DataTable({ data }: { data: Client[] }) {
+export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -75,50 +67,19 @@ export function DataTable({ data }: { data: Client[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-2 py-4">
         <Input
-          placeholder="Filter emails, names, etc."
-          // value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filtrer par point de vente"
           onChange={(event) => {
-            table.getColumn("email")?.setFilterValue(event.target.value);
+            table.getColumn("pos")?.setFilterValue(event.target.value);
           }}
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                const translator = {
-                  name: "Nom",
-                  email: "Email",
-                  phone: "Telephone",
-                  siret: "Siret",
-                  vatNumber: "TVA",
-                }
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {translator[column.id] || column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DateRangePicker
+          onChange={(range) => table.getColumn("date")?.setFilterValue(range)}
+        />
       </div>
-      <div className="rounded-md border">
+      <div className="h-[60vh] overflow-y-auto rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

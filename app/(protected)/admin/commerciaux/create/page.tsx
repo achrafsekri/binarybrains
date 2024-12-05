@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
 
-import NewVisitForm from "./NewVistForm";
+import NewUserForm from "./NewUserForm";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -20,7 +20,7 @@ export default async function Page() {
   });
   return (
     <>
-      <NewVisitForm pos={pos} products={products} />
+      <NewUserForm />
     </>
   );
 }

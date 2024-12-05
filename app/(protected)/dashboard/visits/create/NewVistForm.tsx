@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Company, Pos, Product } from "@prisma/client";
+import clsx from "clsx";
 import { CheckCircle2, Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -100,6 +101,10 @@ export default function NewVisitForm({
 
   const onSubmit = async (data: VisitFormValues) => {
     setIsSubmitting(true);
+    if (data.validated === false) {
+      toast.error("Veuillez valider votre visite.");
+      return;
+    }
     try {
       const res = await createVisit({ ...data });
       toast.success("La nouvelle visite a été créée avec succès.");
@@ -207,7 +212,10 @@ export default function NewVisitForm({
                   <Button
                     variant="outline"
                     onClick={() => handleValidate()}
-                    className="w-full"
+                    className={clsx(
+                      "w-full",
+                      field.value === true && "bg-green-500 text-white",
+                    )}
                     disabled={field.value === true}
                     type="button"
                   >

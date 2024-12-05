@@ -3,6 +3,8 @@ import {
   ArrowRight,
   ArrowUpRight,
   BookOpen,
+  Calendar,
+  CalendarClock,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -20,6 +22,7 @@ import {
   Loader2,
   LucideIcon,
   LucideProps,
+  MapPin,
   MessagesSquare,
   Moon,
   MoreVertical,
@@ -34,19 +37,16 @@ import {
   User,
   Users,
   X,
-  MapPin,
-  Calendar
 } from "lucide-react";
+import { GoMail } from "react-icons/go";
 import { LiaFileInvoiceDollarSolid, LiaRedoAltSolid } from "react-icons/lia";
 import { PiInvoiceLight, PiUsers } from "react-icons/pi";
-import { VscFilePdf } from "react-icons/vsc";
-import { GoMail } from "react-icons/go";
-
 import {
   TbCircleNumber1,
   TbCircleNumber2,
   TbCircleNumber3,
 } from "react-icons/tb";
+import { VscFilePdf } from "react-icons/vsc";
 
 export type Icon = LucideIcon;
 
@@ -58,6 +58,7 @@ export const Icons = {
   mail: GoMail,
   pdf: VscFilePdf,
   clients: PiUsers,
+  planning: CalendarClock,
   add: Plus,
   calendar: Calendar,
   arrowRight: ArrowRight,
