@@ -18,7 +18,7 @@ const MultipleStateSelector = ({
       <MultipleSelector
         defaultOptions={OPTIONS}
         placeholder="Sélectionner les états"
-        onSelect={onSelect}
+        onChange={(value) => onSelect(value.map((v) => v.value))}
         emptyIndicator={
           <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
             Aucun état sélectionné
