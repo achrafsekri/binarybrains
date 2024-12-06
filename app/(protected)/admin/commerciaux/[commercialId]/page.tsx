@@ -14,7 +14,7 @@ import { DataTable } from "@/app/(protected)/dashboard/visits/Table";
 
 import { VisitChart } from "./VisitChart";
 
-export const getStringMonth = (month: number) => {
+const getStringMonth = (month: number) => {
   return format(new Date(0, month - 1), "MMMM");
 };
 
