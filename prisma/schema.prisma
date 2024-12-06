@@ -98,6 +98,8 @@ model User {
   stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
   visits                 Visit[]
   plans                  Plan[]
+  isBanned               Boolean   @default(false)
+  isDeleted              Boolean   @default(false)
 
   @@map(name: "users")
 }

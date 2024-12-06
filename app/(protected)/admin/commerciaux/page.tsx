@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
-import { DataTable } from "../../dashboard/visits/Table";
+import { DataTable } from "./Table";
 
 export const metadata = constructMetadata({
   title: "Commerciaux",
@@ -24,7 +24,7 @@ export default async function Team() {
       role: UserRole.USER,
     },
   });
-  console.log(commerciaux);
+
   return (
     <>
       <DashboardHeader heading="Commerciaux" text={`Liste des commerciaux.`}>

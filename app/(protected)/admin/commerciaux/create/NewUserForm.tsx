@@ -74,6 +74,10 @@ export default function NewUserForm() {
     }
   };
 
+  const error = form.formState.errors;
+  console.log(error);
+  console.log(form.getValues());
+
   return (
     <main className="w-full max-w-4xl bg-background p-4">
       <h1 className="mb-6 text-center text-2xl font-bold">

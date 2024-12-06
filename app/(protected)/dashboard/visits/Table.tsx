@@ -34,10 +34,11 @@ import {
 } from "@/components/ui/table";
 import DateRangePicker from "@/components/shared/DateRangePicker";
 
+import { UserWithRelations } from "../../admin/commerciaux/page";
 import { columns } from "./columns";
 import { VisitWithDisponibilities } from "./page";
 
-export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
+export function DataTable({ data }: { data: UserWithRelations[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],

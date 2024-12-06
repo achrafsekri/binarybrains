@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import { TransactionWithRelations } from '@/types/transaction';
+import * as React from "react";
+import { State } from "@prisma/client";
 import {
   ColumnFiltersState,
   flexRender,
@@ -12,17 +12,19 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
-} from '@tanstack/react-table';
-import clsx from 'clsx';
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+} from "@tanstack/react-table";
+import clsx from "clsx";
+import { ChevronDown } from "lucide-react";
+
+import { TransactionWithRelations } from "@/types/transaction";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -31,7 +33,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -39,15 +41,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
+import MultipleStateSelector from "@/components/shared/MultiStateSelector";
 
-import { columns } from './columns';
-import { UserWithRelations } from './page';
+import StatesFilter from "../../dashboard/planning/_components/StatesFilter";
+import { columns } from "./columns";
+import { UserWithRelations } from "./page";
 
 export function DataTable({ data }: { data: UserWithRelations[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -75,45 +79,30 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
   if (data?.length === 0) return null;
 
   return (
-    <div className='w-full'>
-      <div className='flex gap-2 md:gap-4 items-center py-4'>
-        <div className='flex gap-2 md:gap-4'>
+    <div className="w-full">
+      <div className="flex items-center gap-2 py-4 md:gap-4">
+        <div className="flex gap-2 md:gap-4">
           <Input
-            placeholder='Filter by user name or id...'
-            value={(table.getColumn('user')?.getFilterValue() as string) ?? ''}
+            placeholder="Filtrer par nom ou id..."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn('user')?.setFilterValue(event.target.value)
+              table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className='max-w-sm'
+            className="max-w-sm"
           />
-          <Select
-            onValueChange={(value) => {
-              table.getColumn('signedAgreement')?.setFilterValue(value);
+          <MultipleStateSelector
+            onSelect={(states) => {
+              table.getColumn("states")?.setFilterValue(states);
             }}
-          >
-            <SelectTrigger className=''>
-              <SelectValue placeholder='Signed Agreement' />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Signed Agreement</SelectLabel>
-                <SelectItem value='All'>All</SelectItem>
-                {['Yes', 'No'].map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          />
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='outline' className='ml-auto'>
-              Columns <ChevronDown className='ml-2 size-4' />
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown className="ml-2 size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
+          <DropdownMenuContent align="end">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
@@ -121,7 +110,7 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className='capitalize'
+                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) =>
                       column.toggleVisibility(!!value)
@@ -134,7 +123,7 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className='rounded-md border'>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -146,7 +135,7 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -159,13 +148,13 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
+                  data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -175,7 +164,7 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -184,23 +173,23 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
           </TableBody>
         </Table>
       </div>
-      <div className='flex items-center justify-end space-x-2 py-4'>
-        <div className='flex-1 text-sm text-muted-foreground'>
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex-1 text-sm text-muted-foreground">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className='space-x-2'>
+        <div className="space-x-2">
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <Button
-            variant='outline'
-            size='sm'
+            variant="outline"
+            size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
