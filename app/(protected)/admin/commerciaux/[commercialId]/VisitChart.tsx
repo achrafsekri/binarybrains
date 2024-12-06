@@ -38,7 +38,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function VisitChart() {
+export function VisitChart({
+  visits,
+}: {
+  visits: { month: string; count: number }[];
+}) {
   return (
     <Card>
       <CardHeader>
@@ -49,7 +53,7 @@ export function VisitChart() {
         <ChartContainer config={chartConfig}>
           <LineChart
             accessibilityLayer
-            data={chartData}
+            data={visits}
             margin={{
               left: 12,
               right: 12,
@@ -68,7 +72,7 @@ export function VisitChart() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Line
-              dataKey="desktop"
+              dataKey="count"
               type="natural"
               stroke="var(--color-desktop)"
               strokeWidth={2}
