@@ -12,7 +12,7 @@ export default {
   providers: [
     Resend({
       apiKey: env.RESEND_API_KEY,
-      from: "noreply@allofacture.com",
+      from: "noreply@Sotacib.com",
       sendVerificationRequest,
     }),
     CredentialsProvider({

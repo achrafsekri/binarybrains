@@ -16,8 +16,8 @@ export const sendVerificationRequest: EmailConfig["sendVerificationRequest"] =
 
     const userVerified = user?.emailVerified ? true : false;
     const authSubject = userVerified
-      ? `Se connecter à AlloFacture`
-      : `Créer un compte AlloFacture`;
+      ? `Se connecter à Sotacib`
+      : `Créer un compte Sotacib`;
 
     try {
       const { data, error } = await resend.emails.send({

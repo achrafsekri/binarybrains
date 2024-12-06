@@ -30,6 +30,7 @@ export function ProductSelector({
     value: string;
     label: string;
     companyCode: string;
+    companyName: string;
   }[];
   value: string;
   onChange: (value: string) => void;
@@ -57,7 +58,30 @@ export function ProductSelector({
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0">
-        <Command>
+        <Command
+          filter={(value, search) => {
+            if (!search) return 1;
+            const item = value.toLowerCase();
+            const searchTerm = search.toLowerCase();
+
+            // Check if search term matches either label or company code
+            const matches =
+              products
+                .find((p) => p.value === item)
+                ?.label.toLowerCase()
+                .includes(searchTerm) ||
+              products
+                .find((p) => p.value === item)
+                ?.companyCode.toLowerCase()
+                .includes(searchTerm) ||
+              products
+                .find((p) => p.value === item)
+                ?.companyName.toLowerCase()
+                .includes(searchTerm);
+
+            return matches ? 1 : 0;
+          }}
+        >
           <CommandInput placeholder="Rechercher un produit..." />
           <CommandList>
             <CommandEmpty>Aucun produit trouvé.</CommandEmpty>

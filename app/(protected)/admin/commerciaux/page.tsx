@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { User, UserRole } from "@prisma/client";
+import { State, User, UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";

@@ -18,18 +18,18 @@ export const NewsletterWelcome = ({
 }: NewsletterWelcomeProps) => (
   <Html>
     <Head />
-    <Preview>Bienvenue à la newsletter d'AlloFacture!</Preview>
+    <Preview>Bienvenue à la newsletter d'Sotacib!</Preview>
 
     <Body className="bg-white font-sans">
       <Container className="mx-auto py-5 pb-12">
         <Img
-          src="https://allofacture.s3.amazonaws.com/Group+1.png"
-          alt="allofacture-logo"
+          src="https://Sotacib.s3.amazonaws.com/Group+1.png"
+          alt="Sotacib-logo"
           className="mx-auto w-28"
         />
         <Text className="mt-4 text-base">Bonjour!</Text>
         <Text className="text-base">
-          Bienvenue à la newsletter d'AlloFacture! Nous sommes ravis de vous
+          Bienvenue à la newsletter d'Sotacib! Nous sommes ravis de vous
           compter parmi nos abonnés.
         </Text>
 
@@ -39,7 +39,7 @@ export const NewsletterWelcome = ({
 
         <ul className="list-disc pl-5">
           <li>Des conseils pratiques pour la gestion de votre facturation</li>
-          <li>Les dernières mises à jour et fonctionnalités d'AlloFacture</li>
+          <li>Les dernières mises à jour et fonctionnalités d'Sotacib</li>
           <li>Des astuces pour optimiser votre flux de trésorerie</li>
           <li>
             Des informations sur les tendances du marché et la réglementation
@@ -54,7 +54,7 @@ export const NewsletterWelcome = ({
         <Section className="mt-8 text-center">
           <Button
             className="inline-block rounded-md bg-[#7f5af0] px-4 py-2 text-base text-white no-underline"
-            href="https://www.allofacture.com/ressources"
+            href="https://www.Sotacib.com/ressources"
           >
             Découvrez nos ressources
           </Button>

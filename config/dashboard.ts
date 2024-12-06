@@ -34,12 +34,7 @@ export const sidebarLinks: SidebarNavItem[] = [
         icon: "planning",
         title: "Planning",
       },
-      {
-        href: "/admin/commerciaux",
-        icon: "users",
-        title: "Commerciaux",
-        authorizeOnly: UserRole.ADMIN,
-      },
+
       {
         href: "/dashboard/stats",
         icon: "lineChart",
@@ -48,31 +43,12 @@ export const sidebarLinks: SidebarNavItem[] = [
     ],
   },
   {
-    title: "Options",
+    title: "Administration",
     items: [
       {
-        href: "/admin/team",
+        href: "/admin/commerciaux",
         icon: "users",
-        title: "Team",
-        authorizeOnly: UserRole.ADMIN,
-      },
-      {
-        href: "#",
-        icon: "messages",
-        title: "Support",
-        authorizeOnly: UserRole.USER,
-        disabled: true,
-      },
-      {
-        href: "/admin/billing",
-        icon: "billing",
-        title: "Billing",
-        authorizeOnly: UserRole.ADMIN,
-      },
-      {
-        href: "/admin/settings",
-        icon: "settings",
-        title: "Settings",
+        title: "Commerciaux",
         authorizeOnly: UserRole.ADMIN,
       },
     ],

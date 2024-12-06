@@ -67,8 +67,8 @@ export const InvoiceEmail = ({
     <Body style={styles.body}>
       <Container style={styles.container}>
         <Img
-          src="https://allofacture.s3.amazonaws.com/Group+1.png"
-          alt="allofacture-logo"
+          src="https://Sotacib.s3.amazonaws.com/Group+1.png"
+          alt="Sotacib-logo"
           style={styles.logo}
         />
         <Text style={styles.text}>
@@ -87,7 +87,7 @@ export const InvoiceEmail = ({
 
         <Hr style={styles.divider} />
         <Text style={styles.footer}>
-          Email envoyé par <a href="https://www.allofacture.com">alloFacture</a>
+          Email envoyé par <a href="https://www.Sotacib.com">Sotacib</a>
         </Text>
       </Container>
     </Body>

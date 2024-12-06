@@ -9,8 +9,8 @@ import Logo from "@/components/layout/logo";
 import { Icons } from "@/components/shared/icons";
 
 export const metadata: Metadata = {
-  title: "Connexion | alloFacture",
-  description: "Connectez-vous à votre compte alloFacture",
+  title: "Connexion | Sotacib",
+  description: "Connectez-vous à votre compte",
 };
 
 export default function LoginPage() {

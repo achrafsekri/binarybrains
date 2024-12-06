@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (html: any, subject: string, to: string) => {
   const options = {
-    from: `"AlloFacture" <${process.env.EMAIL_FROM}>`,
+    from: `"Sotacib" <${process.env.EMAIL_FROM}>`,
     to: to,
     subject: subject,
     html: html,

@@ -3,43 +3,43 @@ import type { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://www.allofacture.com',
+      url: 'https://www.Sotacib.com',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/contact',
+      url: 'https://www.Sotacib.com/contact',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/pricing',
+      url: 'https://www.Sotacib.com/pricing',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/terms',
+      url: 'https://www.Sotacib.com/terms',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/privacy',
+      url: 'https://www.Sotacib.com/privacy',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/login',
+      url: 'https://www.Sotacib.com/login',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://www.allofacture.com/register',
+      url: 'https://www.Sotacib.com/register',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,

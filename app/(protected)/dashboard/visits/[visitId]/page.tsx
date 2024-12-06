@@ -36,6 +36,9 @@ export default async function Page({
     },
     include: {
       disponibilities: {
+        where: {
+          disponibility: true,
+        },
         include: {
           product: {
             include: {
@@ -63,7 +66,7 @@ export default async function Page({
 
   return (
     <div className="max-w-screen overflow-x-hidden">
-      <Card className="h-[90vh] w-[95vw] overflow-y-auto">
+      <Card className="h-[90vh] w-[95vw] overflow-y-auto md:w-full">
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
@@ -91,7 +94,7 @@ export default async function Page({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6">
             <div>
               <h3 className="mb-2 text-lg font-semibold">Informations</h3>
               <div className="flex items-center space-x-2">
@@ -121,6 +124,7 @@ export default async function Page({
                         {companies.find((c) => c.code === companyCode)?.name}
                       </CardTitle>
                       <CardDescription className="space-y-4">
+                        {/* @ts-expect-error TODO: fix this */}
                         {disponibilities?.map((disp) => (
                           <Card key={disp.id}>
                             <CardContent className="flex items-center justify-between p-4">
