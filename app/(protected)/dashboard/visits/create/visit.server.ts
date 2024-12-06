@@ -1,5 +1,6 @@
 "use server";
 
+import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 import { createNotification } from "@/actions/create-notifiction.server";
 import { auth } from "@/auth";
@@ -35,8 +36,10 @@ export const createVisit = async (visit: VisitFormValues) => {
   const mergedDisponibilities = [...addedDisponibilities, ...notFoundProducts];
   console.log("mergedDisponibilities", mergedDisponibilities);
   try {
+    const id = randomUUID();
     const createdVisit = await prisma.visit.create({
       data: {
+        id,
         lat: visit.lat,
         lng: visit.lng,
         posId: visit.posId,
@@ -53,7 +56,7 @@ export const createVisit = async (visit: VisitFormValues) => {
       "Nouvelle visite",
       `Une nouvelle visite a été ajoutée`,
       NotificationType.ADDED_VISIT,
-      `/dashboard/visits/${createdVisit.id}`,
+      `/dashboard/visits/${id}`,
     );
     revalidatePath(`/dashboard/visits`);
   } catch (error) {
