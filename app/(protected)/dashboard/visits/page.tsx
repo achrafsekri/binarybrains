@@ -67,7 +67,7 @@ export default async function Visits() {
           </Link>
         </EmptyPlaceholder>
       )}
-      {visits!.length > 0 && <DataTable data={visits as Visit[]} />}
+      {visits!.length > 0 && <DataTable data={visits as VisitWithDisponibilities[]} />}
     </>
   );
 }

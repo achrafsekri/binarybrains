@@ -86,8 +86,8 @@ export const ReminderEmail = ({
       <Body style={styles.body}>
         <Container style={styles.container}>
           <Img
-            src="https://allofacture.s3.amazonaws.com/Group+1.png"
-            alt="allofacture-logo"
+            src="https://Sotacib.s3.amazonaws.com/Group+1.png"
+            alt="Sotacib-logo"
             style={styles.logo}
           />
           <Text style={styles.text}>
@@ -117,8 +117,8 @@ export const ReminderEmail = ({
           <Hr style={styles.divider} />
           <Text style={styles.footer}>
             Email envoyé par{" "}
-            <a href="https://www.allofacture.com" style={styles.link}>
-              alloFacture
+            <a href="https://www.Sotacib.com" style={styles.link}>
+              Sotacib
             </a>
           </Text>
         </Container>

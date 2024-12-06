@@ -64,17 +64,17 @@ export const MagicLinkEmail = ({
 }: MagicLinkEmailProps) => (
   <Html>
     <Head />
-    <Preview>Votre lien de connexion pour AlloFacture</Preview>
+    <Preview>Votre lien de connexion pour Sotacib</Preview>
     <Body style={styles.body}>
       <Container style={styles.container}>
         <Img
-          src="https://allofacture.s3.amazonaws.com/Group+1.png"
-          alt="allofacture-logo"
+          src="https://Sotacib.s3.amazonaws.com/Group+1.png"
+          alt="Sotacib-logo"
           style={styles.logo}
         />
         <Text style={styles.text}>Bonjour {firstName},</Text>
         <Text style={styles.text}>
-          Bienvenue sur AlloFacture! Vous avez reçu ce courriel pour vous
+          Bienvenue sur Sotacib! Vous avez reçu ce courriel pour vous
           connecter à votre compte.
         </Text>
         <Section style={styles.buttonSection}>

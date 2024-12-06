@@ -36,7 +36,7 @@ function SignInModal({
           </h3>
           <p className="text-sm text-gray-500">
             Connectez-vous à votre compte pour accéder à toutes les
-            fonctionnalités de alloFacture
+            fonctionnalités de Sotacib
           </p>
         </div>
 

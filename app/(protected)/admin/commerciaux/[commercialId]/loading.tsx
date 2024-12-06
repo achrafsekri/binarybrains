@@ -5,8 +5,8 @@ export default function DashboardLoading() {
   return (
     <>
       <DashboardHeader
-        heading="Clients"
-        text="Ajouter, modifier ou supprimer des clients, pour les utiliser dans vos factures et devis."
+        heading="Points de vente"
+        text="Votre point de vente"
       />
       <Skeleton className="size-full rounded-lg" />
     </>

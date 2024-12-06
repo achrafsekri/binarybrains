@@ -248,6 +248,7 @@ export default function NewVisitForm({
                             value: p.id,
                             label: p.name,
                             companyCode: p.company.code,
+                            companyName: p.company.name,
                           }))}
                           value={disponibilities.productId}
                           onChange={(value) => {

@@ -149,10 +149,6 @@ export function DashboardSidebar({ links, isPro }: DashboardSidebarProps) {
                   </section>
                 ))}
               </nav>
-
-              <div className="mt-auto xl:p-4">
-                {isSidebarExpanded && !isPro ? <UpgradeCard /> : null}
-              </div>
             </div>
           </aside>
         </ScrollArea>

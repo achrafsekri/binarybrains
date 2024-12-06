@@ -12,17 +12,7 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
-
-import { InvoiceWithRelations } from "@/types/invoice-with-relations";
-import { QuoteWithRelations } from "@/types/quote-with-relations";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -33,12 +23,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DateRangePicker from "@/components/shared/DateRangePicker";
-
-import { UserWithRelations } from "../../admin/commerciaux/page";
 import { columns } from "./columns";
 import { VisitWithDisponibilities } from "./page";
 
-export function DataTable({ data }: { data: UserWithRelations[] }) {
+export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],

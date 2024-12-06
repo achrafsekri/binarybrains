@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { State } from "@prisma/client";
 import {
   ColumnFiltersState,
@@ -13,24 +14,13 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import clsx from "clsx";
-import { ChevronDown } from "lucide-react";
 
-import { TransactionWithRelations } from "@/types/transaction";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -42,9 +32,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import MultipleStateSelector from "@/components/shared/MultiStateSelector";
-
-import StatesFilter from "../../dashboard/planning/_components/StatesFilter";
 import { columns } from "./columns";
 import { UserWithRelations } from "./page";
 
@@ -56,6 +43,7 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -90,38 +78,24 @@ export function DataTable({ data }: { data: UserWithRelations[] }) {
             }
             className="max-w-sm"
           />
-          <MultipleStateSelector
-            onSelect={(states) => {
-              table.getColumn("states")?.setFilterValue(states);
+          <Select
+            onValueChange={(value) => {
+              table.getColumn("states")?.setFilterValue(value as State);
             }}
-          />
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Sélectionner un état" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous</SelectItem>
+              {Object.values(State).map((state) => (
+                <SelectItem key={state} value={state}>
+                  {state}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>

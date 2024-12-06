@@ -13,7 +13,7 @@ import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 import StatesFilter from "./_components/StatesFilter";
 
 export const metadata = constructMetadata({
-  title: "Les clients- alloFacture",
+  title: "Les clients- Sotacib",
   description:
     "Ajoutez, modifiez et supprimez des clients pour suivre les factures et les paiements.",
 });

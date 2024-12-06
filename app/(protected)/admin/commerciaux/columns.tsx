@@ -1,5 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
+import { State } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { Ban, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
@@ -76,7 +77,8 @@ export const columns: ColumnDef<UserWithRelations>[] = [
       </div>
     ),
     filterFn: (row, value) => {
-      return row.original.states.some((state) => value.includes(state));
+      if (value === "all") return true;
+      return row.original.states.includes(value as State);
     },
   },
   {
