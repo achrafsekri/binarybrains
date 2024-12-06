@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Company, Pos, Product, UserRole } from "@prisma/client";
+import { Company, Pos, Product, State, UserRole } from "@prisma/client";
 import clsx from "clsx";
 import { CheckCircle2, Plus, Trash2 } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -28,23 +28,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { PosSelector } from "@/components/dashboard/PosSelector";
-import { ProductSelector } from "@/components/dashboard/ProductSelector";
+import MultipleStateSelector from "@/components/shared/MultiStateSelector";
 
-import { createUser, createVisit } from "./user.server";
-
-const disponibilitySchema = z.object({
-  productId: z.string(),
-  disponibility: z.boolean().default(false),
-  price: z.number(),
-});
+import { createUser } from "./user.server";
 
 const userSchema = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
   role: z.nativeEnum(UserRole),
+  states: z.array(z.nativeEnum(State)),
 });
 
 export type UserFormValues = z.infer<typeof userSchema>;
@@ -162,6 +155,19 @@ export default function NewUserForm() {
                       <SelectItem value="ADMIN">Administrateur</SelectItem>
                     </SelectContent>
                   </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="states"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>États</FormLabel>
+                <FormControl>
+                  <MultipleStateSelector onSelect={field.onChange} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

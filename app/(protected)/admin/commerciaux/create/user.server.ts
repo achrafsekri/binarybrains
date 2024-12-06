@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
+import { State } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "@/lib/db";
@@ -18,6 +19,7 @@ export const createUser = async (user: UserFormValues) => {
       data: {
         ...user,
         password: hashedPassword,
+        states: user.states as State[],
       },
     });
   } catch (error) {

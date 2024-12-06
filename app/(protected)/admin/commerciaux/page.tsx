@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { UserRole } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
@@ -24,9 +24,15 @@ export default async function Team() {
       role: UserRole.USER,
     },
   });
+  console.log(commerciaux);
   return (
     <>
-      <DashboardHeader heading="Commerciaux" text={`Liste des commerciaux.`} />
+      <DashboardHeader heading="Commerciaux" text={`Liste des commerciaux.`}>
+        <Button>
+          <Link href="/admin/commerciaux/create">Créer un commercial</Link>
+        </Button>
+      </DashboardHeader>
+
       {commerciaux.length === 0 ? (
         <EmptyPlaceholder>
           <EmptyPlaceholder.Icon name="users" />
