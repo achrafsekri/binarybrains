@@ -23,6 +23,7 @@ export function PosSelector({
   pos,
   value,
   onChange,
+  disabled,
 }: {
   pos: {
     value: string;
@@ -30,6 +31,7 @@ export function PosSelector({
   }[];
   value: string;
   onChange: (value: string) => void;
+  disabled: boolean;
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -41,6 +43,7 @@ export function PosSelector({
           role="combobox"
           aria-expanded={open}
           className="w-full justify-between"
+          disabled={disabled}
         >
           {value
             ? pos.find((p) => p.value === value)?.label

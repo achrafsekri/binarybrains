@@ -16,9 +16,17 @@ import {
   State,
   Visit,
 } from "@prisma/client";
-import { isAfter, isBefore } from "date-fns";
-import { LocateFixed } from "lucide-react";
+import { format, isAfter, isBefore } from "date-fns";
+import {
+  CalendarClock,
+  Eye,
+  LocateFixed,
+  MapPin,
+  Phone,
+  PlusCircleIcon,
+} from "lucide-react";
 import { DateRange } from "react-day-picker";
+import { FaDirections } from "react-icons/fa";
 
 import { getStateCoordinates } from "@/lib/getStateCords";
 import StatesFilter from "@/app/(protected)/dashboard/points-de-vente/_components/StatesFilter";
@@ -171,6 +179,9 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
                     isBefore(v.createdAt, dateRange?.to) &&
                     isAfter(v.createdAt, dateRange?.from),
                 );
+                const lastVisit = p.visits?.sort(
+                  (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+                )[0];
 
                 return (
                   <Marker
@@ -179,19 +190,54 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
                     position={[Number(p.lat), Number(p.lng)]}
                   >
                     <Popup>
-                      <div className="flex flex-col gap-2">
-                        <span className="text-lg font-bold">{p.nom}</span>
-                        <span className="text-sm">{p.city}</span>
-                        {p.phone && (
-                          <a href={`tel:${p.phone}`} className="text-sm">
-                            +216 {p.phone}
-                          </a>
-                        )}
-                        <Button variant="outline" size="sm">
-                          <Link href={`/dashboard/points-de-vente/${p.id}`}>
-                            Voir le point de vente
+                      <div className="flex flex-col gap-2 space-y-2">
+                        <span className="text-lg flex items-center gap-2 font-bold">
+                          {p.nom}
+                          <Link
+                            href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
+                          >
+                            <FaDirections size={16} />
                           </Link>
-                        </Button>
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <MapPin size={16} />
+                          <span className="text-sm">{p.city}</span>
+                        </div>
+                        {p.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone size={16} />
+                            <a href={`tel:${p.phone}`} className="text-sm">
+                              +216 {p.phone}
+                            </a>
+                          </div>
+                        )}
+                        {lastVisit && (
+                          <div className="flex items-center gap-2">
+                            <CalendarClock size={16} />
+                            <Link
+                              href={`/dashboard/visits/${lastVisit.id}`}
+                              className="text-sm"
+                            >
+                              {format(lastVisit.createdAt, "dd/MM/yyyy, HH:mm")}
+                            </Link>
+                          </div>
+                        )}
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">
+                            <Link
+                              className="flex items-center"
+                              href={`/dashboard/visits/create?pos=${p.id}`}
+                            >
+                              <PlusCircleIcon size={16} />
+                              <span className="ml-2">Ajouter une visite</span>
+                            </Link>
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Link href={`/dashboard/points-de-vente/${p.id}`}>
+                              <Eye size={16} />
+                            </Link>
+                          </Button>
+                        </div>
                       </div>
                     </Popup>
                   </Marker>

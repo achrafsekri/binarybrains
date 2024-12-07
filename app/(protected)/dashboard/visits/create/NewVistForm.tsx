@@ -73,9 +73,11 @@ const calculateDistance = (
 export default function NewVisitForm({
   pos,
   products,
+  posId,
 }: {
   pos: Pos[];
   products: ProductType[];
+  posId: string;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [disponibilities, setDisponibilities] = useState<{
@@ -92,7 +94,7 @@ export default function NewVisitForm({
       validated: false,
       lat: "",
       lng: "",
-      posId: "",
+      posId: posId,
       file: null,
       disponibilities: [],
       note: null,
@@ -178,23 +180,10 @@ export default function NewVisitForm({
                         value: p.id,
                         label: p.nom,
                       }))}
+                      disabled={posId !== ""}
                       value={field.value}
                       onChange={field.onChange}
                     />
-                    <div className="w-full text-center text-sm text-gray-500">
-                      -- Ou --
-                    </div>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      className="w-full"
-                      onClick={() => {
-                        router.push("/dashboard/points-de-vente/create");
-                      }}
-                    >
-                      <Plus className="size-4" />
-                      Ajouter un point de vente
-                    </Button>
                   </>
                 </FormControl>
                 <FormMessage />
