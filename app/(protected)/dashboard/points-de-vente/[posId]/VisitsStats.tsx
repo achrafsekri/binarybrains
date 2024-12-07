@@ -28,33 +28,56 @@ const months = [
 ];
 
 const VisitsStats = ({ visits }: { visits: Visit[] }) => {
-  const [month, setMonth] = useState<string>("01");
+  const [month, setMonth] = useState<string>(new Date().getMonth().toString());
+  const [year, setYear] = useState<string>(new Date().getFullYear().toString());
   const [shownVisits, setShownVisits] = useState<Visit[]>(visits);
   useEffect(() => {
     setShownVisits(
       visits.filter(
         (visit) =>
           visit.createdAt.getMonth() === parseInt(month) &&
-          visit.createdAt.getFullYear() === new Date().getFullYear(),
+          visit.createdAt.getFullYear() === parseInt(year),
       ),
     );
-  }, [month]);
-  const currentMonth = new Date().getMonth();
+  }, [month, year]);
   return (
     <>
       <h2 className="text-lg font-semibold">Statistiques</h2>
-      <Select onValueChange={setMonth} defaultValue={currentMonth.toString()}>
-        <SelectTrigger className="w-auto">
-          <SelectValue placeholder="Sélectionner un mois" />
-        </SelectTrigger>
-        <SelectContent>
-          {months.map((month, index) => (
-            <SelectItem key={index} value={month.value}>
-              {month.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="grid w-full grid-cols-2 gap-4">
+        <Select
+          onValueChange={setYear}
+          defaultValue={new Date().getFullYear().toString()}
+        >
+          <SelectTrigger className="w-auto">
+            <SelectValue placeholder="Sélectionner une année" />
+          </SelectTrigger>
+          <SelectContent>
+            {Array.from({ length: 50 }, (_, i) => (
+              <SelectItem
+                key={i}
+                value={(new Date().getFullYear() - i).toString()}
+              >
+                {(new Date().getFullYear() - i).toString()}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          onValueChange={setMonth}
+          defaultValue={new Date().getMonth().toString()}
+        >
+          <SelectTrigger className="w-auto">
+            <SelectValue placeholder="Sélectionner un mois" />
+          </SelectTrigger>
+          <SelectContent>
+            {months.map((month, index) => (
+              <SelectItem key={index} value={month.value}>
+                {month.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="overflow-hidden rounded-lg border p-4">
           <dt className="truncate text-sm font-medium text-gray-500">
