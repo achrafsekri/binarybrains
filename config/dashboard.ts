@@ -36,11 +36,6 @@ export const sidebarLinks: SidebarNavItem[] = [
         title: "Planning",
       },
       {
-        href: "/dashboard/products",
-        icon: "box",
-        title: "Produits",
-      },
-      {
         href: "/dashboard/stats",
         icon: "lineChart",
         title: "Statistiques",
