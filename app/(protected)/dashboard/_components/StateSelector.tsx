@@ -17,13 +17,14 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { State } from "@prisma/client"
 
 type SelectorProps = {
-  companies: { value: string; label: string }[]
+  States: string; 
   placeholder: string
 }
 
-function CompanySelector({ companies, placeholder }: SelectorProps) {
+function StateSelector({ States, placeholder }: SelectorProps) {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
 
@@ -36,9 +37,9 @@ function CompanySelector({ companies, placeholder }: SelectorProps) {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? companies.find((company) => company.value === value)?.label
-            : placeholder}
+          {/* {value
+            ? States.find((company) => company.value === value)?.value
+            : placeholder} */}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -48,7 +49,7 @@ function CompanySelector({ companies, placeholder }: SelectorProps) {
           <CommandEmpty>No company found.</CommandEmpty>
           <CommandGroup>
             console.log(companies);
-            {companies.map((company) => (
+            {/* {States.map((company) => (
               <CommandItem
                 key={company.value}
                 onSelect={(currentValue) => {
@@ -62,9 +63,9 @@ function CompanySelector({ companies, placeholder }: SelectorProps) {
                     value === company.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {company.label}
+                {company.value}
               </CommandItem>
-            ))}
+            ))} */}
           </CommandGroup>
         </Command>
       </PopoverContent>
@@ -72,12 +73,11 @@ function CompanySelector({ companies, placeholder }: SelectorProps) {
   )
 }
 
-export function CompanySelectors({companies}) {
+export function StateSelectors() {
     // console.log(companies);
   return (
     <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-      <CompanySelector companies={companies} placeholder="Select company 1" />
-      <CompanySelector companies={companies} placeholder="Select company 2" />
+      <StateSelector placeholder="Select Delegation" States={[Object.values(State)]} />
     </div>
   )
 }
