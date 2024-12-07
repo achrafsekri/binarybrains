@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CompanySelectors } from './CompanySelector'
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -38,42 +39,14 @@ const chartConfig = {
   },
 }
 
-export default function MultipleBarChart() {
+export default function MultipleBarChart({companies}) {
+  console.log(companies);
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
+        <CardTitle>Companies Comparaison </CardTitle>
         <CardDescription>January - June 2024</CardDescription>
-        <Select>
-          <SelectTrigger className="w-[180px]">
-         <SelectValue placeholder="Select a company" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Fruits</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
-    <Select>
-          <SelectTrigger className="w-[180px]">
-         <SelectValue placeholder="Select a company" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectLabel>Fruits</SelectLabel>
-          <SelectItem value="apple">Apple</SelectItem>
-          <SelectItem value="banana">Banana</SelectItem>
-          <SelectItem value="blueberry">Blueberry</SelectItem>
-          <SelectItem value="grapes">Grapes</SelectItem>
-          <SelectItem value="pineapple">Pineapple</SelectItem>
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+          <CompanySelectors/>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
