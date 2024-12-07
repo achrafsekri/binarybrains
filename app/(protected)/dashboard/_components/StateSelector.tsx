@@ -1,32 +1,32 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Check, ChevronsUpDown } from 'lucide-react'
+import * as React from "react";
+import { State } from "@prisma/client";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { State } from "@prisma/client"
+} from "@/components/ui/popover";
 
 type SelectorProps = {
-  States: string; 
-  placeholder: string
-}
+  States: string[];
+  placeholder: string;
+};
 
 function StateSelector({ States, placeholder }: SelectorProps) {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,7 +45,9 @@ function StateSelector({ States, placeholder }: SelectorProps) {
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder={`Search ${placeholder.toLowerCase()}...`} />
+          <CommandInput
+            placeholder={`Search ${placeholder.toLowerCase()}...`}
+          />
           <CommandEmpty>No company found.</CommandEmpty>
           <CommandGroup>
             console.log(companies);
@@ -70,15 +72,17 @@ function StateSelector({ States, placeholder }: SelectorProps) {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
 
 export function StateSelectors() {
-    // console.log(companies);
+  // console.log(companies);
   return (
     <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
-      <StateSelector placeholder="Select Delegation" States={[Object.values(State)]} />
+      <StateSelector
+        placeholder="Select Delegation"
+        States={Object.values(State)}
+      />
     </div>
-  )
+  );
 }
-
