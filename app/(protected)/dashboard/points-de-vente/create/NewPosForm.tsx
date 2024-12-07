@@ -329,7 +329,9 @@ export default function NewPosForm({ products }: { products: Product[] }) {
                           products={products.map((p) => ({
                             value: p.id,
                             label: p.name,
+                            // @ts-ignore
                             companyCode: p.company.code,
+                            // @ts-ignore
                             companyName: p.company.name,
                           }))}
                           value={disponibilities.productId}
@@ -370,6 +372,7 @@ export default function NewPosForm({ products }: { products: Product[] }) {
                           return (
                             <div className="relative flex h-10 w-full items-center space-x-2 rounded-md border border-gray-300 p-2">
                               <Badge variant="outline">
+                                {/* @ts-ignore */}
                                 {product?.company.code}
                               </Badge>
                               <span className="">|</span>

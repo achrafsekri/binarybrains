@@ -109,6 +109,7 @@ export default function NewPlaningForm({ pos }: { pos: Pos[] }) {
                 <FormLabel>Point de vente</FormLabel>
                 <FormControl>
                   <PosSelector
+                    disabled={isSubmitting}
                     pos={pos.map((pos) => ({
                       value: pos.id,
                       label: pos.nom,

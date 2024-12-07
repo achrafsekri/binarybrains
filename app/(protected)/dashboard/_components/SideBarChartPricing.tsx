@@ -47,24 +47,24 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function SideBarChart({
+export function SideBarChartPricing({
   totalPos,
   startDate,
   endDate,
-  productsAvailability,
+  pricing,
 }: {
   totalPos: number;
   startDate: Date;
   endDate: Date;
-  productsAvailability: {
+  pricing: {
     name: string;
-    count: number;
+    avg: number;
   }[];
 }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Taux de disponibilté de Chaque Produit</CardTitle>
+        <CardTitle>Prix moyen des produits</CardTitle>
         <CardDescription className="flex flex-col gap-2">
           {format(startDate, "MMM yyyy")} - {format(endDate, "MMM yyyy")}
           <span className="font-bold text-muted-foreground">
@@ -76,7 +76,7 @@ export function SideBarChart({
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={productsAvailability}
+            data={pricing}
             layout="vertical"
             margin={{
               right: 16,
@@ -92,13 +92,13 @@ export function SideBarChart({
               tickFormatter={(value) => value.slice(0, 3)}
               hide
             />
-            <XAxis dataKey="count" type="number" hide />
+            <XAxis dataKey="avg" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Bar
-              dataKey="count"
+              dataKey="avg"
               layout="vertical"
               fill="var(--color-desktop)"
               radius={4}
@@ -111,7 +111,7 @@ export function SideBarChart({
                 fontSize={8}
               />
               <LabelList
-                dataKey="count"
+                dataKey="avg"
                 position="right"
                 offset={8}
                 className="fill-foreground"

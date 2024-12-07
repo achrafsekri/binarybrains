@@ -82,7 +82,7 @@ const HeatmapLayer = dynamic(
   },
 );
 
-export default function Map({ products }: { products: ProductWithCompany[] }) {
+export default function HeatMap({ products }: { products: ProductWithCompany[] }) {
   const [state, setState] = useState<State | null | "all">(null);
   const [position, setPosition] = useState<LatLngExpression | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
@@ -138,12 +138,12 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
 
   return (
     <>
-      <DateRangePicker
+      {/* <DateRangePicker
         defaultValue={dateRange}
         onChange={(date) => setDateRange(date as DateRange)}
         className="mb-4"
-      />
-      <div className="flex justify-between gap-2">
+      /> */}
+      {/* <div className="flex justify-between gap-2">
         <StatesFilter selectedState={state} setSelectedState={setState} />
         <ProductSelector
           products={products.map((p) => ({
@@ -155,7 +155,7 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
           value={selectedProduct || ""}
           onChange={setSelectedProduct}
         />
-      </div>
+      </div> */}
       {position && (
         <div className="relative">
           <MapContainer
@@ -168,107 +168,16 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
             <MapEvents />
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-            {zoom < 10 && (
-              <HeatmapLayer
-                // @ts-ignore
-                points={heatmapData}
-                longitudeExtractor={(m) => m.lng}
-                latitudeExtractor={(m) => m.lat}
-                intensityExtractor={(m) => m.intensity}
-                radius={20}
-                max={1}
-                minOpacity={0.4}
-              />
-            )}
-
-            {zoom >= 10 &&
-              pos.map((p) => {
-                const visited = p.visits.some(
-                  (v) =>
-                    isBefore(v.createdAt, dateRange?.to || new Date()) &&
-                    isAfter(v.createdAt, dateRange?.from || new Date()),
-                );
-                const lastVisit = p.visits?.sort(
-                  (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-                )[0];
-
-                const isProspect = p.type === PosType.PROSPECT;
-
-                return (
-                  <Marker
-                    icon={
-                      isProspect
-                        ? ProspectIcon
-                        : visited
-                          ? visitedIcon
-                          : unvisitedIcon
-                    }
-                    key={p.id}
-                    position={[Number(p.lat), Number(p.lng)]}
-                  >
-                    <Popup>
-                      <div className="flex flex-col gap-2 space-y-2">
-                        <span className="flex items-center gap-2 text-lg font-bold">
-                          {p.nom}{" "}
-                          {isProspect ? (
-                            <Badge variant="outline" className="text-xs">
-                              P.C
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline" className="text-xs">
-                              C
-                            </Badge>
-                          )}
-                          <Link
-                            href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
-                          >
-                            <FaDirections size={16} />
-                          </Link>
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <MapPin size={16} />
-                          <span className="text-sm">{p.city}</span>
-                        </div>
-                        {p.phone && (
-                          <div className="flex items-center gap-2">
-                            <Phone size={16} />
-                            <a href={`tel:${p.phone}`} className="text-sm">
-                              +216 {p.phone}
-                            </a>
-                          </div>
-                        )}
-                        {lastVisit && (
-                          <div className="flex items-center gap-2">
-                            <CalendarClock size={16} />
-                            <Link
-                              href={`/dashboard/visits/${lastVisit.id}`}
-                              className="text-sm"
-                            >
-                              {format(lastVisit.createdAt, "dd/MM/yyyy, HH:mm")}
-                            </Link>
-                          </div>
-                        )}
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="sm">
-                            <Link
-                              className="flex items-center"
-                              href={`/dashboard/visits/create?pos=${p.id}`}
-                            >
-                              <PlusCircleIcon size={16} />
-                              <span className="ml-2">Ajouter une visite</span>
-                            </Link>
-                          </Button>
-                          <Button variant="outline" size="sm">
-                            <Link href={`/dashboard/points-de-vente/${p.id}`}>
-                              <Eye size={16} />
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                );
-              })}
+            <HeatmapLayer
+              // @ts-ignore
+              points={heatmapData}
+              longitudeExtractor={(m) => m.lng}
+              latitudeExtractor={(m) => m.lat}
+              intensityExtractor={(m) => m.intensity}
+              radius={20}
+              max={1}
+              minOpacity={0.4}
+            />
           </MapContainer>
           <Button
             className="absolute bottom-4 right-4 z-[1000]"
