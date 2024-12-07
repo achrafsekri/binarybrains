@@ -8,7 +8,6 @@ import { constructMetadata } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
 import Map from "@/components/layout/Map";
-import { EmptyPlaceholder } from "@/components/shared/empty-placeholder";
 
 import StatesFilter from "./_components/StatesFilter";
 
@@ -23,19 +22,11 @@ export default async function Pos({
 }: {
   searchParams: { state: State };
 }) {
-  const user = await getCurrentUser();
-  const isAdmin = user?.role === "ADMIN";
-  const userStates = user?.states;
-  const allStates = Object.values(State);
-  const filterByStates = searchParams.state
-    ? { state: searchParams.state }
-    : isAdmin
-      ? {}
-      : { state: { in: userStates || [] } };
-  const pos = await prisma.pos.findMany({
-    where: filterByStates,
+  const products = await prisma.product.findMany({
+    include: {
+      company: true,
+    },
   });
-
   return (
     <>
       <DashboardHeader
@@ -49,30 +40,10 @@ export default async function Pos({
           </Button>
         </Link>
       </DashboardHeader>
-      <StatesFilter states={isAdmin ? allStates : userStates || []} />
-      {pos.length === 0 ? (
-        <EmptyPlaceholder>
-          <EmptyPlaceholder.Icon name="mapPin" />
-          <EmptyPlaceholder.Title>
-            Pas des points de vente trouvés
-          </EmptyPlaceholder.Title>
-          <EmptyPlaceholder.Description>
-            Ajoutez un point de vente pour suivre les visites.
-          </EmptyPlaceholder.Description>
-          <Link href="/dashboard/points-de-vente/create">
-            <Button className="relative flex h-9 items-center justify-center gap-2 p-2">
-              <Plus size={18} className="" />
-              <span className="flex-1 truncate text-center">
-                Ajouter un point de vente
-              </span>
-            </Button>
-          </Link>
-        </EmptyPlaceholder>
-      ) : (
-        <div className="relative size-full overflow-hidden">
-          <Map pos={pos} />
-        </div>
-      )}
+
+      <div className="relative size-full overflow-hidden">
+        <Map products={products} />
+      </div>
     </>
   );
 }

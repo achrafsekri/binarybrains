@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { State } from "@prisma/client";
 
@@ -12,15 +12,30 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const StatesFilter = ({ states }: { states: State[] }) => {
+import { getStates } from "../get-states.server";
+
+const StatesFilter = ({
+  selectedState,
+  setSelectedState,
+}: {
+  selectedState: State | null | "all";
+  setSelectedState: (state: State | null | "all") => void;
+}) => {
+  const [states, setStates] = useState<State[]>([]);
   const router = useRouter();
+  useEffect(() => {
+    const fetchStates = async () => {
+      const states = await getStates();
+      setStates(states);
+    };
+    fetchStates();
+  }, []);
   return (
     <>
       <Select
+        value={selectedState || "all"}
         onValueChange={(value) =>
-          value === "all"
-            ? router.push("/dashboard/points-de-vente")
-            : router.push(`/dashboard/points-de-vente?state=${value}`)
+          setSelectedState(value === "all" ? null : (value as State))
         }
       >
         <SelectTrigger className="mb-4 w-full">

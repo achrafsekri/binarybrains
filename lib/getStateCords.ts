@@ -1,0 +1,30 @@
+const stateCoordinates = {
+  TUNIS: [36.8065, 10.1815],
+  ARIANA: [36.8667, 10.1667],
+  BIZERTE: [37.2747, 9.874],
+  MANOUBA: [36.8065, 10.1815],
+  NABEUL: [36.45, 10.7333],
+  SFAX: [34.74, 10.7167],
+  BEJA: [36.7333, 9.1833],
+  BENAROUS: [36.7542, 10.2333],
+  GABES: [33.8833, 10.1167],
+  GAFSA: [34.425, 8.7842],
+  JENDOUBA: [36.5, 8.75],
+  KAIROUAN: [35.6781, 10.0963],
+  KASSERINE: [35.1667, 8.8333],
+  KEBILI: [33.7044, 8.9697],
+  KEF: [36.1824, 8.7148],
+  MAHDIA: [35.5047, 11.0622],
+  MEDENINE: [33.3546, 10.5055],
+  MONASTIR: [35.7833, 10.8333],
+  SIDIBOUZID: [35.039, 9.4844],
+  SILIANA: [36.0833, 9.3667],
+  SOUSSE: [35.8256, 10.6411],
+  TATAOUINE: [32.9333, 10.45],
+  TOZEUR: [33.9197, 8.1335],
+  ZAGHOUAN: [36.4, 10.14],
+};
+
+export const getStateCoordinates = (state: string) => {
+  return stateCoordinates[state];
+};
