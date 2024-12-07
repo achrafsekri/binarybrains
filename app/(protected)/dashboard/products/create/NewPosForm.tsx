@@ -35,7 +35,6 @@ const customerSchema = z.object({
   state: z.string().min(1, { message: "Le nom est requis" }),
   city: z.string().min(1, { message: "La ville est requise" }),
   zip: z.string().min(1, { message: "Le code postal est requis" }),
-  phone: z.string().nullable(),
   lat: z.string().nullable(),
   lng: z.string().nullable(),
   description: z.string().nullable(),
@@ -54,7 +53,6 @@ export default function NewPosForm() {
       name: "",
       state: "",
       city: "",
-      phone: "",
       zip: "",
       lat: "",
       lng: "",
@@ -214,24 +212,7 @@ export default function NewPosForm() {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Téléphone</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Téléphone du point de vente"
-                    value={field.value as string}
-                    onChange={field.onChange}
-                    className="w-full"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+
           <div className="flex gap-4">
             <Button
               type="button"

@@ -2,12 +2,12 @@ import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlusCircle } from "lucide-react";
-import { FaDirections } from "react-icons/fa";
-import { MdDirections } from "react-icons/md";
 
 import { prisma } from "@/lib/db";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/header";
+import { FaDirections } from "react-icons/fa";
+import { MdDirections } from "react-icons/md";
 
 const page = async ({ params }: { params: { posId: string } }) => {
   const pos = await prisma.pos.findFirst({
@@ -22,8 +22,7 @@ const page = async ({ params }: { params: { posId: string } }) => {
     <>
       <DashboardHeader
         heading={pos.nom}
-        text={`${pos.city ?? ""} - ${pos.state ?? ""} `}
-        phone={pos.phone}
+        text={`${pos.city ?? ""} - ${pos.state ?? ""}`}
       >
         <Button variant="outline" size="sm">
           <Link

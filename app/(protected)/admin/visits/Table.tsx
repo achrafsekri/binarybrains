@@ -16,6 +16,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
@@ -28,7 +35,13 @@ import DateRangePicker from "@/components/shared/DateRangePicker";
 import { columns } from "./columns";
 import { VisitWithDisponibilities } from "./page";
 
-export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
+export function DataTable({
+  data,
+  commerciaux,
+}: {
+  data: VisitWithDisponibilities[];
+  commerciaux: User[];
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -69,9 +82,26 @@ export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
         <DateRangePicker
           onChange={(range) => table.getColumn("date")?.setFilterValue(range)}
         />
+        <Select
+          onValueChange={(value) => {
+            table.getColumn("user")?.setFilterValue(value);
+          }}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Filtrer par commercial" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous</SelectItem>
+            {commerciaux.map((commercial) => (
+              <SelectItem key={commercial.id} value={commercial.id}>
+                {commercial.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="h-[60vh] overflow-y-auto rounded-md border">
-        <Table className="">
+        <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -113,7 +143,7 @@ export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Aucun résultat.
                 </TableCell>
               </TableRow>
             )}
@@ -122,8 +152,8 @@ export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s).
         </div>
         <div className="space-x-2">
           <Button
@@ -132,7 +162,7 @@ export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Précédent
           </Button>
           <Button
             variant="outline"
@@ -140,7 +170,7 @@ export function DataTable({ data }: { data: VisitWithDisponibilities[] }) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Suivant
           </Button>
         </div>
       </div>

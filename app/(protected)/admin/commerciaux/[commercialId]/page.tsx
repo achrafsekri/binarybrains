@@ -30,7 +30,11 @@ const page = async ({ params }: { params: { commercialId: string } }) => {
           disponibilities: true,
         },
       },
-      Notification: true,
+      Notification: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
   if (!commercial) {
@@ -72,7 +76,7 @@ const page = async ({ params }: { params: { commercialId: string } }) => {
         </div>
         <div className="col-span-1 rounded-md p-4">
           <h3 className="text-lg font-semibold">Dernière Notification</h3>
-          <div className="mt-4 max-h-[400px] space-y-4 overflow-y-auto">
+          <div className="mt-4 max-h-[550px] space-y-4 overflow-y-auto">
             {commercial.Notification.length > 0 ? (
               commercial.Notification.map((notification) => (
                 <Alert className="border-gray-400">

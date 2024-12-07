@@ -46,6 +46,11 @@ export default function Map({ pos }: { pos: Pos[] }) {
               <div className="flex flex-col gap-2">
                 <span className="text-lg font-bold">{p.nom}</span>
                 <span className="text-sm">{p.city}</span>
+                {p.phone && (
+                  <a href={`tel:${p.phone}`} className="text-sm">
+                    +216 {p.phone}
+                  </a>
+                )}
                 <Button variant="outline" size="sm">
                   <Link href={`/dashboard/points-de-vente/${p.id}`}>
                     Voir le point de vente

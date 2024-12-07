@@ -1,12 +1,14 @@
 interface DashboardHeaderProps {
   heading: string;
   text?: string;
+  phone?: string;
   children?: React.ReactNode;
 }
 
 export function DashboardHeader({
   heading,
   text,
+  phone,
   children,
 }: DashboardHeaderProps) {
   return (
@@ -16,6 +18,14 @@ export function DashboardHeader({
           {heading}
         </h1>
         {text && <p className="text-base text-muted-foreground">{text}</p>}
+        {phone && (
+          <a
+            href={`tel:${phone}`}
+            className="text-base underline"
+          >
+            +216 {phone}
+          </a>
+        )}
       </div>
       {children}
     </div>

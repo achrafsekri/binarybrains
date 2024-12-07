@@ -55,8 +55,8 @@ export function DashboardSidebar({ links, isPro }: DashboardSidebarProps) {
             )}
           >
             <div className="flex h-full max-h-screen flex-1 flex-col gap-2">
-              <div className="flex h-14 items-center p-4">
-                {isSidebarExpanded ? <Logo /> : <MobileLogo />}
+              <div className="flex h-28 items-center p-4">
+                <Logo />
                 <Button
                   variant="ghost"
                   size="icon"

@@ -123,6 +123,7 @@ model Pos {
   lng         String
   nom         String
   description String?
+  phone       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   isActive    Boolean  @default(true)

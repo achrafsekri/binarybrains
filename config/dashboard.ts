@@ -28,13 +28,18 @@ export const sidebarLinks: SidebarNavItem[] = [
         href: "/dashboard/visits",
         icon: "calendar",
         title: "Mes visites",
+        authorizeOnly: UserRole.USER,
       },
       {
         href: "/dashboard/planning",
         icon: "planning",
         title: "Planning",
       },
-
+      {
+        href: "/dashboard/products",
+        icon: "box",
+        title: "Produits",
+      },
       {
         href: "/dashboard/stats",
         icon: "lineChart",
@@ -49,6 +54,12 @@ export const sidebarLinks: SidebarNavItem[] = [
         href: "/admin/commerciaux",
         icon: "users",
         title: "Commerciaux",
+        authorizeOnly: UserRole.ADMIN,
+      },
+      {
+        href: "/admin/visits",
+        icon: "calendar",
+        title: "Visites",
         authorizeOnly: UserRole.ADMIN,
       },
     ],

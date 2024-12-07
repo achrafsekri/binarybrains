@@ -17,7 +17,6 @@ export const createPos = async (values: PosFormValues) => {
       data: {
         nom: values.name,
         description: values.description,
-        phone: values.phone,
         state: values.state as State,
         city: values.city,
         zip: values.zip,
