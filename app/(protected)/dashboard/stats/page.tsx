@@ -34,6 +34,7 @@ import {
 import { CourbePrix } from "../_components/CourbePrix";
 import { Select } from "@radix-ui/react-select";
 import { StateSelectors } from "../_components/StateSelector";
+import { AreaChartComponent } from "../_components/AreaChartComponent";
 
 export const metadata = constructMetadata({
   title: "Charts – SaaS Starter",
@@ -41,9 +42,7 @@ export const metadata = constructMetadata({
 });
 
 export default async function ChartsPage() {
-  const companies = await prisma.company.findMany();
-  const states = await prisma.state.findMany();
-  
+  const companies = await prisma.company.findMany();  
   return (
 
     <>
@@ -68,7 +67,7 @@ export default async function ChartsPage() {
       </TabsContent>
       <TabsContent value="Visites">
         <div>
-          <StateSelectors />
+          {/* <StateSelectors /> */}
           <PieChartComponent/>
         </div>
         
@@ -78,6 +77,7 @@ export default async function ChartsPage() {
       </TabsContent>
       <TabsContent value="Prix">
         <CourbePrix/>
+        <AreaChartComponent/>
       </TabsContent>
     </Tabs>
         
