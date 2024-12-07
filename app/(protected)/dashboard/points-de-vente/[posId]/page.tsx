@@ -35,10 +35,12 @@ const page = async ({ params }: { params: { posId: string } }) => {
   });
 
   return (
-    <>
+    <div className="relative h-[calc(100vh-5rem)] overflow-y-auto">
       <DashboardHeader
         heading={pos.nom}
-        text={`${pos.city ?? ""} - ${pos.state ?? ""} `}
+        text={`${pos.city ?? ""} - ${pos.state ?? ""} , ${
+          pos.type == "CLIENT" ? "Client" : "Point de vente"
+        }`}
         phone={pos.phone ?? ""}
       >
         <Button variant="outline" size="sm">
@@ -68,23 +70,24 @@ const page = async ({ params }: { params: { posId: string } }) => {
           </Link>
         </Button>
       </DashboardHeader>
-      <Button className="absolute bottom-4 right-4" size="sm">
-        <Link
-          href={`/dashboard/visits/create?posId=${pos.id}`}
-          className="flex items-center"
-        >
-          <PlusCircle className="mr-2 size-4" />
-          Ajouter une visite
-        </Link>
-      </Button>
+
       <div className="grid gap-4">
-        <VisitsStats visits={visits} />
+        <VisitsStats visits={visits} posId={pos.id} />
         <div className="relative size-full overflow-hidden">
           <h2 className="text-lg font-semibold">Visites</h2>
           <DataTable data={visits} />
         </div>
       </div>
-    </>
+
+      <Button className="fixed bottom-4 right-4 z-50" size="sm">
+        <Link
+          href={`/dashboard/visits/create?posId=${pos.id}`}
+          className="flex items-center rounded-full"
+        >
+          <PlusCircle className="size-4" />
+        </Link>
+      </Button>
+    </div>
   );
 };
 

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Visit } from "@prisma/client";
+import { getProductDisponibilityByPos } from "@/utils/stats/getProductDisponibilityByPos";
+import { Product, Visit } from "@prisma/client";
 
 import {
   Select,
@@ -29,9 +30,24 @@ const months = [
   { value: "11", label: "Décembre" },
 ];
 
-const VisitsStats = ({ visits }: { visits: VisitWithDisponibilities[] }) => {
+const VisitsStats = ({
+  visits,
+  posId,
+}: {
+  visits: VisitWithDisponibilities[];
+  posId: string;
+}) => {
   const [month, setMonth] = useState<string>(new Date().getMonth().toString());
   const [year, setYear] = useState<string>(new Date().getFullYear().toString());
+  const [productDisponibilities, setProductDisponibilities] = useState<{
+    score: string;
+    disponibilities: {
+      productId: string;
+      productName: string;
+      disponibility: number;
+      available: boolean;
+    }[];
+  } | null>(null);
   const [shownVisits, setShownVisits] =
     useState<VisitWithDisponibilities[]>(visits);
   useEffect(() => {
@@ -43,6 +59,16 @@ const VisitsStats = ({ visits }: { visits: VisitWithDisponibilities[] }) => {
       ),
     );
   }, [month, year]);
+
+  useEffect(() => {
+    getProductDisponibilityByPos(posId, new Date(), new Date()).then(
+      (disponibilities) => {
+        setProductDisponibilities(disponibilities);
+      },
+    );
+  }, []);
+
+  console.log(productDisponibilities);
 
   return (
     <>
@@ -93,12 +119,26 @@ const VisitsStats = ({ visits }: { visits: VisitWithDisponibilities[] }) => {
         </div>
         <div className="overflow-hidden rounded-lg border p-4">
           <dt className="truncate text-sm font-medium text-gray-500">
-            Taux de visite
+            Disponibilité de nos produits
           </dt>
           <dd className="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-            {shownVisits.length / 10}
+            {productDisponibilities?.score}
           </dd>
         </div>
+      </div>
+      <div className="overflow-hidden rounded-lg p-4">
+        <h1 className="text-sm font-medium text-gray-500">
+          Nos produits 
+        </h1>
+        {productDisponibilities?.disponibilities.map((d) => (
+          <div
+            key={d.productId}
+            className="flex items-center justify-between gap-2 border-b py-2 text-sm"
+          >
+            <p>{d.productName}</p>
+            <p>{d.available ? "Disponible" : "Indisponible"}</p>
+          </div>
+        ))}
       </div>
     </>
   );
