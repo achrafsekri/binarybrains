@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { User } from "@prisma/client";
 import {
   ColumnFiltersState,
   flexRender,

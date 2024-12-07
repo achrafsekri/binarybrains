@@ -23,7 +23,7 @@ const page = async ({ params }: { params: { posId: string } }) => {
       <DashboardHeader
         heading={pos.nom}
         text={`${pos.city ?? ""} - ${pos.state ?? ""} `}
-        phone={pos.phone}
+        phone={pos.phone ?? ""}
       >
         <Button variant="outline" size="sm">
           <Link
