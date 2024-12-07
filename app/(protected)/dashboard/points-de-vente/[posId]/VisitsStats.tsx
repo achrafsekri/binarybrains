@@ -13,18 +13,18 @@ import {
 import { DatePicker } from "@/components/shared/DatePicker";
 
 const months = [
-  { value: "01", label: "Janvier" },
-  { value: "02", label: "Février" },
-  { value: "03", label: "Mars" },
-  { value: "04", label: "Avril" },
-  { value: "05", label: "Mai" },
-  { value: "06", label: "Juin" },
-  { value: "07", label: "Juillet" },
-  { value: "08", label: "Août" },
-  { value: "09", label: "Septembre" },
-  { value: "10", label: "Octobre" },
-  { value: "11", label: "Novembre" },
-  { value: "12", label: "Décembre" },
+  { value: "00", label: "Janvier" },
+  { value: "01", label: "Février" },
+  { value: "02", label: "Mars" },
+  { value: "03", label: "Avril" },
+  { value: "04", label: "Mai" },
+  { value: "05", label: "Juin" },
+  { value: "06", label: "Juillet" },
+  { value: "07", label: "Août" },
+  { value: "08", label: "Septembre" },
+  { value: "09", label: "Octobre" },
+  { value: "10", label: "Novembre" },
+  { value: "11", label: "Décembre" },
 ];
 
 const VisitsStats = ({ visits }: { visits: Visit[] }) => {
@@ -33,11 +33,13 @@ const VisitsStats = ({ visits }: { visits: Visit[] }) => {
   useEffect(() => {
     setShownVisits(
       visits.filter(
-        (visit) => visit.createdAt.getMonth() + 1 === parseInt(month),
+        (visit) =>
+          visit.createdAt.getMonth() === parseInt(month) &&
+          visit.createdAt.getFullYear() === new Date().getFullYear(),
       ),
     );
   }, [month]);
-  const currentMonth = new Date().getMonth() + 1;
+  const currentMonth = new Date().getMonth();
   return (
     <>
       <h2 className="text-lg font-semibold">Statistiques</h2>
