@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import { Icon, LatLngExpression } from "leaflet";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
@@ -29,16 +30,16 @@ import { Button } from "../ui/button";
 
 const visitedIcon = new Icon({
   iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=008000",
-  iconSize: [32, 32], // size of the icon
-  iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
 });
 
 const unvisitedIcon = new Icon({
   iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=FF0000",
-  iconSize: [32, 32], // size of the icon
-  iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-  popupAnchor: [-3, -76], // point from which the popup should open relative to the iconAnchor
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
 });
 
 function ChangeView({ center }: { center: LatLngExpression }) {
@@ -55,6 +56,16 @@ type PosWithVisits = Pos & {
   visits: (Visit & { disponibilities: Disponibility[] })[];
 };
 
+// Dynamically import the heatmap layer with no SSR
+const HeatmapLayer = dynamic(
+  () =>
+    import("react-leaflet-heatmap-layer-v3").then((mod) => mod.HeatmapLayer),
+  {
+    ssr: false,
+    loading: () => null,
+  },
+);
+
 export default function Map({ products }: { products: ProductWithCompany[] }) {
   const [state, setState] = useState<State | null | "all">(null);
   const [position, setPosition] = useState<LatLngExpression | null>(null);
@@ -65,6 +76,7 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
     to: new Date(),
   });
   const [pos, setPos] = useState<PosWithVisits[]>([]);
+  const [zoom, setZoom] = useState(13);
 
   useEffect(() => {
     const fetchPos = async () => {
@@ -89,6 +101,24 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
   useEffect(() => {
     if (!state) getMyPosition();
   }, []);
+
+  function MapEvents() {
+    const map = useMap();
+
+    useEffect(() => {
+      map.on("zoomend", () => {
+        setZoom(map.getZoom());
+      });
+    }, [map]);
+
+    return null;
+  }
+
+  const heatmapData = pos.map((p) => ({
+    lat: Number(p.lat),
+    lng: Number(p.lng),
+    intensity: 1,
+  }));
 
   return (
     <>
@@ -119,39 +149,54 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
             style={{ height: "550px", width: "100%", zIndex: 10 }}
           >
             <ChangeView center={position} />
+            <MapEvents />
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-            {pos.map((p) => {
-              const visited = p.visits.some(
-                (v) =>
-                  isBefore(v.createdAt, dateRange?.to) &&
-                  isAfter(v.createdAt, dateRange?.from),
-              );
 
-              return (
-                <Marker
-                  icon={visited ? visitedIcon : unvisitedIcon}
-                  key={p.id}
-                  position={[Number(p.lat), Number(p.lng)]}
-                >
-                  <Popup>
-                    <div className="flex flex-col gap-2">
-                      <span className="text-lg font-bold">{p.nom}</span>
-                      <span className="text-sm">{p.city}</span>
-                      {p.phone && (
-                        <a href={`tel:${p.phone}`} className="text-sm">
-                          +216 {p.phone}
-                        </a>
-                      )}
-                      <Button variant="outline" size="sm">
-                        <Link href={`/dashboard/points-de-vente/${p.id}`}>
-                          Voir le point de vente
-                        </Link>
-                      </Button>
-                    </div>
-                  </Popup>
-                </Marker>
-              );
-            })}
+            {zoom < 10 && (
+              <HeatmapLayer
+                points={heatmapData}
+                longitudeExtractor={(m) => m.lng}
+                latitudeExtractor={(m) => m.lat}
+                intensityExtractor={(m) => m.intensity}
+                radius={20}
+                max={1}
+                minOpacity={0.4}
+              />
+            )}
+
+            {zoom >= 10 &&
+              pos.map((p) => {
+                const visited = p.visits.some(
+                  (v) =>
+                    isBefore(v.createdAt, dateRange?.to) &&
+                    isAfter(v.createdAt, dateRange?.from),
+                );
+
+                return (
+                  <Marker
+                    icon={visited ? visitedIcon : unvisitedIcon}
+                    key={p.id}
+                    position={[Number(p.lat), Number(p.lng)]}
+                  >
+                    <Popup>
+                      <div className="flex flex-col gap-2">
+                        <span className="text-lg font-bold">{p.nom}</span>
+                        <span className="text-sm">{p.city}</span>
+                        {p.phone && (
+                          <a href={`tel:${p.phone}`} className="text-sm">
+                            +216 {p.phone}
+                          </a>
+                        )}
+                        <Button variant="outline" size="sm">
+                          <Link href={`/dashboard/points-de-vente/${p.id}`}>
+                            Voir le point de vente
+                          </Link>
+                        </Button>
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              })}
           </MapContainer>
           <Button
             className="absolute bottom-4 right-4 z-[1000]"
