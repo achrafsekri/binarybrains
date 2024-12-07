@@ -12,6 +12,7 @@ export const metadata = constructMetadata({
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+  redirect("/dashboard/points-de-vente");
   return (
     <>
       <DashboardHeader
