@@ -12,6 +12,7 @@ import {
   Company,
   Disponibility,
   Pos,
+  PosType,
   Product,
   State,
   Visit,
@@ -34,17 +35,24 @@ import { getPos } from "@/app/(protected)/dashboard/points-de-vente/get-pos.serv
 
 import { ProductSelector } from "../dashboard/ProductSelector";
 import DateRangePicker from "../shared/DateRangePicker";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 
 const visitedIcon = new Icon({
-  iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=008000",
+  iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=4d7c0f",
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
 });
 
 const unvisitedIcon = new Icon({
-  iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=FF0000",
+  iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=b91c1c",
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+const ProspectIcon = new Icon({
+  iconUrl: "https://img.icons8.com/?size=100&id=87988&format=png&color=030712",
   iconSize: [32, 32],
   iconAnchor: [16, 32],
   popupAnchor: [0, -32],
@@ -183,16 +191,33 @@ export default function Map({ products }: { products: ProductWithCompany[] }) {
                   (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
                 )[0];
 
+                const isProspect = p.type === PosType.PROSPECT;
+
                 return (
                   <Marker
-                    icon={visited ? visitedIcon : unvisitedIcon}
+                    icon={
+                      isProspect
+                        ? ProspectIcon
+                        : visited
+                          ? visitedIcon
+                          : unvisitedIcon
+                    }
                     key={p.id}
                     position={[Number(p.lat), Number(p.lng)]}
                   >
                     <Popup>
                       <div className="flex flex-col gap-2 space-y-2">
-                        <span className="text-lg flex items-center gap-2 font-bold">
-                          {p.nom}
+                        <span className="flex items-center gap-2 text-lg font-bold">
+                          {p.nom}{" "}
+                          {isProspect ? (
+                            <Badge variant="outline" className="text-xs">
+                              P.C
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-xs">
+                              C
+                            </Badge>
+                          )}
                           <Link
                             href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
                           >

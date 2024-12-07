@@ -114,6 +114,11 @@ model VerificationToken {
   @@map(name: "verification_tokens")
 }
 
+enum PosType {
+  PROSPECT
+  CLIENT
+}
+
 model Pos {
   id          String   @id @default(cuid())
   state       State
@@ -122,6 +127,7 @@ model Pos {
   lat         String
   lng         String
   nom         String
+  type        PosType  @default(CLIENT)
   description String?
   phone       String?
   createdAt   DateTime @default(now())

@@ -25,7 +25,11 @@ const page = async ({ params }: { params: { posId: string } }) => {
       posId: params.posId,
     },
     include: {
-      disponibilities: true,
+      disponibilities: {
+        include: {
+          product: true,
+        },
+      },
       pos: true,
     },
   });

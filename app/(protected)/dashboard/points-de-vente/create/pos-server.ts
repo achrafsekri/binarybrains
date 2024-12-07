@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createNotification } from "@/actions/create-notifiction.server";
-import { NotificationType, State } from "@prisma/client";
+import { NotificationType, PosType, State } from "@prisma/client";
 
 import { prisma } from "@/lib/db";
 import { getCurrentUser } from "@/lib/session";
@@ -25,6 +25,7 @@ export const createPos = async (values: PosFormValues) => {
           zip: values.zip,
           lat: values.lat ?? "",
           lng: values.lng ?? "",
+          type: values.type as PosType,
         },
       });
       await createVisit({

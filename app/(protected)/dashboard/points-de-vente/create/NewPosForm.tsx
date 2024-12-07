@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { redirect, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Product, State } from "@prisma/client";
+import { PosType, Product, State } from "@prisma/client";
 import { CheckCircle2, Loader2, MapPin, Plus, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
@@ -45,6 +45,7 @@ const customerSchema = z.object({
   state: z.string().min(1, { message: "Le nom est requis" }),
   city: z.string().min(1, { message: "La ville est requise" }),
   zip: z.string().min(1, { message: "Le code postal est requis" }),
+  type: z.nativeEnum(PosType),
   phone: z.string().nullable(),
   lat: z.string().nullable(),
   lng: z.string().nullable(),
@@ -155,6 +156,30 @@ export default function NewPosForm({ products }: { products: Product[] }) {
                     onChange={field.onChange}
                     className="w-full"
                   />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Type</FormLabel>
+                <FormControl>
+                  <Select
+                    value={field.value as string}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={PosType.CLIENT}>Client</SelectItem>
+                      <SelectItem value={PosType.PROSPECT}>Prospect</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>

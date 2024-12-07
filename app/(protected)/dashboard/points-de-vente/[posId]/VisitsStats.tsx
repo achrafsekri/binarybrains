@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/shared/DatePicker";
 
+import { VisitWithDisponibilities } from "../../visits/page";
+
 const months = [
   { value: "00", label: "Janvier" },
   { value: "01", label: "Février" },
@@ -27,10 +29,11 @@ const months = [
   { value: "11", label: "Décembre" },
 ];
 
-const VisitsStats = ({ visits }: { visits: Visit[] }) => {
+const VisitsStats = ({ visits }: { visits: VisitWithDisponibilities[] }) => {
   const [month, setMonth] = useState<string>(new Date().getMonth().toString());
   const [year, setYear] = useState<string>(new Date().getFullYear().toString());
-  const [shownVisits, setShownVisits] = useState<Visit[]>(visits);
+  const [shownVisits, setShownVisits] =
+    useState<VisitWithDisponibilities[]>(visits);
   useEffect(() => {
     setShownVisits(
       visits.filter(
@@ -40,6 +43,7 @@ const VisitsStats = ({ visits }: { visits: Visit[] }) => {
       ),
     );
   }, [month, year]);
+
   return (
     <>
       <h2 className="text-lg font-semibold">Statistiques</h2>
