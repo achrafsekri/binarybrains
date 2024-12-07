@@ -19,15 +19,12 @@ export function DashboardHeader({
         </h1>
         {text && <p className="text-base text-muted-foreground">{text}</p>}
         {phone && (
-          <a
-            href={`tel:${phone}`}
-            className="text-base underline"
-          >
+          <a href={`tel:${phone}`} className="text-base underline">
             +216 {phone}
           </a>
         )}
       </div>
-      {children}
+      <div className="flex items-center gap-2">{children}</div>
     </div>
   );
 }
