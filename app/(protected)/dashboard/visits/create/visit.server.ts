@@ -21,7 +21,6 @@ export const createVisit = async (visit: VisitFormValues) => {
     disponibility: true,
   }));
   const productsIds = addedDisponibilities.map((d) => d.productId);
-  console.log("productsIds", productsIds);
   const dbProducts = await prisma.product.findMany();
   const notFoundProducts = dbProducts
     .filter((dbProduct) => !productsIds.includes(dbProduct.id))
@@ -32,9 +31,7 @@ export const createVisit = async (visit: VisitFormValues) => {
         price: 0,
       };
     });
-  console.log("notFoundProducts", notFoundProducts);
   const mergedDisponibilities = [...addedDisponibilities, ...notFoundProducts];
-  console.log("mergedDisponibilities", mergedDisponibilities);
   try {
     const id = randomUUID();
     const createdVisit = await prisma.visit.create({

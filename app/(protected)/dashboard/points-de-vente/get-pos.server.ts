@@ -49,6 +49,5 @@ export const getPos = async (
       },
     },
   });
-  console.log("pos", pos);
   return pos;
 };

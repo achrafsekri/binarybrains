@@ -1,20 +1,10 @@
 import { compare } from "bcrypt";
 import type { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import Resend from "next-auth/providers/resend";
-
-import { env } from "@/env.mjs";
-
 import { prisma } from "./lib/db";
-import { sendVerificationRequest } from "./lib/email";
 
 export default {
   providers: [
-    Resend({
-      apiKey: env.RESEND_API_KEY,
-      from: "noreply@Sotacib.com",
-      sendVerificationRequest,
-    }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",

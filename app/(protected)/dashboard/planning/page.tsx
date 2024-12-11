@@ -42,7 +42,6 @@ export default async function Pos({
     },
   });
 
-  console.log(planning);
 
   return (
     <>

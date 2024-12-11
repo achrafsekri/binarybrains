@@ -88,7 +88,6 @@ export default function NewPosForm({ products }: { products: Product[] }) {
     },
   });
 
-  console.log(form.formState.errors);
   const onSubmit = async (data: PosFormValues) => {
     setIsSubmitting(true);
     try {

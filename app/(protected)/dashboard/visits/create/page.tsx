@@ -22,7 +22,6 @@ export default async function Page({
       createdAt: "desc",
     },
   });
-  console.log(searchParams);
   return (
     <>
       <NewVisitForm
